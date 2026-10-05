@@ -16,7 +16,7 @@ shidduchDetail=function(sid){
       <div class="zm-pair-title-wrap">
         <div class="zm-pair-title" aria-label="${esc(g.name)} and ${esc(gl.name)}">
           <button type="button" class="zm-pair-name guy" data-zm-person="${esc(g.id)}" aria-label="Open ${esc(g.name)} profile">${esc(g.name)}</button>
-          <span class="zm-inward-arrows" aria-hidden="true">→←</span>
+          <span class="zm-inward-arrows" aria-hidden="true">→ ←</span>
           <button type="button" class="zm-pair-name girl" data-zm-person="${esc(gl.id)}" aria-label="Open ${esc(gl.name)} profile">${esc(gl.name)}</button>
         </div>
         <div class="detail-meta">Round ${esc(r?.number||1)}</div>
