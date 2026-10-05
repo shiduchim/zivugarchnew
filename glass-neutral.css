@@ -1,0 +1,88 @@
+/* Neutral Frosted Glass override.
+   Keep the transparent Windows-style acrylic effect, but remove the pink/lilac feminine cast. */
+html[data-skin="glass"]{
+  color-scheme:light;
+  --bg:transparent;
+  --bg-2:transparent;
+  --surface:rgba(248,252,255,.34);
+  --surface-2:rgba(238,246,250,.22);
+  --surface-3:rgba(244,250,252,.28);
+  --text:#173445;
+  --text-2:#4f6a78;
+  --text-3:#758a95;
+  --line:rgba(255,255,255,.68);
+  --blue:#3f789b;
+  --blue-2:rgba(197,226,240,.56);
+  --blue-3:rgba(165,211,230,.54);
+  --sage:#4f8c78;
+  --sage-2:rgba(195,230,215,.52);
+  --peach:#b87962;
+  --peach-2:rgba(242,216,203,.47);
+  --amber:#987329;
+  --amber-2:rgba(245,228,180,.54);
+  --lav:#7184a5;
+  --lav-2:rgba(211,220,235,.52);
+  --rose:#8a6f78;
+  --rose-2:rgba(231,218,221,.45);
+  --shadow:0 20px 48px rgba(42,72,91,.17);
+  --shadow-soft:0 9px 25px rgba(42,72,91,.12);
+}
+
+html[data-skin="glass"] body{
+  background:
+    radial-gradient(circle at 8% 10%,rgba(153,207,222,.72),transparent 29%),
+    radial-gradient(circle at 92% 13%,rgba(112,166,201,.72),transparent 31%),
+    radial-gradient(circle at 78% 84%,rgba(137,188,174,.58),transparent 34%),
+    linear-gradient(145deg,#dfeaf0 0,#edf4f6 42%,#dce9e5 100%) fixed!important;
+}
+
+html[data-skin="glass"] body:before{
+  background:linear-gradient(120deg,rgba(255,255,255,.27),transparent 38%,rgba(255,255,255,.13))!important;
+}
+
+html[data-skin="glass"] .warm-person-row,
+html[data-skin="glass"] .warm-activity-row,
+html[data-skin="glass"] .warm-source-row,
+html[data-skin="glass"] .warm-match-row,
+html[data-skin="glass"] .warm-summary,
+html[data-skin="glass"] .warm-metric,
+html[data-skin="glass"] .warm-search,
+html[data-skin="glass"] .warm-filter,
+html[data-skin="glass"] .warm-circle,
+html[data-skin="glass"] .warm-info-card,
+html[data-skin="glass"] .warm-history-card,
+html[data-skin="glass"] .warm-profile-card,
+html[data-skin="glass"] .warm-related-card,
+html[data-skin="glass"] .next-card,
+html[data-skin="glass"] .waiting-summary,
+html[data-skin="glass"] .all-clear,
+html[data-skin="glass"] .sheet,
+html[data-skin="glass"] .warm-bottom-nav{
+  background:rgba(250,253,255,.35)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  box-shadow:0 18px 44px rgba(43,73,92,.16),inset 0 1px 0 rgba(255,255,255,.82)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%);
+  backdrop-filter:blur(24px) saturate(155%);
+}
+
+html[data-skin="glass"] .warm-segment{
+  background:rgba(244,250,252,.22)!important;
+  border:1px solid rgba(255,255,255,.52)!important;
+}
+
+html[data-skin="glass"] .warm-seg.active,
+html[data-skin="glass"] .warm-nav.active{
+  background:rgba(239,249,252,.68)!important;
+  color:#315f79!important;
+}
+
+html[data-skin="glass"] .warm-add{
+  background:rgba(61,119,154,.72)!important;
+  color:#fff!important;
+}
+
+.skin-swatch.glass{
+  background:linear-gradient(135deg,rgba(248,252,255,.96),rgba(133,185,208,.72),rgba(143,190,177,.64))!important;
+  color:#254f63!important;
+  border:1px solid rgba(255,255,255,.96)!important;
+}
