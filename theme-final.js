@@ -8,7 +8,7 @@ const FINAL_SKINS=[
 ['boys','Boys','Bold navy · cyan · teal','◆'],
 ['girls','Girls','Bold plum · rose · lilac','♥'],
 ['kids','Cartoon','Big colorful cards · cartoon icons','☀'],
-['contrast','High Contrast','Black, white and strong focus','◐'],
+['contrast','High Contrast','Crisp accessible · system light or dark','◐'],
 ['neon','Neon','Electric · one color per section','✦'],
 ['ocean','Ocean','Deep blue and turquoise','≈'],
 ['sunset','Sunset','Coral, orange and violet','☀']
@@ -27,7 +27,7 @@ const skin=data?.settings?.skin||'classic';
 document.documentElement.dataset.skin=skin;
 const colors={
 classic:'#f6f0e7',game:'#f5f3ff',dark:'#15191f',glass:'#6c8fc7',boys:'#082f49',girls:'#65244f',kids:'#fff4b8',
-contrast:'#ffffff',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
+contrast:'#0B1735',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
 };
 document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||colors.classic);
 };
