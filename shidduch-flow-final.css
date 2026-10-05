@@ -1,0 +1,35 @@
+/* Final shidduch workflow visuals. */
+
+/* Lifecycle tabs: Offers -> In Progress -> Ended. Colors echo the stage bar. */
+.warm-seg[data-seg-scope="shidduchim"][data-seg="ideas"]{color:#356fd6!important;border-color:color-mix(in srgb,#4e8df7 50%,var(--border,#d9dce6))!important}
+.warm-seg[data-seg-scope="shidduchim"][data-seg="ideas"].active{background:#4e8df7!important;color:#fff!important;border-color:#4e8df7!important;box-shadow:0 5px 14px color-mix(in srgb,#4e8df7 28%,transparent)!important}
+.warm-seg[data-seg-scope="shidduchim"][data-seg="active"]{color:#8b5ec8!important;border-color:color-mix(in srgb,#9563e6 48%,var(--border,#d9dce6))!important}
+.warm-seg[data-seg-scope="shidduchim"][data-seg="active"].active{background:linear-gradient(90deg,#2fb8b0 0%,#6f79eb 38%,#c251ce 72%,#ee6b7f 100%)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 5px 14px color-mix(in srgb,#9563e6 25%,transparent)!important}
+.warm-seg[data-seg-scope="shidduchim"][data-seg="ended"]{color:#737a84!important;border-color:#aeb4bd!important}
+.warm-seg[data-seg-scope="shidduchim"][data-seg="ended"].active{background:#8f97a2!important;color:#fff!important;border-color:#8f97a2!important;box-shadow:0 5px 12px rgba(90,98,110,.16)!important}
+
+/* Offers visually match the first blue step of the stage bar. */
+.zm-offer-row{border-left:4px solid #4e8df7!important}
+.zm-offer-row .warm-match-avatar{color:#356fd6!important;background:color-mix(in srgb,#4e8df7 12%,var(--surface,#fff))!important}
+
+/* Ended cards are intentionally quieter/grey, while their bar length still shows where they stopped. */
+.zm-ended-card{border-color:color-mix(in srgb,#8f97a2 45%,var(--border,#d9dce6))!important}
+.zm-stage.ended .zm-stage-meta strong{color:#6f7781!important}
+.zm-stage.ended .zm-stage-meta span{color:#8a919a!important}
+.zm-stage.ended .zm-stage-seg.done,.zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
+
+.zm-end-action{display:flex;justify-content:center;margin:16px auto 28px;max-width:760px}
+.zm-end-action .ghost-btn{min-width:150px}
+.zm-ended-summary{display:grid;gap:8px;max-width:760px;margin:14px auto 28px;padding:14px 16px;border:1px solid color-mix(in srgb,#8f97a2 35%,var(--border,#d9dce6));border-radius:14px;background:color-mix(in srgb,#8f97a2 7%,var(--surface,#fff))}
+.zm-ended-summary>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:start}
+.zm-ended-summary span{font-size:10px;color:var(--text-2);font-weight:700}
+.zm-ended-summary strong{font-size:12px;color:var(--text-1);font-weight:800;overflow-wrap:anywhere}
+
+/* High Contrast owns its selected-state treatment. */
+html[data-skin="contrast"] .warm-seg[data-seg-scope="shidduchim"].active{box-shadow:none!important}
+
+@media(max-width:520px){
+  .zm-ended-summary{margin:12px 9px 24px}
+  .zm-ended-summary>div{grid-template-columns:92px minmax(0,1fr)}
+  .warm-seg[data-seg-scope="shidduchim"]{font-size:11px!important}
+}
