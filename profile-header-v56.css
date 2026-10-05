@@ -1,0 +1,152 @@
+/* v56: one stable compact person header from the first pixel of the page through scrolling.
+   It never grows, shrinks, reflows, or changes surface when it becomes sticky. */
+
+/* Sticky cannot work through an overflow-clipping ancestor. */
+.warm-detail-page:has(.zm-profile-identity){
+  overflow:visible!important;
+}
+
+/* The old sentinel is still used by existing JS, but it should take no visual space. */
+.zm-profile-sticky-sentinel{
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+.zm-profile-identity,
+.zm-profile-identity.is-stuck{
+  position:sticky!important;
+  top:0!important;
+  z-index:50!important;
+  display:grid!important;
+  grid-template-columns:44px 44px minmax(0,1fr) 44px!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  min-height:68px!important;
+  margin:6px 0 12px!important;
+  padding:8px 10px!important;
+  box-sizing:border-box!important;
+  border-radius:20px!important;
+  border:1px solid color-mix(in srgb,var(--line,#dfe4e8) 62%,transparent)!important;
+  background:color-mix(in srgb,var(--surface,#fff) 97%,transparent)!important;
+  box-shadow:0 7px 22px rgba(24,38,54,.075)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+  backdrop-filter:blur(14px)!important;
+  transition:none!important;
+}
+
+/* easy.css intentionally makes .warm-person-big large in phone preview.
+   This selector is deliberately more specific so a profile header avatar is ALWAYS compact. */
+html body .zm-profile-identity .warm-person-big.zm-profile-avatar,
+html body .zm-profile-identity.is-stuck .warm-person-big.zm-profile-avatar{
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:50%!important;
+  font-size:14px!important;
+  line-height:44px!important;
+  flex:0 0 44px!important;
+  align-self:center!important;
+  justify-self:center!important;
+  overflow:hidden!important;
+  transition:none!important;
+}
+
+.zm-profile-copy,
+.zm-profile-identity.is-stuck .zm-profile-copy{
+  min-width:0!important;
+  align-self:center!important;
+  text-align:left!important;
+}
+.zm-profile-copy h1,
+.zm-profile-identity.is-stuck .zm-profile-copy h1{
+  margin:0!important;
+  padding:0!important;
+  font:800 18px/1.08 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  letter-spacing:-.015em!important;
+  color:var(--text,#172536)!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.zm-profile-meta,
+.zm-profile-identity.is-stuck .zm-profile-meta{
+  display:block!important;
+  margin-top:4px!important;
+  padding:0!important;
+  font:700 11px/1.15 system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  color:var(--text-2,#68727b)!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.zm-profile-occupation,
+.zm-profile-identity.is-stuck .zm-profile-occupation{
+  display:none!important;
+}
+
+.zm-profile-back,
+.zm-profile-more,
+.zm-profile-identity.is-stuck .zm-profile-back,
+.zm-profile-identity.is-stuck .zm-profile-more{
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  margin:0!important;
+  align-self:center!important;
+  justify-self:center!important;
+  transition:none!important;
+}
+
+/* Keep exactly the same geometry and surface after the sticky class is added. */
+.zm-profile-identity.is-stuck{
+  margin:6px 0 12px!important;
+  padding:8px 10px!important;
+  border-radius:20px!important;
+}
+
+html[data-skin="dark"] .zm-profile-identity,
+html[data-skin="dark"] .zm-profile-identity.is-stuck,
+html[data-skin="neon"] .zm-profile-identity,
+html[data-skin="neon"] .zm-profile-identity.is-stuck{
+  background:color-mix(in srgb,var(--surface,#17202a) 97%,transparent)!important;
+  border-color:color-mix(in srgb,currentColor 20%,transparent)!important;
+}
+
+@media(max-width:520px){
+  .zm-profile-identity,
+  .zm-profile-identity.is-stuck{
+    grid-template-columns:40px 40px minmax(0,1fr) 40px!important;
+    column-gap:8px!important;
+    min-height:64px!important;
+    margin:4px 0 10px!important;
+    padding:7px 8px!important;
+    border-radius:18px!important;
+  }
+  html body .zm-profile-identity .warm-person-big.zm-profile-avatar,
+  html body .zm-profile-identity.is-stuck .warm-person-big.zm-profile-avatar{
+    width:40px!important;
+    height:40px!important;
+    min-width:40px!important;
+    max-width:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+    line-height:40px!important;
+    font-size:13px!important;
+    flex-basis:40px!important;
+  }
+  .zm-profile-copy h1,
+  .zm-profile-identity.is-stuck .zm-profile-copy h1{font-size:17px!important}
+  .zm-profile-meta,
+  .zm-profile-identity.is-stuck .zm-profile-meta{font-size:10.5px!important;margin-top:3px!important}
+  .zm-profile-back,.zm-profile-more,
+  .zm-profile-identity.is-stuck .zm-profile-back,.zm-profile-identity.is-stuck .zm-profile-more{
+    width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;
+  }
+}
