@@ -1,7 +1,7 @@
 'use strict';
 
-// Compact shidduch header: full names stay readable, arrows point inward,
-// and the duplicated initials are removed from the hero.
+// Clear shidduch header: each person gets a dedicated centered row.
+// This stays consistent for short and long names and avoids connector symbols entirely.
 const shidduchDetailBeforePairHeader=shidduchDetail;
 shidduchDetail=function(sid){
   let html=shidduchDetailBeforePairHeader(sid);
@@ -16,7 +16,6 @@ shidduchDetail=function(sid){
       <div class="zm-pair-title-wrap">
         <div class="zm-pair-title" aria-label="${esc(g.name)} and ${esc(gl.name)}">
           <button type="button" class="zm-pair-name guy" data-zm-person="${esc(g.id)}" aria-label="Open ${esc(g.name)} profile">${esc(g.name)}</button>
-          <span class="zm-inward-arrows" aria-hidden="true">→ ←</span>
           <button type="button" class="zm-pair-name girl" data-zm-person="${esc(gl.id)}" aria-label="Open ${esc(gl.name)} profile">${esc(gl.name)}</button>
         </div>
         <div class="detail-meta">Round ${esc(r?.number||1)}</div>
@@ -26,7 +25,7 @@ shidduchDetail=function(sid){
   </div>`;
 
   html=html.replace(/<div class="detail-head">[\s\S]*?<button class="more-btn" data-act="detail-menu">⋯<\/button><\/div>/,pairHeader);
-  // The header now identifies both people clearly, so initials below it are redundant.
+  // Full names in the header make the old initials below redundant.
   html=html.replace(/<div class="pair-people">[\s\S]*?<\/div>/,'');
   return html;
 };
