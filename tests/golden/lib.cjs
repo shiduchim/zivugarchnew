@@ -13,7 +13,9 @@ const DB = { name: 'ZivugMatchDB', store: 'kv', key: 'state' };
 
 // Seeded PRNG + IndexedDB write counter. Installed before any app script runs.
 const INIT_SCRIPT = `(() => {
-  let s = 0x2f6b1d3a;
+  // Deterministic, but different on every page load of the same tab (so IDs made after a reload never repeat).
+  let loads = 0; try { loads = Number(sessionStorage.getItem('__goldenLoads') || 0); sessionStorage.setItem('__goldenLoads', String(loads + 1)); } catch (e) {}
+  let s = (0x2f6b1d3a + loads * 0x9e3779b1) | 0;
   Math.random = function () { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   window.__idbWrites = [];

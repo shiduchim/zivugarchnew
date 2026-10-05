@@ -34,7 +34,9 @@ function handleClick(e){const b=e.target.closest('button');if(!b)return;
   else if(act==='export-backup')exportBackup();
   else if(act==='import-backup')document.getElementById('backupFile')?.click();
   else if(act==='toggle-demo'){const wasDemo=data.meta.demo;keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});}
-  else if(act==='undo-safety')restoreSafetyCopy(b.dataset.copyId);
+  else if(act==='undo-safety')runOnce(act,()=>restoreSafetyCopy(b.dataset.copyId));
+  else if(act==='close-open-item')runOnce(act,()=>closeOpenItem(b.dataset.itemId));
+  else if(act==='undo-close-item')runOnce(act,()=>undoCloseOpenItem(b.dataset.itemId,b.dataset.entryId));
   else if(act==='show-wait-me'){ui.screen='shadchanim';ui.screenView.shadchanim='me';ui.detail=null;render();}
   else if(act==='show-wait-them'){ui.screen='shadchanim';ui.screenView.shadchanim='them';ui.detail=null;render();}
   else if(act==='show-active'){ui.screen='shidduchim';ui.screenView.shidduchim='active';ui.detail=null;render();}

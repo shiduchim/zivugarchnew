@@ -494,6 +494,30 @@ const checks = {
     await ctx.close();
   },
 
+  async R7_open_items_completable() {
+    const { ctx, page } = await fresh({ mode: 'single' }); const s0 = await L.idbRead(page);
+    const todo0 = (await domList(page, '.zm-todo-card strong')).length;
+    await run(page, personPath('p_miriam', 'single')); await L.tap(page, '.warm-contact.wait');
+    const listed = await page.$$eval('#overlay [data-act="close-open-item"]', els => els.map(e => e.dataset.itemId + ':' + e.textContent));
+    await L.tap(page, '#overlay [data-act="close-open-item"][data-item-id="oi2"]');
+    const s1 = await L.idbRead(page); const oi = s1.openItems.find(x => x.id === 'oi2'); const e = s1.entries.find(x => x.id === oi.closedByEntryId);
+    const others = s1.openItems.filter(x => x.id !== 'oi2').every(x => JSON.stringify(x) === JSON.stringify(s0.openItems.find(o => o.id === x.id)));
+    await L.tap(page, '.warm-contact-row [data-contact="wait"]'); await L.closeSheets(page); await L.tap(page, 'button[data-detail-tab="conversation"]');
+    const inHistory = (await domList(page, '#app [data-entry]', 'data-entry')).includes(e?.id);
+    await L.tap(page, 'button[data-screen="recent"]');
+    const inRecent = (await domList(page, '#app [data-entry]', 'data-entry')).includes(e?.id);
+    const todo1 = (await domList(page, '.zm-todo-card strong')).length;
+    // Undo from the toast of a fresh close.
+    await L.openApp(page); await run(page, personPath('p_miriam', 'single')); await L.tap(page, '.warm-contact.wait');
+    await L.tap(page, '#overlay [data-act="close-open-item"][data-item-id="oi1"]');
+    await L.tap(page, '#toast [data-act="undo-close-item"]');
+    const s2 = await L.idbRead(page); const oi1 = s2.openItems.find(x => x.id === 'oi1');
+    const undone = oi1.status === 'open' && !('closedByEntryId' in oi1) && s2.entries.length === s1.entries.length;
+    const ok = listed.length === 2 && oi.status === 'closed' && e && e.text === 'Done: Send updated profile v4' && others && inHistory && inRecent && todo1 === todo0 - 1 && undone;
+    record('R7', "Open items can be completed from What's next?: exactly that item closes (linked to a new history entry shown in Recent and History); Undo reopens it", ok ? 'PASS' : 'FAIL', { listed, closed: oi?.status, entry: e?.text, othersUntouched: others, inHistory, inRecent, todo: [todo0, todo1], undone });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
