@@ -1,0 +1,128 @@
+/* Simpler navigation + manual Phone/Web view switch. */
+
+.layout-choice-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.layout-choice{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 8px;text-align:center;font-size:11px;font-weight:800;color:var(--text-2)}
+.layout-choice.active{background:var(--blue-2);color:var(--blue);border-color:color-mix(in srgb,var(--blue) 30%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 10%,transparent)}
+.layout-choice small{display:block;font-size:8.5px;font-weight:650;margin-top:3px;color:var(--text-3)}
+.settings-heading{margin:16px 2px 7px;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+
+/* Make the most common navigation targets forgiving and obvious. */
+.warm-nav,.warm-person-row,.warm-activity-row,.warm-source-row,.warm-match-row,.warm-seg,.warm-contact,.warm-tabs button{touch-action:manipulation}
+.warm-person-row,.warm-activity-row,.warm-source-row,.warm-match-row{transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+@media (hover:hover){
+  .warm-person-row:hover,.warm-activity-row:hover,.warm-source-row:hover,.warm-match-row:hover{transform:translateY(-1px);box-shadow:0 13px 30px rgba(70,53,34,.085)}
+}
+.warm-seg{min-height:36px}
+.warm-tabs button{min-height:39px}
+.warm-contact{min-height:56px}
+
+/* Desktop back control gets a word as well as an arrow. */
+@media (min-width:900px){
+  html:not([data-layout="phone"]) .warm-detail-title>.warm-back{width:70px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:5px!important;margin-left:-4px!important}
+  html:not([data-layout="phone"]) .warm-detail-title>.warm-back::after{content:"Back";font-size:11px;font-weight:800;color:var(--text-2)}
+}
+
+/* Manual phone preview on a desktop browser. This deliberately restores the
+   exact mobile composition even though the browser itself is wide. */
+@media (min-width:900px){
+  html[data-layout="phone"] body{
+    padding-bottom:96px!important;
+    background:#e9e5de!important;
+    overflow-x:hidden;
+  }
+  html[data-layout="phone"] .app-shell{
+    width:430px!important;
+    max-width:430px!important;
+    margin:20px auto 0!important;
+    min-height:calc(100vh - 40px)!important;
+    background:var(--bg)!important;
+    border-radius:30px 30px 0 0;
+    box-shadow:0 24px 70px rgba(45,39,32,.14);
+    overflow:hidden;
+  }
+  html[data-layout="phone"] .page{
+    margin-left:0!important;
+    padding:14px 16px 30px!important;
+    min-height:calc(100vh - 116px)!important;
+  }
+  html[data-layout="phone"] .page>*{max-width:none!important;margin-left:initial!important;margin-right:initial!important}
+
+  html[data-layout="phone"] .warm-bottom-nav{
+    left:50%!important;top:auto!important;bottom:20px!important;transform:translateX(-50%)!important;
+    width:430px!important;height:76px!important;
+    display:grid!important;grid-template-columns:repeat(5,1fr)!important;
+    padding:0!important;
+    background:rgba(255,253,249,.97)!important;
+    border-right:0!important;border-top:1px solid rgba(60,70,80,.06)!important;
+    box-shadow:0 -5px 22px rgba(62,53,44,.045)!important;
+  }
+  html[data-layout="phone"] .warm-bottom-nav::before,
+  html[data-layout="phone"] .warm-bottom-nav::after{display:none!important;content:none!important}
+  html[data-layout="phone"] .warm-nav{
+    width:auto!important;min-height:0!important;flex-direction:column!important;justify-content:center!important;
+    gap:4px!important;padding:5px 2px!important;margin:0!important;border-radius:0!important;
+    font-size:9px!important;color:#8b9297!important;transform:none!important;background:transparent!important;
+  }
+  html[data-layout="phone"] .warm-nav-icon{width:36px!important;height:28px!important;border-radius:12px!important}
+  html[data-layout="phone"] .warm-nav-icon svg{width:19px!important;height:19px!important}
+  html[data-layout="phone"] .warm-nav.active{color:#567c9f!important;background:transparent!important}
+  html[data-layout="phone"] .warm-nav.active .warm-nav-icon{background:#e7f0f7!important;box-shadow:none!important}
+
+  html[data-layout="phone"] .warm-wordmark{display:flex!important}
+  html[data-layout="phone"] .warm-header{margin-bottom:13px!important}
+  html[data-layout="phone"] .warm-title-row{grid-template-columns:auto minmax(0,1fr) auto!important;gap:10px!important;align-items:center!important}
+  html[data-layout="phone"] .warm-title-row>.warm-back{position:static!important;margin-left:-6px!important;margin-top:0!important;width:38px!important}
+  html[data-layout="phone"] .warm-title-copy h1{font-size:34px!important}
+  html[data-layout="phone"] .warm-title-copy p{font-size:11.5px!important;margin-top:5px!important}
+  html[data-layout="phone"] .warm-circle{width:42px!important;height:42px!important}
+  html[data-layout="phone"] .warm-add{height:42px!important;padding:0 16px!important;font-size:12px!important}
+
+  html[data-layout="phone"] .warm-search-row{grid-template-columns:1fr 46px!important;gap:8px!important;margin:4px 0 12px!important}
+  html[data-layout="phone"] .warm-search,html[data-layout="phone"] .warm-filter{height:47px!important;border-radius:17px!important}
+  html[data-layout="phone"] .warm-search{padding:0 14px!important}
+
+  html[data-layout="phone"] .warm-segment-scroll{margin-bottom:13px!important;overflow:auto!important}
+  html[data-layout="phone"] .warm-segment{width:max-content!important;min-width:100%!important;padding:4px!important;border-radius:16px!important}
+  html[data-layout="phone"] .warm-seg{padding:8px 12px!important;font-size:11.5px!important}
+
+  html[data-layout="phone"] .warm-summary-grid{grid-template-columns:repeat(3,1fr)!important;gap:9px!important;margin:6px 0 15px!important;max-width:none!important}
+  html[data-layout="phone"] .warm-summary{min-height:82px!important;border-radius:18px!important;padding:11px!important;gap:8px!important}
+  html[data-layout="phone"] .warm-summary-icon{width:34px!important;height:34px!important}
+  html[data-layout="phone"] .warm-summary-copy small{font-size:9px!important}
+  html[data-layout="phone"] .warm-summary-copy strong{font-size:21px!important;margin-top:7px!important}
+
+  html[data-layout="phone"] .warm-stack{grid-template-columns:1fr!important;gap:8px!important}
+  html[data-layout="phone"] .warm-person-row{min-height:76px!important;padding:11px 12px!important;grid-template-columns:48px 1fr auto!important}
+  html[data-layout="phone"] .warm-avatar{width:48px!important;height:48px!important;font-size:12px!important}
+  html[data-layout="phone"] .warm-person-top strong,html[data-layout="phone"] .warm-activity-top strong,html[data-layout="phone"] .warm-source-main strong,html[data-layout="phone"] .warm-match-main strong{font-size:14px!important}
+  html[data-layout="phone"] .warm-person-line,html[data-layout="phone"] .warm-activity-text,html[data-layout="phone"] .warm-source-main p,html[data-layout="phone"] .warm-match-main p{font-size:11.5px!important}
+  html[data-layout="phone"] .warm-person-status,html[data-layout="phone"] .warm-activity-about{font-size:10.5px!important}
+  html[data-layout="phone"] .warm-activity-row{min-height:72px!important;padding:11px 12px!important;grid-template-columns:42px 1fr auto!important}
+  html[data-layout="phone"] .warm-activity-icon{width:42px!important;height:42px!important}
+  html[data-layout="phone"] .warm-feed{gap:8px!important;max-width:none!important}
+  html[data-layout="phone"] .warm-day{max-width:none!important}
+
+  html[data-layout="phone"] .warm-detail-page{max-width:none!important;margin:0 -16px!important;padding:2px 16px 22px!important;overflow:hidden!important}
+  html[data-layout="phone"] .warm-detail-glow{left:-22%!important;right:-22%!important;top:-145px!important;height:310px!important}
+  html[data-layout="phone"] .warm-detail-title{grid-template-columns:38px minmax(0,1fr) 38px!important;gap:7px!important}
+  html[data-layout="phone"] .warm-detail-name h1{font-size:32px!important}
+  html[data-layout="phone"] .warm-person-hero{margin:15px 0 14px!important;gap:13px!important}
+  html[data-layout="phone"] .warm-person-big{width:70px!important;height:70px!important;font-size:19px!important}
+  html[data-layout="phone"] .warm-metric-grid{grid-template-columns:repeat(3,1fr)!important;gap:9px!important;margin-bottom:12px!important}
+  html[data-layout="phone"] .warm-metric{min-height:92px!important;border-radius:17px!important;padding:12px 10px!important;gap:8px!important}
+  html[data-layout="phone"] .warm-metric-icon{width:36px!important;height:36px!important}
+  html[data-layout="phone"] .warm-contact-row{grid-template-columns:repeat(5,1fr)!important;justify-content:stretch!important;gap:7px!important;margin:4px 0 13px!important}
+  html[data-layout="phone"] .warm-contact{font-size:8.5px!important}
+  html[data-layout="phone"] .warm-contact>span{width:40px!important;height:40px!important}
+  html[data-layout="phone"] .warm-tabs{max-width:none!important;margin-bottom:10px!important}
+  html[data-layout="phone"] .warm-info-card,html[data-layout="phone"] .warm-history-card,html[data-layout="phone"] .warm-profile-card,html[data-layout="phone"] .warm-related-card{max-width:none!important}
+
+  html[data-layout="phone"] .scrim{display:flex!important;align-items:flex-end!important;justify-content:center!important;padding:0!important}
+  html[data-layout="phone"] .sheet{width:430px!important;max-height:88vh!important;margin:0!important;border-radius:28px 28px 0 0!important}
+  html[data-layout="phone"] .sheet-handle{display:block!important}
+}
+
+/* A small desktop-only cue: web mode is intentionally spacious, not a stretched phone. */
+@media (min-width:900px){
+  html:not([data-layout="phone"]) .warm-nav.active::after{content:"";margin-left:auto;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55}
+}
