@@ -481,6 +481,19 @@ const checks = {
     await ctx.close();
   },
 
+  async R6_profile_row_from_history() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const row = async pid => { await L.openApp(page); await run(page, [nav('shadchanim'), seg('shadchanim', 'all'), ['tap', `[data-person="${pid}"]`], tab('details')]);
+      return page.$eval('#app', a => { const r = [...a.querySelectorAll('.warm-info-card > div')].find(d => d.querySelector('span')?.textContent === 'My profile'); return r ? r.querySelector('strong').textContent + ' | ' + r.querySelector('button').textContent : null; }); };
+    const miriam = await row('p_miriam'), batya0 = await row('p_batya');
+    await L.tap(page, '[data-act="log-profile"]');
+    const batya1 = await row('p_batya');
+    const fake = (await page.content()).includes('Has v3 · v4 ready');
+    const ok = miriam === 'Has v4 | Send v4' && batya0 === 'Not sent yet · v4 ready | Send v4' && batya1 === 'Has v4 | Send v4' && !fake;
+    record('R6', "A shadchan's 'My profile' row shows the version actually sent to them (from the history), not a fixed 'Has v3 · v4 ready'", ok ? 'PASS' : 'FAIL', { miriam, batyaBefore: batya0, batyaAfterSend: batya1 });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
