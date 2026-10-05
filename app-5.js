@@ -30,7 +30,8 @@ function handleClick(e){const b=e.target.closest('button');if(!b)return;
   else if(act==='idea-yes')chooseIdea(b.dataset.ideaId,true);
   else if(act==='export-backup')exportBackup();
   else if(act==='import-backup')document.getElementById('backupFile')?.click();
-  else if(act==='toggle-demo'){data=data.meta.demo?emptyData():demoData();save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showToast(data.meta.demo?'Demo loaded':'Ready for your data');});}
+  else if(act==='toggle-demo'){const wasDemo=data.meta.demo;keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});}
+  else if(act==='undo-safety')restoreSafetyCopy(b.dataset.copyId);
   else if(act==='show-wait-me'){ui.screen='shadchanim';ui.screenView.shadchanim='me';ui.detail=null;render();}
   else if(act==='show-wait-them'){ui.screen='shadchanim';ui.screenView.shadchanim='them';ui.detail=null;render();}
   else if(act==='show-active'){ui.screen='shidduchim';ui.screenView.shidduchim='active';ui.detail=null;render();}
@@ -56,7 +57,7 @@ overlay.addEventListener('click',e=>{if(e.target.classList.contains('scrim'))clo
 async function init(){
   try{data=await dbGet(STATE_KEY);}
   catch(err){console.error(err);storageBlocked=true;data=demoData();applySettings();render();showToast('Local storage unavailable; using temporary data');return;}
-  try{if(!data){data=demoData();await save();}data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  try{if(!data){data=demoData();await save();}data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();loadSafetyCopies();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}

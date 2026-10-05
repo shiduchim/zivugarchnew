@@ -335,13 +335,35 @@ const checks = {
     await ctx.close();
   },
 
+  async S3_demo_toggle_is_recoverable() {
+    const det = {}; let ok = true;
+    for (const [label, demo] of [['loadDemo', false], ['clearDemo', true]]) {
+      const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = demo; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
+      const s0 = await L.idbRead(page);
+      await L.tap(page, '[data-act="settings"]'); await L.tap(page, '#overlay [data-act="toggle-demo"]'); await page.waitForTimeout(150); await L.settle(page);
+      const replaced = await L.idbRead(page);
+      const undoBtn = await page.$('#toast [data-act="undo-safety"]');
+      if (undoBtn) { await L.tap(page, '#toast [data-act="undo-safety"]'); await page.waitForTimeout(150); await L.settle(page); }
+      const undone = await L.idbRead(page);
+      // Settings also offers the way back (after the undo, the replaced data is the earlier copy).
+      await L.openApp(page); await L.tap(page, '[data-act="settings"]');
+      const row = await page.$eval('#overlay', o => (o.querySelector('[data-act="undo-safety"]') ? o.querySelector('[data-act="undo-safety"]').closest('.setting-row').textContent.replace(/\s+/g, ' ').trim() : null));
+      const back = JSON.stringify(undone.people) === JSON.stringify(s0.people) && JSON.stringify(undone.entries) === JSON.stringify(s0.entries);
+      det[label] = { replaced: replaced.people.length !== s0.people.length, undoOnToast: !!undoBtn, realDataBackAfterUndo: back, settingsRow: row };
+      ok = ok && det[label].replaced && !!undoBtn && back && !!row;
+      await ctx.close();
+    }
+    record('S3', 'Load demo / Clear demo keep a recoverable copy: Undo on the toast and Restore in Settings bring the real data back', ok ? 'PASS' : 'FAIL', det);
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
     const label = await (async () => { await L.tap(page, '[data-act="settings"]'); return page.$eval('#overlay [data-act="toggle-demo"]', e => e.textContent); })();
     await L.tap(page, '#overlay [data-act="toggle-demo"]');
     const st = await L.idbRead(page);
-    const lost = !st.people.some(p => p.id === 'p_golden_real');
+    const copies = await page.evaluate(() => new Promise(r => { const q = indexedDB.open('ZivugMatchDB', 1); q.onsuccess = () => { const g = q.result.transaction('kv').objectStore('kv').get('safetyCopies'); g.onsuccess = () => r((g.result || []).length); }; }));
+    const lost = !st.people.some(p => p.id === 'p_golden_real') && !copies;
     record('K1', `Settings "${label}" replaces all real data with no confirm and no undo`, lost ? 'KNOWN' : 'CHANGED', { realPersonStillThere: !lost, peopleAfter: st.people.length, demoFlag: st.meta.demo });
     await ctx.close();
   },

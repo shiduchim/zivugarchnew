@@ -20,6 +20,7 @@ function entryDetail(eid){const e=data.entries.find(x=>x.id===eid);if(!e)return 
 
 function render(){applySettings();let body;if(ui.detail?.type==='person')body=personDetail(ui.detail.id);else if(ui.detail?.type==='shidduch')body=shidduchDetail(ui.detail.id);else if(ui.detail?.type==='source')body=sourceDetail(ui.detail.id);else if(ui.detail?.type==='entry')body=entryDetail(ui.detail.id);else if(ui.screen==='recent')body=recentScreen();else if(ui.screen==='guys')body=peopleScreen('Guy');else if(ui.screen==='girls')body=peopleScreen('Girl');else if(ui.screen==='shadchanim')body=shadchanScreen();else body=shidduchimScreen();app.innerHTML=`<main class="page">${body}</main>${nav()}`;}
 
-function showToast(msg){toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toastEl.classList.remove('show'),2200);}
+function showToast(msg){toastEl.textContent=msg;toastEl.classList.remove('has-action');toastEl.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toastEl.classList.remove('show'),2200);}
+function showUndoToast(msg,copyId){if(!copyId)return showToast(msg);toastEl.innerHTML=`<span>${esc(msg)}</span><button data-act="undo-safety" data-copy-id="${esc(copyId)}">Undo</button>`;toastEl.classList.add('show','has-action');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toastEl.classList.remove('show','has-action'),8000);}
 function openSheet(html){overlay.innerHTML=`<div class="scrim"><div class="sheet"><div class="sheet-handle"></div>${html}</div></div>`;}
 function closeSheet(){overlay.innerHTML='';}

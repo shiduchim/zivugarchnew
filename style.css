@@ -241,6 +241,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 .toast{position:fixed;z-index:120;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--text);color:var(--surface);border-radius:999px;padding:10px 14px;font-size:11px;font-weight:700;opacity:0;pointer-events:none;transition:.2s ease;box-shadow:var(--shadow);max-width:calc(100vw - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.has-action{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:6px 6px 6px 14px}
+.toast button{border:0;border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-weight:800;padding:6px 12px;cursor:pointer}
 
 @media(min-width:760px){
   body{background:linear-gradient(180deg,var(--bg),var(--bg-2))}
