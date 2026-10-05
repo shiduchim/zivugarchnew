@@ -5,6 +5,11 @@
 .page:has(.zm-profile-identity),
 .warm-detail-page:has(.zm-profile-identity){overflow:visible!important}
 
+/* The decorative glow behind a profile is wider than the screen; without clipping, profile pages could
+   be dragged sideways. Clip only the horizontal overflow at the app frame: clip (unlike hidden) creates
+   no scroll container, so the sticky/pinned header keeps working. Inside the screen nothing moves. */
+#app.app-shell{overflow-x:clip!important}
+
 .zm-profile-sticky-sentinel{height:0;margin:0;padding:0}
 
 .zm-profile-identity{
