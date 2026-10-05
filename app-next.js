@@ -67,20 +67,6 @@ function activityFeed(entries){
   return Object.entries(groups).map(([day,arr])=>`<section class="warm-day"><div class="warm-day-label">${esc(day)}</div><div class="warm-feed">${arr.map(activityRow).join('')}</div></section>`).join('')||empty('Nothing here yet','Calls, messages, notes and profiles will appear here automatically.','add-activity');
 }
 
-const previousShadchanScreenNext=shadchanScreen;
-shadchanScreen=function(){
-  if(ui.screenView.shadchanim!=='all'||ui.search)return previousShadchanScreenNext();
-  const all=byType('Shadchan').sort(byName);
-  const active=all.filter(p=>openForPerson(p.id).length||shidduchimForPerson(p.id).some(s=>s.status==='active'));
-  const activeIds=new Set(active.map(p=>p.id)),rest=all.filter(p=>!activeIds.has(p.id));
-  const groups={};for(const p of rest){const k=(p.name?.[0]||'#').toUpperCase();(groups[k]??=[]).push(p);}
-  const them=all.filter(p=>openForPerson(p.id,'them').length),mine=all.filter(p=>openForPerson(p.id,'me').length),needs=all.filter(needsContactPerson);
-  const tabs=[{value:'all',label:'All',count:all.length},{value:'them',label:'Waiting on them',count:them.length},{value:'me',label:'Waiting on me',count:mine.length},{value:'needs',label:'Needs contact',count:needs.length},{value:'sources',label:'Sources',count:data.sources.length}];
-  const activeHtml=active.length?`<div class="warm-section-title shad-section"><h2>Active now</h2><span>${active.length}</span></div><div class="warm-stack">${active.slice(0,8).map(p=>personRow(p)).join('')}</div>`:'';
-  const az=Object.entries(groups).map(([letter,arr])=>`<section class="alpha-group"><div class="alpha-letter">${letter}</div><div class="warm-stack">${arr.map(p=>personRow(p)).join('')}</div></section>`).join('');
-  return `${header('Shadchanim',`${all.length} people in your network`,{add:true})}${searchBox('Search name, phone or city…')}${segment(tabs,'all','shadchanim')}${activeHtml}<div class="warm-section-title shad-section"><h2>Everyone A–Z</h2><span>${rest.length}</span></div>${az}`;
-};
-
 function currentAdd(){universalAddSheet();}
 
 // Repaint once this late-loaded UX layer has replaced the earlier rendering functions.

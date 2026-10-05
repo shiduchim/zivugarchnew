@@ -38,9 +38,7 @@ function dormantPerson(p){const lc=lastContact(p.id);return lc&&Date.now()-new D
 
 function applySettings(){const s=data.settings||defaultSettings();document.documentElement.dataset.theme=s.theme||'warm';document.documentElement.dataset.density=s.density||'comfortable';document.documentElement.dataset.iconSize=s.iconSize||'medium';const themeColor=s.theme==='dark'?'#151917':s.theme==='blue'?'#f2f6fa':s.theme==='sage'?'#f1f4ef':'#f6f0e7';document.querySelector('meta[name="theme-color"]').setAttribute('content',themeColor);}
 
-function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe);const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));if(type==='Girl'&&data.settings.mode==='single'){
-  const view=ui.screenView.girls;if(view==='for-me')arr=arr.filter(p=>ideasForPerson(p.id).some(i=>i.status==='open'&&(i.guyId===me().id||i.girlId===me().id))||shidduchimForPerson(p.id).some(s=>s.status==='active'&&(s.guyId===me().id||s.girlId===me().id)));if(view==='previous')arr=arr.filter(p=>shidduchimForPerson(p.id).some(s=>s.status==='ended'&&(s.guyId===me().id||s.girlId===me().id))||ideasForPerson(p.id).some(i=>i.status==='not-applicable'&&(i.guyId===me().id||i.girlId===me().id)));
-  }
+function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe);const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
   return arr.sort(byRecentContact);
 }
 

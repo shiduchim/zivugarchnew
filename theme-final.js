@@ -32,19 +32,6 @@ contrast:'#0B1735',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
 document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||colors.classic);
 };
 
-// Use the same simple turn language in filters wherever the old waiting labels appear.
-const segmentBeforePlainWords=segment;
-segment=function(items,active,scope){
-const mapped=items.map(x=>({...x,label:x.label==='Waiting on me'?'My turn':x.label==='Waiting on them'?'Their turn':x.label}));
-return segmentBeforePlainWords(mapped,active,scope);
-};
-
-// "Active now" sounded like online presence. This section means shadchanim you are currently working with.
-const shadchanScreenBeforePlainWords=shadchanScreen;
-shadchanScreen=function(){
-return shadchanScreenBeforePlainWords().replace('<h2>Active now</h2>','<h2>Working with</h2>');
-};
-
 // Neon section identity. The DOM marker wins; otherwise resolve the actual detail record,
 // then fall back to the active navigation tab. Other skins never keep data-section on <html>.
 (function neonSectionHook(){

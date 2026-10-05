@@ -3,16 +3,6 @@
 // Final plain-language workflow for the home screen and person profiles.
 // An open item lives in exactly one place: My to-do list or To hear back.
 
-// Keep the new workflow words everywhere, including Shadchanim filters.
-const zmSegmentBeforeWorkflowWords=segment;
-segment=function(items,active,scope){
-  const mapped=items.map(x=>({...x,label:
-    (x.label==='My turn'||x.label==='Waiting on me')?'My to-do':
-    (x.label==='Their turn'||x.label==='Waiting on them')?'To hear back':x.label
-  }));
-  return zmSegmentBeforeWorkflowWords(mapped,active,scope);
-};
-
 function zmShortOpenLabel(items){
   if(!items?.length)return '';
   const first=String(items[0].label||'Next step').trim();

@@ -37,25 +37,48 @@ function activityRow(e){
   return `<button class="warm-activity-row" data-entry="${e.id}"><div class="warm-activity-icon ${tone}">${icon(ic)}</div><div class="warm-activity-main"><div class="warm-activity-top"><strong>${esc(who?`${primary} · ${who}`:primary)}</strong><time>${esc(fmtTime(e.at))}</time></div><div class="warm-activity-text">${esc(e.text||'')}</div>${linkedAbout(e)?`<div class="warm-activity-about">${esc(linkedAbout(e))}${e.result?` · ${esc(e.result)}`:''}</div>`:''}</div><div class="warm-chevron">›</div></button>`;
 }
 
+// Guys and Girls. In Single mode, Girls is one focused list: only profiles applicable to me.
 function peopleScreen(type){
   const isGirl=type==='Girl',key=isGirl?'girls':'guys';
-  let tabs;if(isGirl&&data.settings.mode==='single')tabs=[{value:'for-me',label:'For me'},{value:'previous',label:'Previous'}];else tabs=[{value:'all',label:'All'},{value:'recent',label:'Recently added'}];
+  if(isGirl&&data.settings.mode==='single'){
+    let arr=byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
+    const q=ui.search.trim().toLowerCase();
+    if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
+    arr=arr.sort(byRecentContact);
+    return `${header('Girls','Profiles applicable to you',{add:true})}${searchBox('Search girls…')}<div class="warm-stack">${arr.map(p=>personRow(p)).join('')||empty('No applicable profiles yet','Profiles connected to an open offer or current shidduch with you will appear here.','add-current')}</div>`;
+  }
+  const tabs=[{value:'all',label:'All'},{value:'recent',label:'Recently added'}];
   const arr=filteredPeople(type);
-  return `${header(isGirl?'Girls':'Guys',isGirl&&data.settings.mode==='single'?'Profiles relevant to you':'Browse and search',{add:true})}${searchBox(`Search ${isGirl?'girls':'guys'}…`)}${segment(tabs,ui.screenView[key],key)}<div class="warm-stack">${arr.map((p,i)=>personRow(p,{selected:i===0&&isGirl})).join('')||empty(`No ${isGirl?'girls':'guys'} here yet`,`Add a ${isGirl?'girl':'guy'} and the app will keep the profile, sources and history together.`,'add-current')}</div>`;
+  return `${header(isGirl?'Girls':'Guys','Browse and search',{add:true})}${searchBox(`Search ${isGirl?'girls':'guys'}…`)}${segment(tabs,ui.screenView[key],key)}<div class="warm-stack">${arr.map((p,i)=>personRow(p,{selected:i===0&&isGirl})).join('')||empty(`No ${isGirl?'girls':'guys'} here yet`,`Add a ${isGirl?'girl':'guy'} and the app will keep the profile, sources and history together.`,'add-current')}</div>`;
 }
 
+// Shadchanim: All (the ones I'm working with, then everyone A–Z), To hear back, My to-do, Time to contact, Sources.
+// The header sticks while the long list scrolls.
+function shadchanTabs(total,them,mine,needs){return [{value:'all',label:'All',count:total},{value:'them',label:'To hear back',count:them},{value:'me',label:'My to-do',count:mine},{value:'needs',label:'Time to contact',count:needs},{value:'sources',label:'Sources',count:data.sources.length}];}
+function shadchanHeader(total){return `<div class="zm-shadchan-sticky-sentinel" aria-hidden="true"></div><div class="zm-shadchan-sticky-head">${header('Shadchanim',`${total} people in your network`,{add:true})}</div>`;}
 function shadchanScreen(){
   const all=byType('Shadchan'),them=all.filter(p=>openForPerson(p.id,'them').length),mine=all.filter(p=>openForPerson(p.id,'me').length),needs=all.filter(needsContactPerson);
-  let arr=all;const v=ui.screenView.shadchanim;if(v==='them')arr=them;if(v==='me')arr=mine;if(v==='needs')arr=needs;if(v==='sources')return sourceScreenEmbedded(all.length,them.length,mine.length,needs.length);
+  const v=ui.screenView.shadchanim;
+  if(v==='sources')return sourceScreenEmbedded(all.length,them.length,mine.length,needs.length);
+  const tabs=shadchanTabs(all.length,them.length,mine.length,needs.length);
+  if(v==='all'&&!ui.search){
+    const byNameAll=[...all].sort(byName);
+    const active=byNameAll.filter(p=>openForPerson(p.id).length||shidduchimForPerson(p.id).some(s=>s.status==='active'));
+    const activeIds=new Set(active.map(p=>p.id)),rest=byNameAll.filter(p=>!activeIds.has(p.id));
+    const groups={};for(const p of rest){const k=(p.name?.[0]||'#').toUpperCase();(groups[k]??=[]).push(p);}
+    const activeHtml=active.length?`<div class="warm-section-title shad-section"><h2>Working with</h2><span>${active.length}</span></div><div class="warm-stack">${active.slice(0,8).map(p=>personRow(p)).join('')}</div>`:'';
+    const az=Object.entries(groups).map(([letter,arr])=>`<section class="alpha-group"><div class="alpha-letter">${letter}</div><div class="warm-stack">${arr.map(p=>personRow(p)).join('')}</div></section>`).join('');
+    return `${shadchanHeader(all.length)}${searchBox('Search name, phone or city…')}${segment(tabs,'all','shadchanim')}${activeHtml}<div class="warm-section-title shad-section"><h2>Everyone A–Z</h2><span>${rest.length}</span></div>${az}`;
+  }
+  let arr=all;if(v==='them')arr=them;if(v==='me')arr=mine;if(v==='needs')arr=needs;
   const q=ui.search.toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.phone||''}`).toLowerCase().includes(q));arr=arr.sort(byRecentContact);
-  const tabs=[{value:'all',label:'All',count:all.length},{value:'them',label:'Waiting on them',count:them.length},{value:'me',label:'Waiting on me',count:mine.length},{value:'needs',label:'Needs contact',count:needs.length},{value:'sources',label:'Sources',count:data.sources.length}];
-  return `${header('Shadchanim',`${all.length} people in your network`,{add:true})}${searchBox('Search name, phone or city…')}${segment(tabs,v,'shadchanim')}<div class="warm-stack">${arr.map((p,i)=>personRow(p,{selected:i===0})).join('')||empty('No shadchanim in this view','Nothing needs your attention here right now.')}</div>`;
+  return `${shadchanHeader(all.length)}${searchBox('Search name, phone or city…')}${segment(tabs,v,'shadchanim')}<div class="warm-stack">${arr.map((p,i)=>personRow(p,{selected:i===0})).join('')||empty('No shadchanim in this view','Nothing needs your attention here right now.')}</div>`;
 }
 
 function sourceScreenEmbedded(total,them,mine,needs){
-  const tabs=[{value:'all',label:'All',count:total},{value:'them',label:'Waiting on them',count:them},{value:'me',label:'Waiting on me',count:mine},{value:'needs',label:'Needs contact',count:needs},{value:'sources',label:'Sources',count:data.sources.length}];
+  const tabs=shadchanTabs(total,them,mine,needs);
   const rows=data.sources.map(src=>{const st=sourceStats(src);return `<button class="warm-source-row" data-source="${src.id}"><div class="warm-activity-icon ${src.kind==='event'?'peach':'sky'}">${icon(src.kind==='event'?'calendar':'list')}</div><div class="warm-source-main"><div><strong>${esc(src.name)}</strong><time>${esc(fmtDate(src.createdAt))}</time></div><p>${st.total} total · ${st.contacted} contacted · ${st.replied} replied${st.follow?` · ${st.follow} follow-up`:''}</p></div><div class="warm-chevron">›</div></button>`;}).join('');
-  return `${header('Shadchanim',`${total} people in your network`,{add:true})}${searchBox('Search sources…')}${segment(tabs,'sources','shadchanim')}<div class="warm-section-title"><h2>Sources</h2><button data-act="add-source">Add source</button></div><div class="warm-stack">${rows||empty('No sources yet','Lists, events and referrals stay here without duplicating people.','add-source')}</div>`;
+  return `${shadchanHeader(total)}${searchBox('Search sources…')}${segment(tabs,'sources','shadchanim')}<div class="warm-section-title"><h2>Sources</h2><button data-act="add-source">Add source</button></div><div class="warm-stack">${rows||empty('No sources yet','Lists, events and referrals stay here without duplicating people.','add-source')}</div>`;
 }
 
 function warmMetric(ic,tone,label,value){return `<div class="warm-metric ${tone}"><span class="warm-metric-icon">${icon(ic)}</span><div><small>${esc(label)}</small><strong>${esc(value)}</strong></div></div>`;}

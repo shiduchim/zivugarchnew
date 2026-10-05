@@ -16,17 +16,6 @@ function warmContactButtons(p){
   </div>`;
 }
 
-// Keep the new workflow language everywhere, including Shadchanim filters.
-const zmSegmentBeforeV53=segment;
-segment=function(items,active,scope){
-  const mapped=items.map(x=>({...x,label:
-    (x.label==='My turn'||x.label==='Waiting on me')?'My to-do':
-    (x.label==='Their turn'||x.label==='Waiting on them')?'To hear back':
-    x.label==='Needs contact'?'Time to contact':x.label
-  }));
-  return zmSegmentBeforeV53(mapped,active,scope);
-};
-
 // Bottom navigation in Single mode:
 // Guys becomes My profile and opens the user's profile directly.
 function nav(){
@@ -68,17 +57,6 @@ function zmGirlAppliesToMe(p){
   return pairIdea||activeMatch;
 }
 
-// In Single mode, Girls is deliberately one focused list: only profiles applicable to me.
-const zmPeopleScreenBeforeV53=peopleScreen;
-peopleScreen=function(type){
-  if(type!=='Girl'||data?.settings?.mode!=='single')return zmPeopleScreenBeforeV53(type);
-  let arr=byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
-  const q=ui.search.trim().toLowerCase();
-  if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
-  arr=arr.sort(byRecentContact);
-  return `${header('Girls','Profiles applicable to you',{add:true})}${searchBox('Search girls…')}<div class="warm-stack">${arr.map(p=>personRow(p)).join('')||empty('No applicable profiles yet','Profiles connected to an open offer or current shidduch with you will appear here.','add-current')}</div>`;
-};
-
 // Compact profile identity for Guy, Girl and Shadchan profiles.
 // Avoid duplicate city/type text: one concise line, then occupation only if present.
 function zmProfileIdentity(p){
@@ -96,18 +74,6 @@ function zmProfileIdentity(p){
       <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
     </div>`;
 }
-
-// Freeze the Shadchanim page title/actions while the long directory scrolls.
-// It collapses after it reaches the top so it does not consume unnecessary space.
-const zmShadchanScreenBeforeV53=shadchanScreen;
-shadchanScreen=function(){
-  let html=zmShadchanScreenBeforeV53();
-  if(!html.includes('zm-shadchan-sticky-head')){
-    html=html.replace(/(<header class="warm-header">[\s\S]*?<\/header>)/,
-      '<div class="zm-shadchan-sticky-sentinel" aria-hidden="true"></div><div class="zm-shadchan-sticky-head">$1</div>');
-  }
-  return html;
-};
 
 // Extend the existing sticky sync so Shadchanim main header and all person profiles behave consistently.
 const zmSyncProfileStickyBeforeV53=zmSyncProfileSticky;

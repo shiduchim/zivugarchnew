@@ -5,12 +5,6 @@
 
 function clarityFirstName(p){return String(p?.name||'').trim().split(/\s+/)[0]||'them';}
 
-const segmentBeforeClarity=segment;
-segment=function(items,active,scope){
-  const mapped=items.map(x=>({...x,label:x.label==='Needs contact'?'Time to contact':x.label}));
-  return segmentBeforeClarity(mapped,active,scope);
-};
-
 // Person pages use the same wording as Recent and avoid ambiguous labels.
 const personDetailBeforeClarity=personDetail;
 personDetail=function(pid){
