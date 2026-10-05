@@ -84,7 +84,7 @@ peopleScreen=function(type){
 
 // Compact profile identity for Guy, Girl and Shadchan profiles.
 // Avoid duplicate city/type text: one concise line, then occupation only if present.
-zmProfileIdentity=function(p){
+function zmProfileIdentity(p){
   const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
   const meta=[type,p.age,p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
   return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
@@ -98,7 +98,7 @@ zmProfileIdentity=function(p){
       </div>
       <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
     </div>`;
-};
+}
 
 // Freeze the Shadchanim page title/actions while the long directory scrolls.
 // It collapses after it reaches the top so it does not consume unnecessary space.

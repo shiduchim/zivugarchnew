@@ -4,29 +4,6 @@
 // Data, navigation, workflows and skin structure stay unchanged.
 
 function clarityFirstName(p){return String(p?.name||'').trim().split(/\s+/)[0]||'them';}
-function clarityAnswer(v){
-  const s=String(v||'').trim();
-  if(!s)return '—';
-  const map={yes:'Yes',no:'No',thinking:'Thinking',active:'Current',ended:'Ended',open:'Open',converted:'Started'};
-  return map[s.toLowerCase()]||s.charAt(0).toUpperCase()+s.slice(1);
-}
-function clarityShidduchStatus(s){
-  if(!s)return '';
-  if(s.status==='ended')return 'Ended';
-  const r=getCurrentRound(s);
-  const theirs=openForShidduch(s.id,'them');
-  if(theirs.length){
-    const p=person(theirs[0].personId);
-    return p?`Waiting for ${clarityFirstName(p)}`:'Their turn';
-  }
-  const mine=openForShidduch(s.id,'me');
-  if(mine.length)return 'My turn';
-  const stage=String(r?.stage||'').trim();
-  if(stage&&stage.toLowerCase()!=='active'&&stage.toLowerCase()!=='waiting for her side')return stage;
-  if(String(r?.girlStatus||'').toLowerCase()==='thinking')return `Waiting for ${clarityFirstName(person(s.girlId))}`;
-  if(String(r?.guyStatus||'').toLowerCase()==='thinking')return `Waiting for ${clarityFirstName(person(s.guyId))}`;
-  return 'Current';
-}
 
 const segmentBeforeClarity=segment;
 segment=function(items,active,scope){
@@ -44,27 +21,6 @@ personDetail=function(pid){
     .replaceAll('Relationship and shidduch contact','Shadchan details and history')
     .replaceAll('How I know her','How I know them')
     .replaceAll('<small>Waiting</small>','<small>Set turn</small>');
-};
-
-// Shidduch detail: use names, normal capitalization and one understandable current status.
-shidduchDetail=function(sid){
-  const s=shidduch(sid);if(!s)return shidduchimScreen();
-  const r=getCurrentRound(s),g=person(s.guyId),gl=person(s.girlId),them=openForShidduch(s.id,'them'),mine=openForShidduch(s.id,'me');
-  if(!['overview','dates','history','people'].includes(ui.detailTab))ui.detailTab='overview';
-  let content='';
-  if(ui.detailTab==='dates'){
-    const ds=data.dates.filter(d=>d.roundId===r?.id).sort((a,b)=>a.number-b.number);
-    content=ds.length?`<div class="list-card">${ds.map(d=>`<button class="list-row" data-date="${d.id}"><div class="activity-icon lav">${icon('calendar')}</div><div class="row-main"><div class="row-name">Date ${d.number}</div><div class="row-line">${fmtDate(d.when)} · ${esc(clarityAnswer(d.state))}</div><div class="row-status">${esc(clarityFirstName(g))}: ${esc(clarityAnswer(d.guyFeedback))} · ${esc(clarityFirstName(gl))}: ${esc(clarityAnswer(d.girlFeedback))}</div></div><div class="row-end">›</div></button>`).join('')}</div>`:empty('No dates yet','Dates and feedback will stay together here.');
-  }else if(ui.detailTab==='history'){
-    content=timelineHtml(entriesForAbout('shidduch',s.id));
-  }else if(ui.detailTab==='people'){
-    content=`<div class="list-card">${[g,gl,...(s.shadchanIds||[]).map(person)].filter(Boolean).map(p=>personRow(p)).join('')}</div>`;
-  }else{
-    const next=mine[0]?.label||them[0]?.label||(r?.stage==='Dating'?'Dating':'Nothing to do right now');
-    content=`<div class="info-card"><div class="info-row"><div class="info-label">${esc(clarityFirstName(g))}'s answer</div><div class="info-value">${esc(clarityAnswer(r?.guyStatus))}</div><span></span></div><div class="info-row"><div class="info-label">${esc(clarityFirstName(gl))}'s answer</div><div class="info-value">${esc(clarityAnswer(r?.girlStatus))}</div><span></span></div><div class="info-row"><div class="info-label">My turn</div><div class="info-value">${esc(mine.map(x=>x.label).join(', ')||'Nothing')}</div><span></span></div><div class="info-row"><div class="info-label">Their turn</div><div class="info-value">${esc(them.map(x=>x.label).join(', ')||'Nothing')}</div><span></span></div><div class="info-row"><div class="info-label">Next step</div><div class="info-value">${esc(next)}</div><span></span></div></div>`;
-  }
-  const status=clarityShidduchStatus(s);
-  return `${detailHeader(shidduchTitle(s),`Round ${r?.number||1}`)}<div class="pair-hero"><div class="pair-people"><div class="person-avatar">${esc(initials(g?.name))}</div><div class="person-avatar">${esc(initials(gl?.name))}</div></div><div class="pair-title">${esc(shidduchTitle(s))}</div><div class="pair-stage">${esc(status)}</div></div><div class="detail-summary"><div class="detail-tile sage"><span>${esc(clarityFirstName(g))}</span><strong>${esc(clarityAnswer(r?.guyStatus))}</strong></div><div class="detail-tile amber"><span>${esc(clarityFirstName(gl))}</span><strong>${esc(clarityAnswer(r?.girlStatus))}</strong></div><div class="detail-tile blue"><span>Round</span><strong>${r?.number||1}</strong></div></div><div class="tabbar">${[['overview','Overview'],['dates','Dates'],['history','History'],['people','People']].map(([x,l])=>`<button class="tab-btn ${ui.detailTab===x?'active':''}" data-detail-tab="${x}">${l}</button>`).join('')}</div>${content}`;
 };
 
 // Waiting is really a turn. Ask that directly.

@@ -13,11 +13,6 @@ function zmCleanStatusWord(value){
   return v.charAt(0).toUpperCase()+v.slice(1);
 }
 
-function zmCleanTurn(s){
-  const turn=zmTurnForShidduch(s);
-  return turn||'No one';
-}
-
 function zmRoundDates(r){
   return data.dates
     .filter(d=>d.roundId===r?.id&&!/cancel/i.test(String(d.state||'')))
@@ -98,7 +93,7 @@ function zmCleanPeople(s){
 
 // This is the final shidduch-detail renderer. It intentionally removes the old repeated
 // answer cards and repeated pair title inside the hero.
-shidduchDetail=function(sid){
+function shidduchDetail(sid){
   const s=shidduch(sid);if(!s)return shidduchimScreen();
   const r=getCurrentRound(s),g=person(s.guyId),gl=person(s.girlId);
   if(!['overview','dates','history','people'].includes(ui.detailTab))ui.detailTab='overview';
@@ -113,6 +108,6 @@ shidduchDetail=function(sid){
   const endAction=(ui.detailTab==='overview'&&s.status!=='ended'&&zmStageForShidduch(s).index!==10)?`<div class="zm-end-action"><button class="ghost-btn" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End shidduch</button></div>`:'';
 
   return `${detailHeader(shidduchTitle(s),`Round ${r?.number||1}`)}<div class="zm-clean-hero"><div class="pair-people"><div class="person-avatar">${esc(initials(g?.name))}</div><div class="person-avatar">${esc(initials(gl?.name))}</div></div>${zmStageBar(s,true)}</div><div class="tabbar">${tabs.map(([v,l])=>`<button class="tab-btn ${ui.detailTab===v?'active':''}" data-detail-tab="${v}">${l}</button>`).join('')}</div>${content}${endAction}</div>`;
-};
+}
 
 if(data)render();

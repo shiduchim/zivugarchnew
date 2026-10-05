@@ -19,46 +19,6 @@ function zmFlowStageIndexFromLabel(label){
   return null;
 }
 
-// Preserve exactly where an ended shidduch stopped.
-zmStageForShidduch=function(s){
-  if(!s)return {index:0,label:ZM_FLOW_STAGE_LABELS[0]};
-  if(s.status==='ended'){
-    const savedIndex=Number.isInteger(s.endedStageIndex)?s.endedStageIndex:zmFlowStageIndexFromLabel(s.endedStage);
-    if(savedIndex!=null)return {index:savedIndex,label:ZM_FLOW_STAGE_LABELS[savedIndex]||s.endedStage||'Profile sent'};
-    const r=getCurrentRound(s);
-    const roundIndex=Number.isInteger(r?.endedStageIndex)?r.endedStageIndex:zmFlowStageIndexFromLabel(r?.endedStage);
-    if(roundIndex!=null)return {index:roundIndex,label:ZM_FLOW_STAGE_LABELS[roundIndex]||r?.endedStage||'Profile sent'};
-  }
-
-  const r=getCurrentRound(s);
-  const raw=String(r?.stage||'').toLowerCase();
-  if(/married|marriage/.test(raw))return {index:10,label:'Marriage'};
-
-  const ds=data.dates
-    .filter(d=>d.roundId===r?.id&&!/cancel/i.test(String(d.state||'')))
-    .sort((a,b)=>(a.number||0)-(b.number||0));
-  if(ds.length){
-    const n=Math.min(8,Math.max(1,Math.max(...ds.map(d=>Number(d.number)||0))||ds.length));
-    return {index:n+1,label:`Date ${n}`};
-  }
-
-  const explicit=zmFlowStageIndexFromLabel(raw);
-  if(explicit!=null)return {index:explicit,label:ZM_FLOW_STAGE_LABELS[explicit]};
-  if(/dating/.test(raw))return {index:2,label:'Date 1'};
-  return {index:0,label:'Profile sent'};
-};
-
-// List cards show only the stage. On the detail page, whose turn it is is shown separately.
-// All completed segments use the CURRENT stage color, so one glance gives one clear color meaning.
-zmStageBar=function(s,detail=false){
-  const st=zmStageForShidduch(s),turn=zmTurnForShidduch(s),ended=s?.status==='ended';
-  const segs=ZM_FLOW_STAGE_LABELS.map((label,i)=>`<i class="zm-stage-seg s${i} ${i<st.index?'done':''} ${i===st.index?'now':''}" title="${esc(label)}"></i>`).join('');
-  const left=ended?`Ended at ${st.label}`:st.label;
-  const stageColor=ended?'#8f97a2':zmFlowStageColor(st.index);
-  const detailNote=detail?(ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn):'';
-  return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${esc(left)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-meta"><strong>${esc(left)}</strong></div><div class="zm-stage-track">${segs}</div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
-};
-
 // Tabs are deliberately lifecycle order: Offers -> In Progress -> Ended.
 function shidduchimScreen(){
   const v=ui.screenView.shidduchim;
@@ -144,19 +104,6 @@ async function confirmEndShidduch(){
   render();
   showToast('Moved to Ended');
 }
-
-const shidduchDetailBeforeEndFlow=shidduchDetail;
-shidduchDetail=function(sid){
-  let html=shidduchDetailBeforeEndFlow(sid);
-  const s=shidduch(sid);if(!s)return html;
-  if(s.status==='ended'){
-    const st=zmStageForShidduch(s);
-    const why=s.endReason?`<div><span>Why it ended</span><strong>${esc(s.endReason)}</strong></div>`:'';
-    const saved=`<div class="zm-ended-summary"><div><span>Ended at</span><strong>${esc(st.label)}</strong></div>${s.endedAt?`<div><span>Ended</span><strong>${esc(fmtDate(s.endedAt))}</strong></div>`:''}${why}</div>`;
-    return html+saved;
-  }
-  return html+`<div class="zm-end-action"><button class="ghost-btn" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End shidduch</button></div>`;
-};
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;

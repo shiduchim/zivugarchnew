@@ -2,7 +2,7 @@
 
 // Stage-bar correction: a side that is still thinking keeps the shidduch in References.
 // A recorded date must not visually advance the relationship until both sides have agreed.
-zmStageForShidduch=function(s){
+function zmStageForShidduch(s){
   if(!s)return {index:0,label:ZM_FLOW_STAGE_LABELS[0]};
 
   if(s.status==='ended'){
@@ -42,11 +42,11 @@ zmStageForShidduch=function(s){
   if(/dating/.test(raw))return {index:2,label:'Date 1'};
   if(/waiting|thinking|checking/.test(raw))return {index:1,label:'References'};
   return {index:0,label:'Profile sent'};
-};
+}
 
 // Put the stage name directly above the selected point in the bar.
 // Compact list cards show only WHERE the shidduch is. Whose turn is shown only on the detail page.
-zmStageBar=function(s,detail=false){
+function zmStageBar(s,detail=false){
   const st=zmStageForShidduch(s);
   const ended=s?.status==='ended';
   const turn=detail?zmTurnForShidduch(s):'';
@@ -57,6 +57,6 @@ zmStageBar=function(s,detail=false){
   const label=ended?st.label:st.label;
   const detailNote=detail?(ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn):'';
   return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${ended?'Ended at ':''}${esc(st.label)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-track-wrap"><span class="zm-stage-floating${edge}" style="left:${pos}%">${esc(label)}</span><div class="zm-stage-track">${segs}</div></div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
-};
+}
 
 if(data)render();

@@ -70,7 +70,7 @@ function myProfileVersion(){return Number(me()?.profileVersion)||1;}
 function profileSentTo(pid){const mine=me()?.id;let best=0;for(const e of data.entries){if(!e||e.type!=='profile'||e.direction!=='out'||e.toPersonId!==pid||(e.fromPersonId!==mine&&e.aboutId!==mine))continue;const v=Number(e.profileVersion)||Number(/v(\d+)/.exec(e.text||'')?.[1])||0;if(v>best)best=v;}return best;}
 function myProfileStatus(pid){const cur=myProfileVersion(),sent=profileSentTo(pid);return !sent?`Not sent yet · v${cur} ready`:sent<cur?`Has v${sent} · v${cur} ready`:`Has v${sent}`;}
 
-personDetail=function(pid){
+function personDetail(pid){
   const p=person(pid);if(!p)return recentScreen();
   const isShad=p.types?.includes('Shadchan'),them=openForPerson(pid,'them'),mine=openForPerson(pid,'me'),shids=shidduchimForPerson(pid),active=shids.filter(s=>s.status==='active'),lc=lastContact(pid);
   const defaultTab=isShad?'details':'profile';if(!['details','profile','conversation','shidduchim','files'].includes(ui.detailTab))ui.detailTab=defaultTab;
@@ -83,9 +83,9 @@ personDetail=function(pid){
   else content=`<div class="warm-info-card"><div><span>Waiting on them</span><strong>${esc(them.map(x=>x.label).join(', ')||'Nothing')}</strong></div><div><span>Waiting on me</span><strong>${esc(mine.map(x=>x.label).join(', ')||'Nothing')}</strong></div>${isShad?`<div><span>My profile</span><strong>${esc(myProfileStatus(p.id))}</strong><button data-act="log-profile" data-person-id="${p.id}">Send v${myProfileVersion()}</button></div>`:''}<div><span>Last contact</span><strong>${esc(lc?`${fmtDay(lc)} · ${fmtTime(lc)}`:'Never')}</strong></div><div><span>How I know ${isShad?'her':'them'}</span><strong>${esc(sourceNamesForPerson(p.id))}</strong></div></div>`;
 
   return `<div class="warm-detail-page"><div class="warm-detail-glow"></div>${warmWordmark()}<div class="warm-detail-title"><button class="warm-back" data-act="back">${icon('back')}</button><div class="warm-detail-name"><h1>${esc(p.name)}</h1><div>${esc(p.city||'No city')} · ${esc(type)}</div><span>${esc(type)}</span></div><button class="warm-more" data-act="detail-menu">⋯</button></div><div class="warm-person-hero"><div class="warm-person-big ${avatarTone(p)}">${esc(initials(p.name))}</div><div class="warm-person-hero-copy"><strong>${esc(ageText(p)||p.city||type)}</strong><small>${isShad?'Relationship and shidduch contact':'Profile and history'}</small></div></div><div class="warm-metric-grid">${warmMetric('phone','sage','Last contact',lc?fmtDay(lc):'Never')}${warmMetric('hourglass','amber','Waiting on them',String(them.length))}${warmMetric('shad','blue','Active shidduchim',String(active.length))}</div>${warmContactButtons(p)}${warmPersonTabs(p,ui.detailTab)}<div class="warm-detail-content">${content}</div></div>`;
-};
+}
 
-sourceNamesForPerson=function(pid){const srcs=data.sources.filter(s=>s.peopleIds?.includes(pid));if(!srcs.length)return'No source recorded';const first=srcs.slice(0,2).map(s=>s.name).join(' · ');return srcs.length>2?`${first} · ${srcs.length-2} more`:first;};
+function sourceNamesForPerson(pid){const srcs=data.sources.filter(s=>s.peopleIds?.includes(pid));if(!srcs.length)return'No source recorded';const first=srcs.slice(0,2).map(s=>s.name).join(' · ');return srcs.length>2?`${first} · ${srcs.length-2} more`:first;}
 
 settingsSheet=function(){
   const s=data.settings;

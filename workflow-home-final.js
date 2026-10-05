@@ -83,25 +83,6 @@ function zmPersonOpenStatus(p){
   return `<div class="zm-person-status-area">${boxes}<div class="zm-person-meta">${meta.map((x,i)=>`${i?'<i>·</i>':''}<span>${esc(x)}</span>`).join('')}</div></div>`;
 }
 
-function zmProfileIdentity(p){
-  const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
-  const meta=[type];
-  const age=ageText(p);
-  if(age&&age!==p.city&&age!==type)meta.push(age);
-  if(p.city)meta.push(p.city);
-  return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
-    <div class="zm-profile-identity">
-      <button class="warm-back zm-profile-back" data-act="back" aria-label="Back">${icon('back')}</button>
-      <div class="warm-person-big ${avatarTone(p)} zm-profile-avatar">${esc(initials(p.name))}</div>
-      <div class="zm-profile-copy">
-        <h1>${esc(p.name)}</h1>
-        <div class="zm-profile-meta">${esc(meta.join(' · '))}</div>
-        ${p.occupation?`<div class="zm-profile-occupation">${esc(p.occupation)}</div>`:''}
-      </div>
-      <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
-    </div>`;
-}
-
 const personDetailBeforeWorkflowHome=personDetail;
 personDetail=function(pid){
   const p=person(pid);
