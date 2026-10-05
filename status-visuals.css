@@ -1,0 +1,21 @@
+/* Clear visual status language for Shidduchim. A colored rail shows category; icon + short text says what it means. */
+.warm-match-row.clarity-status-card{position:relative;overflow:hidden;padding-left:18px!important}
+.warm-match-row.clarity-status-card::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:5px;border-radius:0 5px 5px 0;background:var(--status-color)}
+.clarity-status-card.status-my{--status-color:var(--blue,#557ea6);--status-soft:var(--blue-2,#e7f0f8)}
+.clarity-status-card.status-their{--status-color:var(--amber,#b28a48);--status-soft:var(--amber-2,#f8efd9)}
+.clarity-status-card.status-dating{--status-color:var(--sage,#7d9a87);--status-soft:var(--sage-2,#e8f0e9)}
+.clarity-status-card.status-current{--status-color:var(--sky,#7798b8);--status-soft:var(--sky-2,#e9f1f7)}
+.clarity-status-card.status-ended{--status-color:var(--text-3,#98a0a7);--status-soft:var(--surface-2,#f3eee6)}
+.clarity-status-card.status-idea{--status-color:var(--blue,#557ea6);--status-soft:var(--blue-2,#e7f0f8)}
+.clarity-status-line{display:flex;align-items:center;gap:7px;margin-top:7px;min-width:0}
+.clarity-status-pill{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:5px 9px;border-radius:999px;background:var(--status-soft);color:var(--status-color);font-size:10.5px;font-weight:800;line-height:1.15;white-space:nowrap;max-width:100%}
+.clarity-status-pill svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.clarity-status-pill span{overflow:hidden;text-overflow:ellipsis}
+.clarity-pair-status{display:inline-flex;align-items:center;gap:8px;margin:8px auto 2px;padding:7px 12px;border-radius:999px;background:var(--status-soft);color:var(--status-color);font-size:11px;font-weight:850;line-height:1.1}
+.clarity-pair-status svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.clarity-pair-status.status-my{--status-color:var(--blue,#557ea6);--status-soft:var(--blue-2,#e7f0f8)}
+.clarity-pair-status.status-their{--status-color:var(--amber,#b28a48);--status-soft:var(--amber-2,#f8efd9)}
+.clarity-pair-status.status-dating{--status-color:var(--sage,#7d9a87);--status-soft:var(--sage-2,#e8f0e9)}
+.clarity-pair-status.status-current{--status-color:var(--sky,#7798b8);--status-soft:var(--sky-2,#e9f1f7)}
+.clarity-pair-status.status-ended{--status-color:var(--text-3,#98a0a7);--status-soft:var(--surface-2,#f3eee6)}
+@media (max-width:520px){.warm-match-row.clarity-status-card{padding-left:15px!important}.clarity-status-pill{font-size:10px;padding:5px 8px}}
