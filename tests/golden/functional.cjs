@@ -79,7 +79,12 @@ const checks = {
   async F03_presentation_no_data_change() {
     const { ctx, page } = await fresh({ mode: 'shadchan' });
     const s0 = await L.idbRead(page);
-    const steps = [...L.SKINS.slice(1).map(s => ['skin', s]), ['skin', 'classic'], ['appearance', '2'], ['appearance', '3'], ['appearance', '1'], ['density', 'compact'], ['density', 'comfortable'], ['iconSize', 'small'], ['iconSize', 'large'], ['iconSize', 'medium'], ['layout', 'phone'], ['layout', 'web'], ['layout', 'auto'], ['summaryCards', 'false'], ['summaryCards', 'true']];
+    // Every presentation control the Settings sheet offers (v58 also had Size, Icons, Summary cards and a
+    // Desktop layout; they had no effect and were removed).
+    const offered = await (async () => { await L.tap(page, '[data-act="settings"]'); const o = await page.$$eval('#overlay [data-setting]', els => [...new Set(els.map(e => e.dataset.setting))]); await L.closeSheets(page); return o; })();
+    const all = [...L.SKINS.slice(1).map(s => ['skin', s]), ['skin', 'classic'], ['appearance', '2'], ['appearance', '3'], ['appearance', '1'], ['density', 'compact'], ['density', 'comfortable'], ['iconSize', 'small'], ['iconSize', 'large'], ['iconSize', 'medium'], ['layout', 'phone'], ['layout', 'web'], ['layout', 'auto'], ['summaryCards', 'false'], ['summaryCards', 'true']];
+    const webOffered = await (async () => { await L.tap(page, '[data-act="settings"]'); const w = !!(await page.$('#overlay [data-setting="layout"][data-value="web"]')); await L.closeSheets(page); return w; })();
+    const steps = all.filter(([k, v]) => offered.includes(k) && !(k === 'layout' && v === 'web' && !webOffered));
     const bad = [];
     let prev = s0;
     for (const [k, v] of steps) {
@@ -93,7 +98,7 @@ const checks = {
     await L.closeSheets(page); await L.openApp(page);
     const end = await L.idbRead(page); const dEnd = diff(s0, end);
     const ok = !bad.length && !dEnd.records.length && !dEnd.settings.length && sameIds(s0, end);
-    record('F03', `Changing skin (all 11), layout feel, size, icons, layout and summary cards changes only that setting (${steps.length} changes)`, ok ? 'PASS' : 'FAIL', { bad, endVsStart: dEnd });
+    record('F03', `Every presentation control in Settings (skin ×11, layout feel, layout, …) changes only that setting (${steps.length} changes: ${[...new Set(steps.map(x => x[0]))].join(', ')})`, ok ? 'PASS' : 'FAIL', { bad, endVsStart: dEnd });
     await ctx.close();
   },
 
@@ -295,10 +300,10 @@ const checks = {
       const good = /zm-fixed/.test(scrolled.cls) && scrolled.top === 0 && scrolled.h === atTop.h && scrolled.avatar === atTop.avatar && !/zm-fixed/.test(back.cls) && back.top === atTop.top && /is-stuck/.test(shad.cls) && shad.top <= 0;
       det[`${skin}/${width}`] = good ? `✓ h=${atTop.h} avatar=${atTop.avatar}` : { atTop, scrolled, back, shad };
       if (skin === 'kids') kids[width] = { good, atTopHeight: atTop.h, pinnedHeight: scrolled.h, shadchanimHeadSticks: /is-stuck/.test(shad.cls) };
-      else ok = ok && good;
+      ok = ok && good;
       await ctx.close();
     }
-    record('F10', 'Profile header is compact from the start, pins at top on scroll without resizing (10 skins × 2 widths); Shadchanim header sticks', ok ? 'PASS' : 'FAIL', det);
+    record('F10', 'Profile header is compact from the start, pins at top on scroll without resizing (all 11 skins × 2 widths); Shadchanim header sticks', ok ? 'PASS' : 'FAIL', det);
     record('K8', 'Cartoon skin: profile header is not compact (≈314 px tall at top, squeezed column, empty block) and shrinks when pinned', Object.values(kids).every(k => !k.good) ? 'KNOWN' : 'CHANGED', kids);
   },
 

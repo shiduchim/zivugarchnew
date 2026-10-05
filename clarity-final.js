@@ -131,7 +131,7 @@ universalAddSheet=function(){
 // Secondary filters use ordinary language and no visible plus signs.
 filtersSheet=function(){
   if(ui.screen==='shadchanim'){
-    openSheet(`<h2>Shadchanim view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>No contact for 60 days or more</b><span>Show people you have not contacted recently</span></div><button class="option" data-act="show-dormant">Show</button></div><div class="setting-row"><div class="setting-copy"><b>Sort</b><span>How to order the list</span></div><div class="option-group"><button class="option active">Last contact</button><button class="option">A–Z</button></div></div><div class="setting-row"><div class="setting-copy"><b>Group</b><span>How to group the list</span></div><div class="option-group"><button class="option active">None</button><button class="option">Source</button></div></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);
+    openSheet(`<h2>Shadchanim view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>No contact for 60 days or more</b><span>Show people you have not contacted recently</span></div><button class="option" data-act="show-dormant">Show</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);
   }else settingsSheet();
 };
 

@@ -49,11 +49,10 @@ settingsSheet=function(){
 
     <div class="settings-heading">View</div>
     <div class="sheet-section">
-      <div class="setting-copy" style="padding:2px 0 8px"><b>Screen layout</b><span>Responsive, phone-size or desktop.</span></div>
+      <div class="setting-copy" style="padding:2px 0 8px"><b>Screen layout</b><span>Best for this screen, or always phone-size.</span></div>
       <div class="layout-choice-row">
-        <button class="layout-choice ${layout==='auto'?'active':''}" data-setting="layout" data-value="auto">Auto<small>Best for this screen</small></button>
+        <button class="layout-choice ${layout==='auto'||layout==='web'?'active':''}" data-setting="layout" data-value="auto">Auto<small>Best for this screen</small></button>
         <button class="layout-choice ${layout==='phone'?'active':''}" data-setting="layout" data-value="phone">Phone<small>Phone-size layout</small></button>
-        <button class="layout-choice ${layout==='web'?'active':''}" data-setting="layout" data-value="web">Web<small>Desktop layout</small></button>
       </div>
     </div>
 
@@ -64,9 +63,6 @@ settingsSheet=function(){
     <div class="settings-heading">Spacing</div>
     <div class="sheet-section">
       <div class="setting-row"><div class="setting-copy"><b>Layout feel</b><span>Choose how roomy the screens feel</span></div><div class="option-group">${[['1','Standard'],['2','Roomy'],['3','Compact']].map(([v,l])=>`<button class="option ${String(s.appearance||'1')===v?'active':''}" data-setting="appearance" data-value="${v}">${l}</button>`).join('')}</div></div>
-      <div class="setting-row"><div class="setting-copy"><b>Size</b><span>Comfortable is easiest to read</span></div><div class="option-group">${['comfortable','compact'].map(v=>`<button class="option ${s.density===v?'active':''}" data-setting="density" data-value="${v}">${v==='comfortable'?'Comfortable':'Compact'}</button>`).join('')}</div></div>
-      <div class="setting-row"><div class="setting-copy"><b>Icons and initials</b><span>Touch target size</span></div><div class="option-group">${['small','medium','large'].map(v=>`<button class="option ${s.iconSize===v?'active':''}" data-setting="iconSize" data-value="${v}">${v[0].toUpperCase()+v.slice(1)}</button>`).join('')}</div></div>
-      <div class="setting-row"><div class="setting-copy"><b>Summary cards</b><span>Quick attention items on Recent</span></div><div class="option-group"><button class="option ${s.summaryCards?'active':''}" data-setting="summaryCards" data-value="true">Show</button><button class="option ${!s.summaryCards?'active':''}" data-setting="summaryCards" data-value="false">Hide</button></div></div>
     </div>
 
     <div class="settings-heading">Use</div>
