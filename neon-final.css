@@ -1,6 +1,6 @@
-/* Neon v30 — restore the bright electric look that worked, then add section identity only where it helps.
-   Recent = cyan, Guys = blue, Shadchanim = violet, Girls = pink, Shidduchim = green.
-   Status colors and action colors remain independent. */
+/* Final Neon skin: bright electric color, readable text, sleek glow.
+   Deliberately different from the playful Game skin: sharper cards, luminous edges,
+   translucent surfaces and cyan/magenta/violet/green accents instead of chunky toy styling. */
 
 html[data-skin="neon"]{
   color-scheme:light;
@@ -26,51 +26,8 @@ html[data-skin="neon"]{
   --lav-2:#f0e2ff;
   --shadow:0 14px 34px rgba(91,61,201,.14);
   --shadow-soft:0 7px 20px rgba(32,178,216,.12);
-
-  --sec-recent-accent:#22d3ee;
-  --sec-recent-ink:#0e7490;
-  --sec-recent-soft:rgba(34,211,238,.15);
-  --sec-recent-glow:rgba(34,211,238,.30);
-  --sec-guys-accent:#3182ff;
-  --sec-guys-ink:#1d5fd6;
-  --sec-guys-soft:rgba(49,130,255,.14);
-  --sec-guys-glow:rgba(49,130,255,.30);
-  --sec-shadchanim-accent:#8b5cf6;
-  --sec-shadchanim-ink:#6d3fe0;
-  --sec-shadchanim-soft:rgba(139,92,246,.14);
-  --sec-shadchanim-glow:rgba(139,92,246,.30);
-  --sec-girls-accent:#f43f9e;
-  --sec-girls-ink:#b81d72;
-  --sec-girls-soft:rgba(244,63,158,.13);
-  --sec-girls-glow:rgba(244,63,158,.28);
-  --sec-shidduchim-accent:#22c55e;
-  --sec-shidduchim-ink:#13773a;
-  --sec-shidduchim-soft:rgba(34,197,94,.14);
-  --sec-shidduchim-glow:rgba(34,197,94,.28);
-
-  --section-accent:var(--sec-recent-accent);
-  --section-ink:var(--sec-recent-ink);
-  --section-soft:var(--sec-recent-soft);
-  --section-glow:var(--sec-recent-glow);
 }
 
-html[data-skin="neon"][data-section="recent"],html[data-skin="neon"] .warm-nav[data-screen="recent"]{
-  --section-accent:var(--sec-recent-accent);--section-ink:var(--sec-recent-ink);--section-soft:var(--sec-recent-soft);--section-glow:var(--sec-recent-glow)
-}
-html[data-skin="neon"][data-section="guys"],html[data-skin="neon"] .warm-nav[data-screen="guys"]{
-  --section-accent:var(--sec-guys-accent);--section-ink:var(--sec-guys-ink);--section-soft:var(--sec-guys-soft);--section-glow:var(--sec-guys-glow)
-}
-html[data-skin="neon"][data-section="shadchanim"],html[data-skin="neon"] .warm-nav[data-screen="shadchanim"]{
-  --section-accent:var(--sec-shadchanim-accent);--section-ink:var(--sec-shadchanim-ink);--section-soft:var(--sec-shadchanim-soft);--section-glow:var(--sec-shadchanim-glow)
-}
-html[data-skin="neon"][data-section="girls"],html[data-skin="neon"] .warm-nav[data-screen="girls"]{
-  --section-accent:var(--sec-girls-accent);--section-ink:var(--sec-girls-ink);--section-soft:var(--sec-girls-soft);--section-glow:var(--sec-girls-glow)
-}
-html[data-skin="neon"][data-section="shidduchim"],html[data-skin="neon"] .warm-nav[data-screen="shidduchim"],html[data-skin="neon"] .warm-match-row{
-  --section-accent:var(--sec-shidduchim-accent);--section-ink:var(--sec-shidduchim-ink);--section-soft:var(--sec-shidduchim-soft);--section-glow:var(--sec-shidduchim-glow)
-}
-
-/* Keep the original multicolor Neon atmosphere instead of recoloring the whole screen per section. */
 html[data-skin="neon"] body{
   background:
     radial-gradient(circle at 10% 3%,rgba(0,220,255,.32),transparent 28%),
@@ -79,12 +36,18 @@ html[data-skin="neon"] body{
     linear-gradient(145deg,#f7f1ff 0,#f7fcff 48%,#effff9 100%) fixed!important;
 }
 html[data-skin="neon"] body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
-  background:linear-gradient(rgba(96,71,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,190,225,.035) 1px,transparent 1px);
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    linear-gradient(rgba(96,71,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,190,225,.035) 1px,transparent 1px);
   background-size:36px 36px;
 }
 
-/* Original sleek translucent Neon cards. */
+/* Sleek translucent panels with luminous colored edges. */
 html[data-skin="neon"] .warm-person-row,
 html[data-skin="neon"] .warm-activity-row,
 html[data-skin="neon"] .warm-source-row,
@@ -101,23 +64,23 @@ html[data-skin="neon"] .all-clear{
   background:rgba(255,255,255,.88)!important;
   border:1.5px solid rgba(96,71,255,.24)!important;
   border-radius:15px!important;
-  box-shadow:0 0 0 1px rgba(0,205,235,.07),0 10px 28px rgba(91,61,201,.12),0 0 22px rgba(0,205,235,.06)!important;
+  box-shadow:
+    0 0 0 1px rgba(0,205,235,.07),
+    0 10px 28px rgba(91,61,201,.12),
+    0 0 22px rgba(0,205,235,.06)!important;
   color:#21163f!important;
 }
 
-/* Section identity is an accent, not a wholesale recolor. */
-html[data-skin="neon"] .warm-person-row.selected{
-  background:linear-gradient(135deg,var(--section-soft),rgba(255,255,255,.96))!important;
-  color:var(--section-ink)!important;
-  border-color:color-mix(in srgb,var(--section-accent) 52%,rgba(96,71,255,.20))!important;
-  box-shadow:inset 4px 0 0 var(--section-accent),0 0 16px var(--section-glow)!important;
-}
-html[data-skin="neon"] .warm-match-row{
-  border-color:rgba(34,197,94,.28)!important;
-  box-shadow:inset 3px 0 0 var(--sec-shidduchim-accent),0 10px 28px rgba(91,61,201,.10)!important;
+html[data-skin="neon"] .warm-person-row.selected,
+html[data-skin="neon"] .warm-nav.active,
+html[data-skin="neon"] .warm-seg.active{
+  background:linear-gradient(135deg,#e9e1ff 0,#ddf8ff 52%,#e6fff5 100%)!important;
+  color:#5138dc!important;
+  border-color:rgba(96,71,255,.30)!important;
+  box-shadow:0 0 18px rgba(96,71,255,.16),0 0 12px rgba(0,205,235,.10)!important;
 }
 
-/* Status colors stay independent from section colors. */
+/* Make the overview and person metrics visibly neon instead of white cards. */
 html[data-skin="neon"] .warm-summary,
 html[data-skin="neon"] .warm-metric{
   border:1.5px solid rgba(80,58,180,.18)!important;
@@ -125,24 +88,39 @@ html[data-skin="neon"] .warm-metric{
   box-shadow:0 9px 24px rgba(91,61,201,.11)!important;
 }
 html[data-skin="neon"] .warm-summary.blue,
-html[data-skin="neon"] .warm-metric.blue{background:linear-gradient(145deg,#daf8ff,#dfe6ff)!important;border-color:rgba(0,174,220,.30)!important}
+html[data-skin="neon"] .warm-metric.blue{
+  background:linear-gradient(145deg,#daf8ff,#dfe6ff)!important;
+  border-color:rgba(0,174,220,.30)!important;
+}
 html[data-skin="neon"] .warm-summary.amber,
-html[data-skin="neon"] .warm-metric.amber{background:linear-gradient(145deg,#fff2bd,#ffe0f2)!important;border-color:rgba(236,86,153,.25)!important}
+html[data-skin="neon"] .warm-metric.amber{
+  background:linear-gradient(145deg,#fff2bd,#ffe0f2)!important;
+  border-color:rgba(236,86,153,.25)!important;
+}
 html[data-skin="neon"] .warm-summary.sage,
-html[data-skin="neon"] .warm-metric.sage{background:linear-gradient(145deg,#d8fff2,#e7e1ff)!important;border-color:rgba(18,167,124,.26)!important}
+html[data-skin="neon"] .warm-metric.sage{
+  background:linear-gradient(145deg,#d8fff2,#e7e1ff)!important;
+  border-color:rgba(18,167,124,.26)!important;
+}
 html[data-skin="neon"] .warm-summary-icon,
-html[data-skin="neon"] .warm-metric-icon{background:#fff!important;box-shadow:0 0 0 1px rgba(96,71,255,.15),0 0 16px rgba(0,196,228,.10)!important}
+html[data-skin="neon"] .warm-metric-icon{
+  background:#fff!important;
+  box-shadow:0 0 0 1px rgba(96,71,255,.15),0 0 16px rgba(0,196,228,.10)!important;
+}
 
-/* Keep the colorful contact actions from the good Neon version. */
+/* Strong color coding for actions without hurting readability. */
 html[data-skin="neon"] .warm-contact{color:#35275e!important;font-weight:800!important}
-html[data-skin="neon"] .warm-contact>span{border:1.5px solid rgba(84,62,185,.20)!important;box-shadow:0 0 16px rgba(96,71,255,.11)!important}
+html[data-skin="neon"] .warm-contact>span{
+  border:1.5px solid rgba(84,62,185,.20)!important;
+  box-shadow:0 0 16px rgba(96,71,255,.11)!important;
+}
 html[data-skin="neon"] .warm-contact.phone>span{background:#d4fbff!important;color:#0083a4!important}
 html[data-skin="neon"] .warm-contact.email>span{background:#ffe0f1!important;color:#c12d7b!important}
 html[data-skin="neon"] .warm-contact.message>span{background:#dcfff0!important;color:#07865f!important}
 html[data-skin="neon"] .warm-contact.sms>span{background:#e8e0ff!important;color:#6946dc!important}
 html[data-skin="neon"] .warm-contact.wait>span{background:#fff0bd!important;color:#a86f00!important}
 
-/* Tabs keep the sleek Neon form, but use the current section color. */
+/* Neon tab strip: sleek and unmistakable, not arcade-like. */
 html[data-skin="neon"] .warm-tabs,
 html[data-skin="neon"] .warm-segment{
   background:rgba(248,246,255,.88)!important;
@@ -151,12 +129,12 @@ html[data-skin="neon"] .warm-segment{
 }
 html[data-skin="neon"] .warm-tabs button.active,
 html[data-skin="neon"] .warm-seg.active{
-  background:linear-gradient(135deg,var(--section-ink),var(--section-accent))!important;
+  background:linear-gradient(135deg,#00bfe8,#704fff 58%,#d73db2)!important;
   color:#fff!important;
-  box-shadow:0 0 18px var(--section-glow)!important;
+  box-shadow:0 0 18px rgba(96,71,255,.22),0 0 12px rgba(0,191,232,.16)!important;
 }
 
-/* Each nav item advertises its own section color. */
+/* Navigation gets a luminous glass rail/bar. */
 html[data-skin="neon"] .warm-bottom-nav{
   background:rgba(249,247,255,.93)!important;
   border-color:rgba(96,71,255,.18)!important;
@@ -164,59 +142,37 @@ html[data-skin="neon"] .warm-bottom-nav{
   backdrop-filter:blur(18px) saturate(135%);
 }
 html[data-skin="neon"] .warm-nav{color:#65597d!important}
-html[data-skin="neon"] .warm-nav .warm-nav-icon{
-  background:var(--section-soft)!important;
-  color:var(--section-ink)!important;
-  border:1px solid color-mix(in srgb,var(--section-accent) 28%,transparent)!important;
-}
-html[data-skin="neon"] .warm-nav.active{
-  background:linear-gradient(135deg,var(--section-soft),rgba(255,255,255,.75))!important;
-  color:var(--section-ink)!important;
-  box-shadow:inset 0 3px 0 var(--section-accent)!important;
+html[data-skin="neon"] .warm-nav-icon{
+  background:linear-gradient(135deg,#f0ebff,#e3faff)!important;
+  color:#5f46d8!important;
 }
 html[data-skin="neon"] .warm-nav.active .warm-nav-icon{
-  background:linear-gradient(135deg,var(--section-ink),var(--section-accent))!important;
+  background:linear-gradient(135deg,#00c7eb,#724dff 58%,#d83cab)!important;
   color:#fff!important;
-  box-shadow:0 0 15px var(--section-glow)!important;
-}
-@media(min-width:900px){
-  html[data-skin="neon"]:not([data-layout="phone"]) .warm-nav.active{box-shadow:inset 4px 0 0 var(--section-accent)!important}
+  box-shadow:0 0 15px rgba(96,71,255,.24)!important;
 }
 
-/* Profile identity follows the actual person type. */
+/* Profile hero and cards carry the same electric language. */
 html[data-skin="neon"] .warm-detail-name h1,
 html[data-skin="neon"] .warm-title-copy h1,
 html[data-skin="neon"] .warm-person-top strong,
 html[data-skin="neon"] .warm-activity-top strong,
 html[data-skin="neon"] .warm-info-card strong,
 html[data-skin="neon"] .warm-profile-card strong{color:#21163f!important}
-html[data-skin="neon"] .warm-title-copy h1::after{
-  content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:4px;
-  background:linear-gradient(90deg,var(--section-accent),transparent);box-shadow:0 0 12px var(--section-glow)
-}
 html[data-skin="neon"] .warm-detail-name>span{
-  background:var(--section-soft)!important;
-  color:var(--section-ink)!important;
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 34%,transparent)!important;
+  background:linear-gradient(135deg,#dff9ff,#eadfff)!important;
+  color:#5238cb!important;
 }
 html[data-skin="neon"] .warm-person-big,
 html[data-skin="neon"] .warm-avatar{
-  background:linear-gradient(135deg,color-mix(in srgb,var(--section-accent) 26%,#fff),color-mix(in srgb,var(--section-accent) 54%,#fff))!important;
+  background:linear-gradient(135deg,#79e6ff,#8d76ff 55%,#f178c9)!important;
   color:#241742!important;
-  box-shadow:0 0 0 2px color-mix(in srgb,var(--section-accent) 45%,#fff),0 0 20px var(--section-glow)!important;
-}
-html[data-skin="neon"] .warm-match-avatar{
-  background:linear-gradient(135deg,#d8fff2,#a9f0c9)!important;
-  color:#13773a!important;
-  box-shadow:0 0 0 2px rgba(34,197,94,.32),0 0 16px rgba(34,197,94,.20)!important;
-}
-html[data-skin="neon"] .warm-add{
-  background:var(--section-soft)!important;color:var(--section-ink)!important;
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 35%,transparent)!important;
+  box-shadow:0 0 20px rgba(96,71,255,.18)!important;
 }
 html[data-skin="neon"] .warm-profile-card h3{color:#3c2779!important}
 html[data-skin="neon"] .warm-info-card>div{border-color:rgba(96,71,255,.12)!important}
 
+/* Settings swatch must advertise the real look. */
 .skin-swatch.neon{
   background:linear-gradient(135deg,#45e6ff 0,#7350ff 48%,#f04db6 100%)!important;
   color:#fff!important;
@@ -224,4 +180,6 @@ html[data-skin="neon"] .warm-info-card>div{border-color:rgba(96,71,255,.12)!impo
   box-shadow:0 0 14px rgba(96,71,255,.25)!important;
 }
 
-@media (prefers-reduced-motion:reduce){html[data-skin="neon"] *{transition:none!important}}
+@media (prefers-reduced-motion:reduce){
+  html[data-skin="neon"] *{transition:none!important}
+}
