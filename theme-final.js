@@ -31,12 +31,12 @@ applySettings=function(){
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||colors.classic);
 };
 
-// Cartoon mode keeps the same navigation order, but uses obvious cartoon-style symbols.
+// Cartoon changes only the visual treatment of navigation. The tabs and labels stay the same as every other theme.
 const navBeforeFinalSkins=nav;
 nav=function(){
   if((data?.settings?.skin||'classic')!=='kids') return navBeforeFinalSkins();
   const items=[
-    ['recent','🏠','Today'],
+    ['recent','🏠','Recent'],
     ['guys','👦','Guys'],
     ['shadchanim','🤝','Shadchanim'],
     ['girls','👧','Girls'],
@@ -50,15 +50,10 @@ function topOverviewHtml(){
   return `<div class="warm-summary-grid top-overview">${summaryCard('blue',c.me,'Waiting on me','show-wait-me')}${summaryCard('amber',c.them,'Waiting on them','show-wait-them')}${summaryCard('sage',c.active,'Active shidduchim','show-active')}</div>`;
 }
 
-// Keep the v15-style overview cards at the top.
-// The duplicate Needs you / Waiting on others blocks are intentionally removed.
+// Every skin uses exactly the same Recent fields and layout.
+// Themes may change colors, shapes and icons only; they do not change the content structure.
 recentScreen=function(){
   const overview=topOverviewHtml();
-  if((data.settings.skin||'classic')==='kids'){
-    const base=easyRecent();
-    return base.replace('<div class="kid-mission">',`${overview}<div class="kid-mission">`);
-  }
-
   const c=counts();
   let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
   if(ui.search){
