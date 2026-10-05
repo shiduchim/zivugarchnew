@@ -3,6 +3,26 @@
 // Final plain-language workflow for the home screen and person profiles.
 // An open item lives in exactly one place: My to-do list or To hear back.
 
+// Main-screen header rule: Settings is global, so keep the gear only on Recent.
+const zmHeaderBeforeRecentOnlySettings=header;
+header=function(title,sub,opts={}){
+  let html=zmHeaderBeforeRecentOnlySettings(title,sub,opts);
+  if(title!=='Recent'){
+    html=html.replace(/<button class="warm-circle" data-act="settings" aria-label="Settings">[\s\S]*?<\/button>/,'');
+  }
+  return html;
+};
+
+// Keep the new workflow words everywhere, including Shadchanim filters.
+const zmSegmentBeforeWorkflowWords=segment;
+segment=function(items,active,scope){
+  const mapped=items.map(x=>({...x,label:
+    (x.label==='My turn'||x.label==='Waiting on me')?'My to-do':
+    (x.label==='Their turn'||x.label==='Waiting on them')?'To hear back':x.label
+  }));
+  return zmSegmentBeforeWorkflowWords(mapped,active,scope);
+};
+
 function zmShortOpenLabel(items){
   if(!items?.length)return '';
   const first=String(items[0].label||'Next step').trim();
@@ -81,8 +101,28 @@ function zmPersonOpenStatus(p){
   let boxes='';
   if(mine.length)boxes+=`<button class="zm-person-open-box mine" data-contact="wait" data-person-id="${esc(p.id)}"><span><b>My to-do</b><small>${esc(zmShortOpenLabel(mine))}</small></span><em>Change</em></button>`;
   if(them.length)boxes+=`<button class="zm-person-open-box theirs" data-contact="wait" data-person-id="${esc(p.id)}"><span><b>To hear back from ${esc(clarityFirstName(p))}</b><small>${esc(zmShortOpenLabel(them))}</small></span><em>Change</em></button>`;
-  const shidText=active.length?`${active.length} current shidduch${active.length===1?'':'im'}`:'No current shidduchim';
-  return `<div class="zm-person-status-area">${boxes}<div class="zm-person-meta"><span>Last contact: ${esc(lc?fmtDay(lc):'Not yet')}</span><i>·</i><span>${esc(shidText)}</span></div></div>`;
+  const meta=[`Last contact: ${lc?fmtDay(lc):'Not yet'}`];
+  if(active.length)meta.push(`${active.length} current shidduch${active.length===1?'':'im'}`);
+  return `<div class="zm-person-status-area">${boxes}<div class="zm-person-meta">${meta.map((x,i)=>`${i?'<i>·</i>':''}<span>${esc(x)}</span>`).join('')}</div></div>`;
+}
+
+function zmProfileIdentity(p){
+  const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
+  const meta=[type];
+  const age=ageText(p);
+  if(age&&age!==p.city&&age!==type)meta.push(age);
+  if(p.city)meta.push(p.city);
+  return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
+    <div class="zm-profile-identity">
+      <button class="warm-back zm-profile-back" data-act="back" aria-label="Back">${icon('back')}</button>
+      <div class="warm-person-big ${avatarTone(p)} zm-profile-avatar">${esc(initials(p.name))}</div>
+      <div class="zm-profile-copy">
+        <h1>${esc(p.name)}</h1>
+        <div class="zm-profile-meta">${esc(meta.join(' · '))}</div>
+        ${p.occupation?`<div class="zm-profile-occupation">${esc(p.occupation)}</div>`:''}
+      </div>
+      <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
+    </div>`;
 }
 
 const personDetailBeforeWorkflowHome=personDetail;
@@ -90,6 +130,9 @@ personDetail=function(pid){
   const p=person(pid);
   let html=personDetailBeforeWorkflowHome(pid);
   if(!p)return html;
+
+  // Compact identity area: one avatar, one name, one concise metadata block.
+  html=html.replace(/<div class="warm-detail-title">[\s\S]*?(?=<div class="warm-metric-grid">)/,zmProfileIdentity(p));
 
   // Replace the three equal metric cards with status only when there is actually something open.
   html=html.replace(/<div class="warm-metric-grid">[\s\S]*?(?=<div class="warm-contact-row">)/,zmPersonOpenStatus(p));
@@ -107,9 +150,24 @@ personDetail=function(pid){
   return html;
 };
 
+// Collapse the compact profile identity further once the user scrolls past its start.
+let zmStickyRaf=0;
+function zmSyncProfileSticky(){
+  zmStickyRaf=0;
+  const bar=document.querySelector('.zm-profile-identity');
+  const marker=document.querySelector('.zm-profile-sticky-sentinel');
+  if(!bar||!marker)return;
+  bar.classList.toggle('is-stuck',marker.getBoundingClientRect().top<0);
+}
+function zmQueueProfileSticky(){
+  if(zmStickyRaf)return;
+  zmStickyRaf=requestAnimationFrame(zmSyncProfileSticky);
+}
+document.addEventListener('scroll',zmQueueProfileSticky,true);
+window.addEventListener('resize',zmQueueProfileSticky);
+
 // Set the next step in ordinary language while preserving the same stored direction values.
 waitingSheet=function(pid){
-  const p=person(pid);
   openSheet(`<h2>What's next?</h2><p class="lead">Keep one open thing in the right place.</p><input type="hidden" id="wPerson" value="${esc(pid)}"><div class="form-grid"><div class="field"><label>Who needs to act?</label><select id="wDirection"><option value="me">I need to…</option><option value="them">I'll hear back about…</option></select></div><div class="field"><label>What is it about?</label><input id="wLabel" placeholder="For example: answer about the Cohen idea" /></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-waiting">Save</button></div>`);
 };
 
