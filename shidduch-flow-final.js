@@ -5,6 +5,9 @@
 // The stage bar shows where the shidduch reached; turn/waiting remains separate.
 
 const ZM_FLOW_STAGE_LABELS=['Profile sent','References','Date 1','Date 2','Date 3','Date 4','Date 5','Date 6','Date 7','Date 8','Marriage'];
+const ZM_FLOW_STAGE_COLORS=['#4e8df7','#2fb8b0','#6f79eb','#7f6deb','#9563e6','#ac59dc','#c251ce','#d64db8','#e4579d','#ee6b7f','#39b86c'];
+
+function zmFlowStageColor(index){return ZM_FLOW_STAGE_COLORS[Math.max(0,Math.min(10,index))]||ZM_FLOW_STAGE_COLORS[0];}
 
 function zmFlowStageIndexFromLabel(label){
   const s=String(label||'').trim().toLowerCase();
@@ -45,13 +48,15 @@ zmStageForShidduch=function(s){
   return {index:0,label:'Profile sent'};
 };
 
-// Show stage, plus a quiet separate note for whose turn it is.
+// List cards show only the stage. On the detail page, whose turn it is is shown separately.
+// All completed segments use the CURRENT stage color, so one glance gives one clear color meaning.
 zmStageBar=function(s,detail=false){
   const st=zmStageForShidduch(s),turn=zmTurnForShidduch(s),ended=s?.status==='ended';
   const segs=ZM_FLOW_STAGE_LABELS.map((label,i)=>`<i class="zm-stage-seg s${i} ${i<st.index?'done':''} ${i===st.index?'now':''}" title="${esc(label)}"></i>`).join('');
   const left=ended?`Ended at ${st.label}`:st.label;
-  const right=ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn;
-  return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" aria-label="${esc(left)}${right?`. ${esc(right)}`:''}"><div class="zm-stage-meta"><strong>${esc(left)}</strong>${right?`<span>${esc(right)}</span>`:''}</div><div class="zm-stage-track">${segs}</div></div>`;
+  const stageColor=ended?'#8f97a2':zmFlowStageColor(st.index);
+  const detailNote=detail?(ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn):'';
+  return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${esc(left)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-meta"><strong>${esc(left)}</strong></div><div class="zm-stage-track">${segs}</div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
 };
 
 function zmOfferRow(i){
