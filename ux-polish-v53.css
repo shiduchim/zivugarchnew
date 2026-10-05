@@ -1,0 +1,104 @@
+/* v53 UX polish */
+
+/* WhatsApp and SMS should be instantly distinguishable while staying in the app's soft icon language. */
+.warm-contact.message>span{
+  background:#e3f7ef!important;
+  color:#0a956b!important;
+  border:1px solid rgba(10,149,107,.16);
+}
+.warm-contact.sms>span{
+  background:#eee9ff!important;
+  color:#6849e8!important;
+  border:1px solid rgba(104,73,232,.16);
+}
+
+/* Boys/Girls themes keep their personality as accents, never at the cost of task readability. */
+html[data-skin="boys"] .zm-todo-card{
+  background:linear-gradient(145deg,#f8fdff,#e9f7fb)!important;
+  border:1px solid rgba(16,145,176,.22)!important;
+  color:#102f40!important;
+  box-shadow:0 8px 22px rgba(0,34,54,.16)!important;
+}
+html[data-skin="boys"] .zm-todo-card .next-copy strong{color:#0c2b3d!important}
+html[data-skin="boys"] .zm-todo-card .next-copy span{color:#456d7d!important}
+html[data-skin="boys"] .zm-todo-card .next-copy small{color:#76919c!important}
+html[data-skin="boys"] .zm-todo-card .next-action{
+  background:#d8f4fa!important;
+  color:#087b9a!important;
+}
+html[data-skin="boys"] .zm-todo-card .next-avatar{
+  background:#e5f4f8!important;
+  color:#316f84!important;
+}
+
+html[data-skin="girls"] .zm-todo-card{
+  background:linear-gradient(145deg,#fffafd,#f5eaf4)!important;
+  border:1px solid rgba(190,78,137,.20)!important;
+  color:#43213a!important;
+  box-shadow:0 8px 22px rgba(70,18,49,.16)!important;
+}
+html[data-skin="girls"] .zm-todo-card .next-copy strong{color:#3e1d35!important}
+html[data-skin="girls"] .zm-todo-card .next-copy span{color:#7a4f69!important}
+html[data-skin="girls"] .zm-todo-card .next-copy small{color:#9b788d!important}
+html[data-skin="girls"] .zm-todo-card .next-action{
+  background:#f2dff0!important;
+  color:#a13b73!important;
+}
+html[data-skin="girls"] .zm-todo-card .next-avatar{
+  background:#f3e6f1!important;
+  color:#8d4b72!important;
+}
+
+/* Shadchanim has a long directory, so keep only its title/action header available while scrolling.
+   Once stuck, collapse it to a compact bar; search and filters still scroll away. */
+.zm-shadchan-sticky-sentinel{height:1px;margin-top:-1px}
+.zm-shadchan-sticky-head{
+  position:sticky;
+  top:0;
+  z-index:34;
+  transition:background .18s ease,box-shadow .18s ease,padding .18s ease,margin .18s ease,border-radius .18s ease;
+}
+.zm-shadchan-sticky-head.is-stuck{
+  margin:0 -10px 8px;
+  padding:7px 10px 5px;
+  border-radius:0 0 16px 16px;
+  background:color-mix(in srgb,var(--surface,#fff) 95%,transparent);
+  box-shadow:0 8px 22px rgba(24,38,54,.10);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+}
+.zm-shadchan-sticky-head.is-stuck .warm-wordmark,
+.zm-shadchan-sticky-head.is-stuck .warm-title-copy p{display:none}
+.zm-shadchan-sticky-head.is-stuck .warm-header{margin-bottom:0}
+.zm-shadchan-sticky-head.is-stuck .warm-title-row{align-items:center}
+.zm-shadchan-sticky-head.is-stuck .warm-title-copy h1{
+  font-size:22px!important;
+  line-height:1.05!important;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-weight:800!important;
+  letter-spacing:-.02em!important;
+}
+.zm-shadchan-sticky-head.is-stuck .warm-add{
+  height:40px!important;
+  min-width:50px!important;
+  padding:0 13px!important;
+}
+
+html[data-skin="dark"] .zm-shadchan-sticky-head.is-stuck,
+html[data-skin="boys"] .zm-shadchan-sticky-head.is-stuck,
+html[data-skin="girls"] .zm-shadchan-sticky-head.is-stuck,
+html[data-skin="neon"] .zm-shadchan-sticky-head.is-stuck,
+html[data-skin="ocean"] .zm-shadchan-sticky-head.is-stuck,
+html[data-skin="sunset"] .zm-shadchan-sticky-head.is-stuck{
+  background:color-mix(in srgb,var(--surface,#17202a) 94%,transparent);
+}
+html[data-skin="contrast"] .zm-shadchan-sticky-head.is-stuck{
+  border-bottom:2px solid currentColor;
+  box-shadow:none;
+}
+
+/* Single-mode My profile label is longer than Guys; keep it legible in the fixed nav. */
+.warm-nav>span:last-child{white-space:nowrap}
+@media(max-width:390px){
+  .warm-nav{font-size:8.5px}
+}
