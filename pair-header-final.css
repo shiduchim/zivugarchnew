@@ -1,51 +1,39 @@
-/* Shidduch header: use the same pair-name visual language as the list cards. */
+/* Shidduch header: always-stacked names for predictable mobile readability. */
 .zm-pair-head{display:block;margin-bottom:10px}
-.zm-pair-appmark{display:flex;align-items:center;margin-bottom:5px;padding:0 42px}
+.zm-pair-appmark{display:flex;align-items:center;margin-bottom:4px;padding:0 42px}
 .zm-pair-appmark .wordmark{font-size:13px}
 .zm-pair-appmark .bh{margin-left:auto}
 .zm-pair-head-row{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;gap:8px;align-items:start}
 .zm-pair-title-wrap{min-width:0;text-align:center}
-
-/* Match the list card: dark text, system font, normal arrow spacing. */
-.zm-pair-title{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  column-gap:4px;
-  row-gap:1px;
-  min-width:0;
-  color:#14244a;
-}
+.zm-pair-title{display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-width:0;color:#14244a}
 .zm-pair-name{
   appearance:none;
   border:0;
   background:transparent;
-  padding:0;
+  width:100%;
+  min-height:44px;
+  padding:2px 4px;
   margin:0;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
   font-family:inherit;
   font-size:20px;
   font-weight:800;
-  line-height:1.12;
+  line-height:24px;
   letter-spacing:0;
   color:#14244a;
+  text-align:center;
   cursor:pointer;
-  white-space:nowrap;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:normal;
+  hyphens:none;
 }
 .zm-pair-name.guy,.zm-pair-name.girl{color:#14244a;text-align:center}
 .zm-pair-name:hover,.zm-pair-name:focus-visible{text-decoration:underline;text-underline-offset:3px}
-.zm-inward-arrows{
-  display:inline-block;
-  font-family:inherit;
-  font-size:20px;
-  font-weight:800;
-  line-height:1.12;
-  letter-spacing:0;
-  color:#14244a;
-  white-space:nowrap;
-  transform:none;
-}
-.zm-pair-title-wrap .detail-meta{margin-top:5px;font-size:10.5px;color:var(--text-2,#6f7881)}
+.zm-pair-title-wrap .detail-meta{margin-top:4px;font-size:10.5px;color:var(--text-2,#6f7881)}
 
 /* Once the names are in the header, the hero only needs the stage bar. */
 .zm-clean-hero{padding-top:14px!important}
@@ -53,10 +41,8 @@
 
 @media(max-width:520px){
   .zm-pair-appmark{padding:0 40px}
-  .zm-pair-title{column-gap:4px}
-  .zm-pair-name,.zm-inward-arrows{font-size:18px;line-height:1.12}
+  .zm-pair-name{font-size:20px;line-height:24px}
 }
 @media(max-width:370px){
-  .zm-pair-name,.zm-inward-arrows{font-size:17px}
-  .zm-pair-title{column-gap:3px}
+  .zm-pair-name{font-size:19px;line-height:23px}
 }
