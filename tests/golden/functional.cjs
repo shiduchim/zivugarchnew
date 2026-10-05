@@ -453,6 +453,20 @@ const checks = {
     await ctx.close();
   },
 
+  async R4_back_never_jumps_to_an_old_shidduch() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const where = () => page.$eval('#app', a => a.querySelector('.zm-pair-title') ? 'shidduch:' + [...a.querySelectorAll('.zm-pair-name')].map(x => x.textContent).join('–') : a.querySelector('.zm-profile-identity h1') ? 'person:' + a.querySelector('.zm-profile-identity h1').textContent : 'screen:' + (a.querySelector('h1')?.textContent || ''));
+    await run(page, shidduchPath('sh_david_noa', false));
+    await L.tap(page, '[data-zm-person="p_david"]'); await L.tap(page, '[data-act="back"]');
+    const intended = await where();
+    await L.tap(page, '[data-zm-person="p_noa"]'); await L.tap(page, 'button[data-screen="recent"]');
+    await L.tap(page, '.zm-todo-card'); const opened = await where(); await L.tap(page, '[data-act="back"]');
+    const afterLeaving = await where();
+    const ok = intended === 'shidduch:David Klein–Noa Weiss' && afterLeaving === 'screen:Recent';
+    record('R4', 'Back from a name opened on a shidduch returns to it; after leaving through other navigation, Back never jumps to that old shidduch', ok ? 'PASS' : 'FAIL', { backFromName: intended, openedFromToDo: opened, backAfterLeaving: afterLeaving });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });

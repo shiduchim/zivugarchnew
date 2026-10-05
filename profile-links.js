@@ -41,9 +41,7 @@ document.addEventListener('click',function(e){
     e.stopPropagation();
     const pid=profileLink.dataset.zmPerson;
     if(!person(pid))return;
-    if(ui.detail?.type==='shidduch'){
-      zmReturnToShidduch={detail:{...ui.detail},detailTab:ui.detailTab};
-    }
+    zmReturnToShidduch=ui.detail?.type==='shidduch'?{detail:{...ui.detail},detailTab:ui.detailTab,personId:pid}:null;
     const p=person(pid);
     ui.detail={type:'person',id:pid};
     ui.detailTab=p?.types?.includes('Shadchan')?'details':'profile';
@@ -53,7 +51,12 @@ document.addEventListener('click',function(e){
   }
 
   const back=e.target.closest('button[data-act="back"]');
-  if(back&&ui.detail?.type==='person'&&zmReturnToShidduch){
+  // Back returns to the shidduch only from the very person opened from it; any other navigation forgets it.
+  if(zmReturnToShidduch&&!(back&&ui.detail?.type==='person'&&ui.detail.id===zmReturnToShidduch.personId)){
+    if(e.target.closest('[data-screen],[data-person],[data-shidduch],[data-source],[data-entry],[data-act="back"]'))zmReturnToShidduch=null;
+    return;
+  }
+  if(back&&zmReturnToShidduch){
     e.preventDefault();
     e.stopPropagation();
     ui.detail=zmReturnToShidduch.detail;
