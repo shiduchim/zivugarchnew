@@ -1,0 +1,185 @@
+/* Final Neon skin: bright electric color, readable text, sleek glow.
+   Deliberately different from the playful Game skin: sharper cards, luminous edges,
+   translucent surfaces and cyan/magenta/violet/green accents instead of chunky toy styling. */
+
+html[data-skin="neon"]{
+  color-scheme:light;
+  --bg:#f5f2ff;
+  --bg-2:#f8fcff;
+  --surface:rgba(255,255,255,.88);
+  --surface-2:rgba(242,238,255,.90);
+  --surface-3:rgba(228,248,255,.92);
+  --text:#21163f;
+  --text-2:#51456f;
+  --text-3:#786f94;
+  --line:rgba(89,65,190,.18);
+  --blue:#6047ff;
+  --blue-2:#e7e1ff;
+  --blue-3:#d5ccff;
+  --sage:#0f9c73;
+  --sage-2:#d9f8ee;
+  --peach:#e34291;
+  --peach-2:#ffe0f0;
+  --amber:#b87500;
+  --amber-2:#fff0bd;
+  --lav:#8b46df;
+  --lav-2:#f0e2ff;
+  --shadow:0 14px 34px rgba(91,61,201,.14);
+  --shadow-soft:0 7px 20px rgba(32,178,216,.12);
+}
+
+html[data-skin="neon"] body{
+  background:
+    radial-gradient(circle at 10% 3%,rgba(0,220,255,.32),transparent 28%),
+    radial-gradient(circle at 90% 8%,rgba(255,59,190,.27),transparent 30%),
+    radial-gradient(circle at 76% 86%,rgba(96,71,255,.24),transparent 34%),
+    linear-gradient(145deg,#f7f1ff 0,#f7fcff 48%,#effff9 100%) fixed!important;
+}
+html[data-skin="neon"] body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    linear-gradient(rgba(96,71,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,190,225,.035) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+
+/* Sleek translucent panels with luminous colored edges. */
+html[data-skin="neon"] .warm-person-row,
+html[data-skin="neon"] .warm-activity-row,
+html[data-skin="neon"] .warm-source-row,
+html[data-skin="neon"] .warm-match-row,
+html[data-skin="neon"] .warm-search,
+html[data-skin="neon"] .warm-filter,
+html[data-skin="neon"] .warm-info-card,
+html[data-skin="neon"] .warm-profile-card,
+html[data-skin="neon"] .warm-history-card,
+html[data-skin="neon"] .warm-related-card,
+html[data-skin="neon"] .next-card,
+html[data-skin="neon"] .waiting-summary,
+html[data-skin="neon"] .all-clear{
+  background:rgba(255,255,255,.88)!important;
+  border:1.5px solid rgba(96,71,255,.24)!important;
+  border-radius:15px!important;
+  box-shadow:
+    0 0 0 1px rgba(0,205,235,.07),
+    0 10px 28px rgba(91,61,201,.12),
+    0 0 22px rgba(0,205,235,.06)!important;
+  color:#21163f!important;
+}
+
+html[data-skin="neon"] .warm-person-row.selected,
+html[data-skin="neon"] .warm-nav.active,
+html[data-skin="neon"] .warm-seg.active{
+  background:linear-gradient(135deg,#e9e1ff 0,#ddf8ff 52%,#e6fff5 100%)!important;
+  color:#5138dc!important;
+  border-color:rgba(96,71,255,.30)!important;
+  box-shadow:0 0 18px rgba(96,71,255,.16),0 0 12px rgba(0,205,235,.10)!important;
+}
+
+/* Make the overview and person metrics visibly neon instead of white cards. */
+html[data-skin="neon"] .warm-summary,
+html[data-skin="neon"] .warm-metric{
+  border:1.5px solid rgba(80,58,180,.18)!important;
+  color:#21163f!important;
+  box-shadow:0 9px 24px rgba(91,61,201,.11)!important;
+}
+html[data-skin="neon"] .warm-summary.blue,
+html[data-skin="neon"] .warm-metric.blue{
+  background:linear-gradient(145deg,#daf8ff,#dfe6ff)!important;
+  border-color:rgba(0,174,220,.30)!important;
+}
+html[data-skin="neon"] .warm-summary.amber,
+html[data-skin="neon"] .warm-metric.amber{
+  background:linear-gradient(145deg,#fff2bd,#ffe0f2)!important;
+  border-color:rgba(236,86,153,.25)!important;
+}
+html[data-skin="neon"] .warm-summary.sage,
+html[data-skin="neon"] .warm-metric.sage{
+  background:linear-gradient(145deg,#d8fff2,#e7e1ff)!important;
+  border-color:rgba(18,167,124,.26)!important;
+}
+html[data-skin="neon"] .warm-summary-icon,
+html[data-skin="neon"] .warm-metric-icon{
+  background:#fff!important;
+  box-shadow:0 0 0 1px rgba(96,71,255,.15),0 0 16px rgba(0,196,228,.10)!important;
+}
+
+/* Strong color coding for actions without hurting readability. */
+html[data-skin="neon"] .warm-contact{color:#35275e!important;font-weight:800!important}
+html[data-skin="neon"] .warm-contact>span{
+  border:1.5px solid rgba(84,62,185,.20)!important;
+  box-shadow:0 0 16px rgba(96,71,255,.11)!important;
+}
+html[data-skin="neon"] .warm-contact.phone>span{background:#d4fbff!important;color:#0083a4!important}
+html[data-skin="neon"] .warm-contact.email>span{background:#ffe0f1!important;color:#c12d7b!important}
+html[data-skin="neon"] .warm-contact.message>span{background:#dcfff0!important;color:#07865f!important}
+html[data-skin="neon"] .warm-contact.sms>span{background:#e8e0ff!important;color:#6946dc!important}
+html[data-skin="neon"] .warm-contact.wait>span{background:#fff0bd!important;color:#a86f00!important}
+
+/* Neon tab strip: sleek and unmistakable, not arcade-like. */
+html[data-skin="neon"] .warm-tabs,
+html[data-skin="neon"] .warm-segment{
+  background:rgba(248,246,255,.88)!important;
+  border:1.5px solid rgba(96,71,255,.18)!important;
+  box-shadow:0 8px 22px rgba(91,61,201,.10)!important;
+}
+html[data-skin="neon"] .warm-tabs button.active,
+html[data-skin="neon"] .warm-seg.active{
+  background:linear-gradient(135deg,#00bfe8,#704fff 58%,#d73db2)!important;
+  color:#fff!important;
+  box-shadow:0 0 18px rgba(96,71,255,.22),0 0 12px rgba(0,191,232,.16)!important;
+}
+
+/* Navigation gets a luminous glass rail/bar. */
+html[data-skin="neon"] .warm-bottom-nav{
+  background:rgba(249,247,255,.93)!important;
+  border-color:rgba(96,71,255,.18)!important;
+  box-shadow:0 -8px 26px rgba(84,56,186,.12)!important;
+  backdrop-filter:blur(18px) saturate(135%);
+}
+html[data-skin="neon"] .warm-nav{color:#65597d!important}
+html[data-skin="neon"] .warm-nav-icon{
+  background:linear-gradient(135deg,#f0ebff,#e3faff)!important;
+  color:#5f46d8!important;
+}
+html[data-skin="neon"] .warm-nav.active .warm-nav-icon{
+  background:linear-gradient(135deg,#00c7eb,#724dff 58%,#d83cab)!important;
+  color:#fff!important;
+  box-shadow:0 0 15px rgba(96,71,255,.24)!important;
+}
+
+/* Profile hero and cards carry the same electric language. */
+html[data-skin="neon"] .warm-detail-name h1,
+html[data-skin="neon"] .warm-title-copy h1,
+html[data-skin="neon"] .warm-person-top strong,
+html[data-skin="neon"] .warm-activity-top strong,
+html[data-skin="neon"] .warm-info-card strong,
+html[data-skin="neon"] .warm-profile-card strong{color:#21163f!important}
+html[data-skin="neon"] .warm-detail-name>span{
+  background:linear-gradient(135deg,#dff9ff,#eadfff)!important;
+  color:#5238cb!important;
+}
+html[data-skin="neon"] .warm-person-big,
+html[data-skin="neon"] .warm-avatar{
+  background:linear-gradient(135deg,#79e6ff,#8d76ff 55%,#f178c9)!important;
+  color:#241742!important;
+  box-shadow:0 0 20px rgba(96,71,255,.18)!important;
+}
+html[data-skin="neon"] .warm-profile-card h3{color:#3c2779!important}
+html[data-skin="neon"] .warm-info-card>div{border-color:rgba(96,71,255,.12)!important}
+
+/* Settings swatch must advertise the real look. */
+.skin-swatch.neon{
+  background:linear-gradient(135deg,#45e6ff 0,#7350ff 48%,#f04db6 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(82,53,180,.24)!important;
+  box-shadow:0 0 14px rgba(96,71,255,.25)!important;
+}
+
+@media (prefers-reduced-motion:reduce){
+  html[data-skin="neon"] *{transition:none!important}
+}
