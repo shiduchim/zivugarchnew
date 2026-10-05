@@ -28,8 +28,6 @@ html[data-skin="glass"]{
   --shadow-soft:0 10px 26px rgba(42,70,92,.13);
 }
 
-/* A slightly stronger neutral background is intentional: real frosted glass needs
-   visible color/shape behind the translucent panels in order for the blur to read. */
 html[data-skin="glass"] body{
   background:
     radial-gradient(circle at 4% 8%,rgba(116,196,224,.88),transparent 27%),
@@ -55,8 +53,6 @@ html[data-skin="glass"] .detail-shell{
   background:transparent!important;
 }
 
-/* Main glass surfaces. The double edge (white highlight + subtle cool inner stroke)
-   makes the boxes visible even on the brightest parts of the background. */
 html[data-skin="glass"] .warm-person-row,
 html[data-skin="glass"] .warm-activity-row,
 html[data-skin="glass"] .warm-source-row,
@@ -91,7 +87,6 @@ html[data-skin="glass"] .timeline{
   backdrop-filter:blur(30px) saturate(145%);
 }
 
-/* Profile tiles need to remain distinct from one another. */
 html[data-skin="glass"] .warm-summary,
 html[data-skin="glass"] .warm-metric{
   background:rgba(255,255,255,.50)!important;
@@ -105,24 +100,42 @@ html[data-skin="glass"] .warm-metric.amber{background:rgba(255,239,199,.58)!impo
 html[data-skin="glass"] .warm-summary.sage,
 html[data-skin="glass"] .warm-metric.sage{background:rgba(218,242,231,.58)!important}
 
-/* Contact buttons should look like individual pieces of glass, not faint icons floating
-   on the page. */
+/* Keep the compact circular contact actions from the earlier version. */
+html[data-skin="glass"] .warm-contact-row,
+html[data-skin="glass"] .contact-row{
+  gap:10px!important;
+}
 html[data-skin="glass"] .warm-contact,
 html[data-skin="glass"] .contact-btn{
-  background:rgba(255,255,255,.42)!important;
-  border:1px solid rgba(255,255,255,.92)!important;
-  box-shadow:0 8px 20px rgba(45,73,94,.10),inset 0 0 0 1px rgba(77,111,134,.10)!important;
-  -webkit-backdrop-filter:blur(22px) saturate(140%);
-  backdrop-filter:blur(22px) saturate(140%);
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  min-width:66px!important;
+  padding:6px 4px!important;
+  color:#31576d!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
 }
 html[data-skin="glass"] .warm-contact span,
 html[data-skin="glass"] .contact-icon{
-  background:rgba(255,255,255,.64)!important;
-  border:1px solid rgba(255,255,255,.96)!important;
-  box-shadow:inset 0 0 0 1px rgba(72,108,132,.10)!important;
+  width:44px!important;
+  height:44px!important;
+  margin:0 auto 5px!important;
+  border-radius:50%!important;
+  background:rgba(255,255,255,.58)!important;
+  border:1.5px solid rgba(255,255,255,.96)!important;
+  box-shadow:0 7px 16px rgba(45,73,94,.10),inset 0 0 0 1px rgba(72,108,132,.11)!important;
+  display:grid!important;
+  place-items:center!important;
+  -webkit-backdrop-filter:blur(20px) saturate(140%);
+  backdrop-filter:blur(20px) saturate(140%);
+}
+html[data-skin="glass"] .warm-contact small,
+html[data-skin="glass"] .contact-btn span:last-child{
+  color:#31576d!important;
+  font-weight:700!important;
 }
 
-/* Tab bar: stronger edge and a clearly visible selected tab. */
 html[data-skin="glass"] .warm-segment,
 html[data-skin="glass"] .warm-tabs,
 html[data-skin="glass"] .tabbar{
@@ -141,7 +154,6 @@ html[data-skin="glass"] .tab-btn.active{
   box-shadow:0 5px 14px rgba(42,71,93,.12),inset 0 0 0 1px rgba(80,116,140,.12)!important;
 }
 
-/* Readability on detail/profile pages. */
 html[data-skin="glass"] .warm-detail-name h1,
 html[data-skin="glass"] .warm-title-copy h1,
 html[data-skin="glass"] .warm-person-top strong,
@@ -159,12 +171,10 @@ html[data-skin="glass"] .warm-profile-card small,
 html[data-skin="glass"] .info-card small,
 html[data-skin="glass"] .profile-card small,
 html[data-skin="glass"] .warm-person-line,
-html[data-skin="glass"] .warm-activity-text,
-html[data-skin="glass"] .warm-contact small{
+html[data-skin="glass"] .warm-activity-text{
   color:#456779!important;
 }
 
-/* Make rows inside the large Details/Profile card easier to scan. */
 html[data-skin="glass"] .warm-info-row,
 html[data-skin="glass"] .warm-profile-row,
 html[data-skin="glass"] .info-row,
