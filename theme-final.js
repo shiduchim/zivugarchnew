@@ -14,7 +14,7 @@ const FINAL_SKINS=[
 ['sunset','Sunset','Coral, orange and violet','☀']
 ];
 const FINAL_SKIN_IDS=new Set(FINAL_SKINS.map(x=>x[0]));
-skinCards=function(){return FINAL_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).join('');};
+function skinCards(){return FINAL_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).join('');}
 
 // data-skin is the single appearance system. Legacy theme values may remain in saved
 // data for backwards compatibility, but they are deliberately prevented from styling the app.
@@ -88,13 +88,5 @@ function queue(){if(!queued){queued=true;requestAnimationFrame(sync);}}
 if(app) new MutationObserver(queue).observe(app,{childList:true,subtree:true});
 queue();
 })();
-
-// Retire the old warm/blue/sage/dark Theme picker. Skin is now the only appearance choice.
-const settingsSheetBeforeSkinOnly=settingsSheet;
-settingsSheet=function(){
-settingsSheetBeforeSkinOnly();
-const legacyThemeControl=overlay.querySelector('[data-setting="theme"]');
-legacyThemeControl?.closest('.setting-row')?.remove();
-};
 
 if(data){applySettings();render();}

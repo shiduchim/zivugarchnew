@@ -3,35 +3,6 @@
 // UX refinement layer: clearer next steps, simpler Recent, universal Add, and many skins.
 // Data architecture is unchanged.
 
-const ZM_SKINS=[
-  ['classic','Classic','Warm Modern · calm default','◇'],
-  ['game','Game','Playful · colorful · lively','★'],
-  ['easy','Big & Easy','Kids-simple · large · obvious','☀'],
-  ['dark','Dark','Comfortable low-light UI','●'],
-  ['contrast','High Contrast','Strongest separation','◐'],
-  ['boys','Boys','Cool blue and teal','◆'],
-  ['girls','Girls','Rose and lilac','♥'],
-  ['jerusalem','Jerusalem Stone','Limestone · honey · olive','▱'],
-  ['macaron','Macaron','Soft color by section','●'],
-  ['notebook','Paper Notebook','Paper · ink · highlighter','▤'],
-  ['luxury','Quiet Luxury','Ivory · charcoal · champagne','◇'],
-  ['clean','Clean','Simple Apple-like minimal','○'],
-  ['glass','Frosted Glass','Airy translucent layers','◌'],
-  ['whitecity','White City','Bauhaus · crisp · geometric','□'],
-  ['startup','Startup Nation','Fast · tech · keyboard-friendly','⌁'],
-  ['mono','Monochrome','Focused greyscale','◧'],
-  ['retro','Retro Desktop','Old Windows-style fun','▣'],
-  ['hearth','Hearth','Cozy lamp-light warmth','⌂'],
-  ['ledger','Ledger','Professional · compact · dependable','▥'],
-  ['sticker','Sticker Pop','Bold · youthful · outlined','✦'],
-  ['shabbos','Shabbos Table','Burgundy · cream · brass','✧'],
-  ['kinneret','Kinneret','Lake blue · sand · reed','≈'],
-  ['midnight','Midnight Library','Warm dark · parchment · amber','☾'],
-  ['daynight','Day & Night','Color shifts gently by time','◒']
-];
-
-function skinCards(){return ZM_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).join('');}
-
 const previousApplySettingsNext=applySettings;
 applySettings=function(){
   previousApplySettingsNext();
@@ -41,7 +12,7 @@ applySettings=function(){
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||'#f6f0e7');
 };
 
-settingsSheet=function(){
+function settingsSheet(){
   const s=data.settings,layout=s.layout||'auto';
   openSheet(`
     <h2>Settings</h2>
@@ -79,7 +50,7 @@ settingsSheet=function(){
     <button class="primary-btn full" data-act="close-sheet">Done</button>
     <div style="text-align:center;color:var(--text-3);font-size:9px;margin-top:12px">v0.17.0</div>
   `);
-};
+}
 
 function personRow(p,{selected=false,context=''}={}){
   const lc=lastContact(p.id),line=context||ageText(p)||p.city||p.types?.join(', ')||'';
@@ -110,12 +81,7 @@ shadchanScreen=function(){
   return `${header('Shadchanim',`${all.length} people in your network`,{add:true})}${searchBox('Search name, phone or city…')}${segment(tabs,'all','shadchanim')}${activeHtml}<div class="warm-section-title shad-section"><h2>Everyone A–Z</h2><span>${rest.length}</span></div>${az}`;
 };
 
-function universalAddSheet(){
-  openSheet(`<h2>Add</h2><p class="lead">What happened? Choose one simple starting point.</p><div class="quick-add-grid"><button id="qaIdea"><span>♡</span><b>Idea</b><small>Someone suggested a match</small></button><button id="qaGuy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote"><span>✎</span><b>Note or call</b><small>Log what just happened</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
-  const go=(sel,fn)=>document.querySelector(sel)?.addEventListener('click',()=>{closeSheet();fn();});
-  go('#qaIdea',()=>addIdeaSheet());go('#qaGuy',()=>addPersonSheet('Guy'));go('#qaShad',()=>addPersonSheet('Shadchan'));go('#qaGirl',()=>addPersonSheet('Girl'));go('#qaNote',()=>addActivitySheet());
-}
-currentAdd=function(){universalAddSheet();};
+function currentAdd(){universalAddSheet();}
 
 // Repaint once this late-loaded UX layer has replaced the earlier rendering functions.
 if(data){applySettings();render();}

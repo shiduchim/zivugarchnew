@@ -42,23 +42,16 @@ function shidduchimScreen(){
   return `${header('Shidduchim','Offers and shidduchim',{add:true})}${searchBox('Search a pair…')}${segment(tabs,v,'shidduchim')}<div class="warm-stack">${rows||empty(emptyTitle,emptyText,'add-idea')}</div>`;
 }
 
-// Replace visible Idea wording with Offer while preserving the existing data model.
-ideaSheet=function(iid){
-  const i=idea(iid);if(!i)return;
-  const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-  openSheet(`<h2>${esc(g?.name)} ↔ ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(gl?.profileText||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
-};
-
-addIdeaSheet=function(){
+function addIdeaSheet(){
   const guys=byType('Guy'),girls=byType('Girl'),shads=byType('Shadchan');
   openSheet(`<h2>New offer</h2><p class="lead">An offer is a suggested pair. It becomes a shidduch only when you choose Interested.</p><div class="form-grid"><div class="field"><label>Guy</label><select id="iGuy">${guys.map(p=>`<option value="${p.id}">${esc(p.isMe?'Me':p.name)}</option>`).join('')}</select></div><div class="field"><label>Girl</label><select id="iGirl">${girls.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Offered by</label><select id="iBy"><option value="">Me / unknown</option>${shads.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-idea">Save offer</button></div>`);
-};
+}
 
-universalAddSheet=function(){
+function universalAddSheet(){
   openSheet(`<h2>Add</h2><p class="lead">What do you want to add?</p><div class="quick-add-grid"><button id="qaIdea"><span>♡</span><b>Offer</b><small>Someone suggested a match</small></button><button id="qaGuy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote"><span>✎</span><b>Note or call</b><small>Add something that happened</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
   const go=(sel,fn)=>document.querySelector(sel)?.addEventListener('click',()=>{closeSheet();fn();});
   go('#qaIdea',()=>addIdeaSheet());go('#qaGuy',()=>addPersonSheet('Guy'));go('#qaShad',()=>addPersonSheet('Shadchan'));go('#qaGirl',()=>addPersonSheet('Girl'));go('#qaNote',()=>addActivitySheet());
-};
+}
 
 const showToastBeforeOffers=showToast;
 showToast=function(msg){

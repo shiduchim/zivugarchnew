@@ -3,10 +3,7 @@
 // v53 final UX polish: clearer single mode, distinct contact icons,
 // current workflow wording, and compact sticky Shadchanim header.
 
-// Contact icons selected from the approved icon sheet:
-// WhatsApp = circular chat bubble + handset (option 6)
-// SMS = rectangular message bubble + two lines (option 2)
-ICONS.whatsapp='<path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.2c.3 2.6 2.2 4.7 4.8 5.5l1.4-1.5 2.2.6v1.8c0 .6-.5 1.1-1.1 1.1-5.1-.2-9.2-4.3-9.4-9.4 0-.6.5-1.1 1.1-1.1h1.8l.6 2.2L9 8.2Z"/>';
+// SMS icon chosen from the approved icon sheet: rectangular message bubble with two lines (option 2).
 ICONS.sms='<path d="M4 5h16v12H9l-5 4V5Z"/><path d="M8 9h8M8 13h6"/>';
 
 function warmContactButtons(p){
