@@ -1,0 +1,179 @@
+/* Cartoon skin: keep the exact same fields and screen structure as every other theme,
+   but make profile/detail pages unmistakably cartoon-like. */
+
+html[data-skin="kids"] .warm-detail-shell,
+html[data-skin="kids"] .detail-shell{
+  position:relative;
+  padding-top:4px;
+}
+
+html[data-skin="kids"] .warm-detail-shell:before,
+html[data-skin="kids"] .detail-shell:before{
+  content:"";
+  position:absolute;
+  inset:-12px -16px auto;
+  height:190px;
+  z-index:-1;
+  background:
+    radial-gradient(circle at 12% 28%,#ff7fae 0 17px,transparent 18px),
+    radial-gradient(circle at 85% 18%,#67d7ff 0 22px,transparent 23px),
+    radial-gradient(circle at 72% 72%,#72df9d 0 16px,transparent 17px),
+    linear-gradient(135deg,#fff1a8 0,#ffe1ed 48%,#dff4ff 100%);
+  border-radius:0 0 34px 34px;
+  opacity:.92;
+}
+
+html[data-skin="kids"] .warm-detail-name h1,
+html[data-skin="kids"] .detail-name{
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-weight:950!important;
+  letter-spacing:-.04em!important;
+  text-shadow:2px 2px 0 rgba(255,255,255,.72);
+}
+
+html[data-skin="kids"] .warm-person-big,
+html[data-skin="kids"] .person-avatar{
+  width:82px!important;
+  height:82px!important;
+  border:3px solid #263654!important;
+  border-radius:28px!important;
+  background:linear-gradient(145deg,#70d8ff,#8ee9bc)!important;
+  color:#203654!important;
+  box-shadow:5px 6px 0 rgba(38,54,84,.18)!important;
+  font-size:22px!important;
+  font-weight:950!important;
+  transform:rotate(-2deg);
+}
+
+html[data-skin="kids"] .warm-person-big:after,
+html[data-skin="kids"] .person-avatar:after{
+  content:"★";
+  position:absolute;
+  transform:translate(28px,-27px) rotate(12deg);
+  font-size:20px;
+  color:#ffcf33;
+  -webkit-text-stroke:1px #263654;
+}
+
+html[data-skin="kids"] .warm-metrics,
+html[data-skin="kids"] .detail-summary{
+  gap:10px!important;
+}
+
+html[data-skin="kids"] .warm-metric,
+html[data-skin="kids"] .detail-tile{
+  border:2px solid #263654!important;
+  border-radius:20px!important;
+  box-shadow:4px 5px 0 rgba(38,54,84,.13)!important;
+  min-height:82px!important;
+  position:relative;
+  overflow:hidden;
+}
+html[data-skin="kids"] .warm-metric:nth-child(1),html[data-skin="kids"] .detail-tile:nth-child(1){background:#dff4ff!important}
+html[data-skin="kids"] .warm-metric:nth-child(2),html[data-skin="kids"] .detail-tile:nth-child(2){background:#fff0ad!important}
+html[data-skin="kids"] .warm-metric:nth-child(3),html[data-skin="kids"] .detail-tile:nth-child(3){background:#dcf5e5!important}
+html[data-skin="kids"] .warm-metric strong,
+html[data-skin="kids"] .detail-tile strong{font-size:16px!important;font-weight:950!important;color:#223252!important}
+
+/* Big illustrated contact buttons while keeping the same Call / Email / WhatsApp / SMS / Waiting fields. */
+html[data-skin="kids"] .warm-contact-row,
+html[data-skin="kids"] .contact-row{gap:8px!important}
+html[data-skin="kids"] .warm-contact,
+html[data-skin="kids"] .contact-btn{
+  border:2px solid #263654!important;
+  border-radius:18px!important;
+  box-shadow:3px 4px 0 rgba(38,54,84,.13)!important;
+  min-height:72px!important;
+  background:#fff!important;
+  font-weight:900!important;
+}
+html[data-skin="kids"] .warm-contact:nth-child(1),html[data-skin="kids"] .contact-btn:nth-child(1){background:#dcf5e5!important}
+html[data-skin="kids"] .warm-contact:nth-child(2),html[data-skin="kids"] .contact-btn:nth-child(2){background:#dff4ff!important}
+html[data-skin="kids"] .warm-contact:nth-child(3),html[data-skin="kids"] .contact-btn:nth-child(3){background:#e5f7dd!important}
+html[data-skin="kids"] .warm-contact:nth-child(4),html[data-skin="kids"] .contact-btn:nth-child(4){background:#e8e2ff!important}
+html[data-skin="kids"] .warm-contact:nth-child(5),html[data-skin="kids"] .contact-btn:nth-child(5){background:#fff0ad!important}
+
+html[data-skin="kids"] .warm-contact span,
+html[data-skin="kids"] .contact-icon{width:32px!important;height:32px!important;border-radius:12px!important;background:#fff!important;border:2px solid #263654!important;display:grid!important;place-items:center!important;margin:0 auto 4px!important}
+html[data-skin="kids"] .warm-contact svg,
+html[data-skin="kids"] .contact-icon svg{display:none!important}
+html[data-skin="kids"] .warm-contact:nth-child(1) span:before,html[data-skin="kids"] .contact-btn:nth-child(1) .contact-icon:before{content:"☎️";font-size:18px}
+html[data-skin="kids"] .warm-contact:nth-child(2) span:before,html[data-skin="kids"] .contact-btn:nth-child(2) .contact-icon:before{content:"✉️";font-size:18px}
+html[data-skin="kids"] .warm-contact:nth-child(3) span:before,html[data-skin="kids"] .contact-btn:nth-child(3) .contact-icon:before{content:"💬";font-size:18px}
+html[data-skin="kids"] .warm-contact:nth-child(4) span:before,html[data-skin="kids"] .contact-btn:nth-child(4) .contact-icon:before{content:"💭";font-size:18px}
+html[data-skin="kids"] .warm-contact:nth-child(5) span:before,html[data-skin="kids"] .contact-btn:nth-child(5) .contact-icon:before{content:"⏳";font-size:17px}
+
+/* Tabs look like chunky cartoon tabs, but labels and destinations stay identical. */
+html[data-skin="kids"] .warm-tabs,
+html[data-skin="kids"] .tabbar{
+  background:#fff5c6!important;
+  border:2px solid #263654!important;
+  border-radius:18px!important;
+  padding:5px!important;
+  box-shadow:3px 4px 0 rgba(38,54,84,.10)!important;
+}
+html[data-skin="kids"] .warm-tabs button,
+html[data-skin="kids"] .tab-btn{
+  font-weight:900!important;
+  border-radius:13px!important;
+}
+html[data-skin="kids"] .warm-tabs button.active,
+html[data-skin="kids"] .tab-btn.active{
+  background:#70d8ff!important;
+  color:#213451!important;
+  box-shadow:inset 0 -3px 0 rgba(38,54,84,.12)!important;
+}
+
+/* Details/history/profile/file cards become illustrated blocks instead of normal CRM cards. */
+html[data-skin="kids"] .warm-info-card,
+html[data-skin="kids"] .warm-history-card,
+html[data-skin="kids"] .warm-profile-card,
+html[data-skin="kids"] .warm-related-card,
+html[data-skin="kids"] .info-card,
+html[data-skin="kids"] .profile-card,
+html[data-skin="kids"] .timeline,
+html[data-skin="kids"] .list-card{
+  background:#fff!important;
+  border:2px solid #263654!important;
+  border-radius:22px!important;
+  box-shadow:4px 5px 0 rgba(38,54,84,.12)!important;
+  overflow:hidden;
+}
+html[data-skin="kids"] .warm-info-card:nth-of-type(odd),
+html[data-skin="kids"] .profile-card:nth-of-type(odd){background:#fff9d8!important}
+html[data-skin="kids"] .warm-history-row:nth-child(3n+1),
+html[data-skin="kids"] .timeline-item:nth-child(3n+1){background:#eef9ff!important}
+html[data-skin="kids"] .warm-history-row:nth-child(3n+2),
+html[data-skin="kids"] .timeline-item:nth-child(3n+2){background:#fff6cf!important}
+html[data-skin="kids"] .warm-history-row:nth-child(3n),
+html[data-skin="kids"] .timeline-item:nth-child(3n){background:#eef9f1!important}
+
+html[data-skin="kids"] .type-chip,
+html[data-skin="kids"] .warm-type-chip{
+  border:2px solid #263654!important;
+  background:#ffdf70!important;
+  color:#223252!important;
+  font-weight:950!important;
+  box-shadow:2px 3px 0 rgba(38,54,84,.10)!important;
+}
+
+html[data-skin="kids"] .warm-back,
+html[data-skin="kids"] .warm-more,
+html[data-skin="kids"] .more-btn{
+  border:2px solid #263654!important;
+  background:#fff!important;
+  box-shadow:2px 3px 0 rgba(38,54,84,.12)!important;
+}
+
+html[data-skin="kids"] .warm-section-title h2,
+html[data-skin="kids"] .section-head h2{
+  font-weight:950!important;
+  letter-spacing:-.02em!important;
+}
+
+@media(max-width:430px){
+  html[data-skin="kids"] .warm-contact,
+  html[data-skin="kids"] .contact-btn{min-height:68px!important}
+  html[data-skin="kids"] .warm-contact small,
+  html[data-skin="kids"] .contact-btn span:last-child{font-size:8px!important}
+}
