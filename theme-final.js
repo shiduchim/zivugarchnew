@@ -50,16 +50,23 @@ function topOverviewHtml(){
   return `<div class="warm-summary-grid top-overview">${summaryCard('blue',c.me,'Waiting on me','show-wait-me')}${summaryCard('amber',c.them,'Waiting on them','show-wait-them')}${summaryCard('sage',c.active,'Active shidduchim','show-active')}</div>`;
 }
 
-// Put the three v15-style overview cards back at the very top of Recent.
-// Cartoon keeps its special Today screen underneath them.
+// Keep the v15-style overview cards at the top.
+// The duplicate Needs you / Waiting on others blocks are intentionally removed.
 recentScreen=function(){
   const overview=topOverviewHtml();
   if((data.settings.skin||'classic')==='kids'){
     const base=easyRecent();
     return base.replace('<div class="kid-mission">',`${overview}<div class="kid-mission">`);
   }
-  const base=improvedRecent();
-  return base.replace('<div class="warm-search-row">',`${overview}<div class="warm-search-row">`);
+
+  const c=counts();
+  let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
+  if(ui.search){
+    const q=ui.search.toLowerCase();
+    entries=entries.filter(e=>(e.text+' '+linkedAbout(e)+' '+(e.personIds||[]).map(pid=>person(pid)?.name).join(' ')).toLowerCase().includes(q));
+  }
+
+  return `${header('Recent',c.me?`${c.me} thing${c.me===1?'':'s'} need you`:'You are caught up',{add:true})}${overview}${searchBox('Find anyone or anything…')}<div class="warm-section-title earlier-title"><h2>Earlier</h2><button data-act="add-activity">Add note</button></div>${activityFeed(entries)}`;
 };
 
 // Keep the existing settings screen, but it now renders only FINAL_SKINS via skinCards().
