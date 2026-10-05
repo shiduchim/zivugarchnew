@@ -1,45 +1,62 @@
-/* Neutral Frosted Glass override.
-   Keep the transparent Windows-style acrylic effect, but remove the pink/lilac feminine cast. */
+/* Neutral Frosted Glass — brighter, clearer, and visibly frosted.
+   Cool ice-blue / aqua palette, stronger glass edges, high text contrast. */
 html[data-skin="glass"]{
   color-scheme:light;
   --bg:transparent;
   --bg-2:transparent;
-  --surface:rgba(248,252,255,.34);
-  --surface-2:rgba(238,246,250,.22);
-  --surface-3:rgba(244,250,252,.28);
-  --text:#173445;
-  --text-2:#4f6a78;
-  --text-3:#758a95;
-  --line:rgba(255,255,255,.68);
-  --blue:#3f789b;
-  --blue-2:rgba(197,226,240,.56);
-  --blue-3:rgba(165,211,230,.54);
-  --sage:#4f8c78;
-  --sage-2:rgba(195,230,215,.52);
-  --peach:#b87962;
-  --peach-2:rgba(242,216,203,.47);
-  --amber:#987329;
-  --amber-2:rgba(245,228,180,.54);
-  --lav:#7184a5;
-  --lav-2:rgba(211,220,235,.52);
-  --rose:#8a6f78;
-  --rose-2:rgba(231,218,221,.45);
-  --shadow:0 20px 48px rgba(42,72,91,.17);
-  --shadow-soft:0 9px 25px rgba(42,72,91,.12);
+  --surface:rgba(255,255,255,.46);
+  --surface-2:rgba(246,251,253,.34);
+  --surface-3:rgba(238,247,250,.40);
+  --text:#102f43;
+  --text-2:#395b70;
+  --text-3:#617b8b;
+  --line:rgba(78,111,134,.22);
+  --blue:#2e7098;
+  --blue-2:rgba(204,232,246,.72);
+  --blue-3:rgba(174,217,238,.72);
+  --sage:#3f846f;
+  --sage-2:rgba(205,236,224,.72);
+  --peach:#af735e;
+  --peach-2:rgba(243,220,209,.68);
+  --amber:#8e6c25;
+  --amber-2:rgba(248,232,188,.74);
+  --lav:#617b9b;
+  --lav-2:rgba(214,225,238,.72);
+  --rose:#7e6b70;
+  --rose-2:rgba(232,222,224,.62);
+  --shadow:0 22px 52px rgba(42,70,92,.18);
+  --shadow-soft:0 10px 26px rgba(42,70,92,.13);
 }
 
+/* A slightly stronger neutral background is intentional: real frosted glass needs
+   visible color/shape behind the translucent panels in order for the blur to read. */
 html[data-skin="glass"] body{
   background:
-    radial-gradient(circle at 8% 10%,rgba(153,207,222,.72),transparent 29%),
-    radial-gradient(circle at 92% 13%,rgba(112,166,201,.72),transparent 31%),
-    radial-gradient(circle at 78% 84%,rgba(137,188,174,.58),transparent 34%),
-    linear-gradient(145deg,#dfeaf0 0,#edf4f6 42%,#dce9e5 100%) fixed!important;
+    radial-gradient(circle at 4% 8%,rgba(116,196,224,.88),transparent 27%),
+    radial-gradient(circle at 94% 7%,rgba(109,156,199,.82),transparent 30%),
+    radial-gradient(circle at 88% 86%,rgba(105,194,171,.68),transparent 31%),
+    radial-gradient(circle at 18% 88%,rgba(166,195,210,.62),transparent 28%),
+    linear-gradient(145deg,#d6e8f0 0,#f4f8f9 40%,#dbece7 100%) fixed!important;
 }
-
 html[data-skin="glass"] body:before{
-  background:linear-gradient(120deg,rgba(255,255,255,.27),transparent 38%,rgba(255,255,255,.13))!important;
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.30),transparent 35%,rgba(255,255,255,.12)),
+    radial-gradient(circle at 42% 18%,rgba(255,255,255,.72),transparent 18%);
 }
 
+html[data-skin="glass"] .app-shell,
+html[data-skin="glass"] .warm-detail-shell,
+html[data-skin="glass"] .detail-shell{
+  background:transparent!important;
+}
+
+/* Main glass surfaces. The double edge (white highlight + subtle cool inner stroke)
+   makes the boxes visible even on the brightest parts of the background. */
 html[data-skin="glass"] .warm-person-row,
 html[data-skin="glass"] .warm-activity-row,
 html[data-skin="glass"] .warm-source-row,
@@ -57,32 +74,126 @@ html[data-skin="glass"] .next-card,
 html[data-skin="glass"] .waiting-summary,
 html[data-skin="glass"] .all-clear,
 html[data-skin="glass"] .sheet,
-html[data-skin="glass"] .warm-bottom-nav{
-  background:rgba(250,253,255,.35)!important;
-  border:1px solid rgba(255,255,255,.72)!important;
-  box-shadow:0 18px 44px rgba(43,73,92,.16),inset 0 1px 0 rgba(255,255,255,.82)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(155%);
-  backdrop-filter:blur(24px) saturate(155%);
+html[data-skin="glass"] .warm-bottom-nav,
+html[data-skin="glass"] .warm-tabs,
+html[data-skin="glass"] .tabbar,
+html[data-skin="glass"] .info-card,
+html[data-skin="glass"] .profile-card,
+html[data-skin="glass"] .list-card,
+html[data-skin="glass"] .timeline{
+  background:rgba(255,255,255,.44)!important;
+  border:1.5px solid rgba(255,255,255,.94)!important;
+  box-shadow:
+    0 16px 38px rgba(45,73,94,.16),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 0 0 1px rgba(80,116,140,.13)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(145%);
+  backdrop-filter:blur(30px) saturate(145%);
 }
 
-html[data-skin="glass"] .warm-segment{
-  background:rgba(244,250,252,.22)!important;
-  border:1px solid rgba(255,255,255,.52)!important;
+/* Profile tiles need to remain distinct from one another. */
+html[data-skin="glass"] .warm-summary,
+html[data-skin="glass"] .warm-metric{
+  background:rgba(255,255,255,.50)!important;
+  border-color:rgba(255,255,255,.98)!important;
+}
+html[data-skin="glass"] .warm-summary.blue,
+html[data-skin="glass"] .warm-metric.sky,
+html[data-skin="glass"] .warm-metric.blue{background:rgba(221,241,251,.58)!important}
+html[data-skin="glass"] .warm-summary.amber,
+html[data-skin="glass"] .warm-metric.amber{background:rgba(255,239,199,.58)!important}
+html[data-skin="glass"] .warm-summary.sage,
+html[data-skin="glass"] .warm-metric.sage{background:rgba(218,242,231,.58)!important}
+
+/* Contact buttons should look like individual pieces of glass, not faint icons floating
+   on the page. */
+html[data-skin="glass"] .warm-contact,
+html[data-skin="glass"] .contact-btn{
+  background:rgba(255,255,255,.42)!important;
+  border:1px solid rgba(255,255,255,.92)!important;
+  box-shadow:0 8px 20px rgba(45,73,94,.10),inset 0 0 0 1px rgba(77,111,134,.10)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(140%);
+  backdrop-filter:blur(22px) saturate(140%);
+}
+html[data-skin="glass"] .warm-contact span,
+html[data-skin="glass"] .contact-icon{
+  background:rgba(255,255,255,.64)!important;
+  border:1px solid rgba(255,255,255,.96)!important;
+  box-shadow:inset 0 0 0 1px rgba(72,108,132,.10)!important;
 }
 
+/* Tab bar: stronger edge and a clearly visible selected tab. */
+html[data-skin="glass"] .warm-segment,
+html[data-skin="glass"] .warm-tabs,
+html[data-skin="glass"] .tabbar{
+  background:rgba(244,249,251,.42)!important;
+  border:1.5px solid rgba(255,255,255,.92)!important;
+  box-shadow:0 10px 24px rgba(44,72,92,.11),inset 0 0 0 1px rgba(75,111,135,.10)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(145%);
+  backdrop-filter:blur(26px) saturate(145%);
+}
 html[data-skin="glass"] .warm-seg.active,
-html[data-skin="glass"] .warm-nav.active{
-  background:rgba(239,249,252,.68)!important;
-  color:#315f79!important;
+html[data-skin="glass"] .warm-nav.active,
+html[data-skin="glass"] .warm-tabs button.active,
+html[data-skin="glass"] .tab-btn.active{
+  background:rgba(255,255,255,.88)!important;
+  color:#1d5576!important;
+  box-shadow:0 5px 14px rgba(42,71,93,.12),inset 0 0 0 1px rgba(80,116,140,.12)!important;
+}
+
+/* Readability on detail/profile pages. */
+html[data-skin="glass"] .warm-detail-name h1,
+html[data-skin="glass"] .warm-title-copy h1,
+html[data-skin="glass"] .warm-person-top strong,
+html[data-skin="glass"] .warm-activity-top strong,
+html[data-skin="glass"] .warm-info-card strong,
+html[data-skin="glass"] .warm-profile-card strong,
+html[data-skin="glass"] .info-card strong,
+html[data-skin="glass"] .profile-card strong{
+  color:#102f43!important;
+}
+html[data-skin="glass"] .warm-detail-name p,
+html[data-skin="glass"] .warm-title-copy p,
+html[data-skin="glass"] .warm-info-card small,
+html[data-skin="glass"] .warm-profile-card small,
+html[data-skin="glass"] .info-card small,
+html[data-skin="glass"] .profile-card small,
+html[data-skin="glass"] .warm-person-line,
+html[data-skin="glass"] .warm-activity-text,
+html[data-skin="glass"] .warm-contact small{
+  color:#456779!important;
+}
+
+/* Make rows inside the large Details/Profile card easier to scan. */
+html[data-skin="glass"] .warm-info-row,
+html[data-skin="glass"] .warm-profile-row,
+html[data-skin="glass"] .info-row,
+html[data-skin="glass"] .profile-row{
+  border-color:rgba(72,108,131,.16)!important;
 }
 
 html[data-skin="glass"] .warm-add{
-  background:rgba(61,119,154,.72)!important;
+  background:rgba(51,113,151,.82)!important;
   color:#fff!important;
+  border:1px solid rgba(255,255,255,.84)!important;
+  box-shadow:0 8px 20px rgba(46,94,126,.19),inset 0 1px 0 rgba(255,255,255,.38)!important;
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+}
+
+html[data-skin="glass"] .warm-back,
+html[data-skin="glass"] .warm-more,
+html[data-skin="glass"] .more-btn{
+  background:rgba(255,255,255,.58)!important;
+  border:1px solid rgba(255,255,255,.95)!important;
+  box-shadow:0 7px 18px rgba(45,73,94,.10),inset 0 0 0 1px rgba(78,112,135,.11)!important;
+  -webkit-backdrop-filter:blur(22px);
+  backdrop-filter:blur(22px);
 }
 
 .skin-swatch.glass{
-  background:linear-gradient(135deg,rgba(248,252,255,.96),rgba(133,185,208,.72),rgba(143,190,177,.64))!important;
-  color:#254f63!important;
-  border:1px solid rgba(255,255,255,.96)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(134,195,220,.82),rgba(125,194,177,.74))!important;
+  color:#244d63!important;
+  border:1px solid rgba(255,255,255,.98)!important;
+  box-shadow:inset 0 0 12px rgba(255,255,255,.92),0 5px 14px rgba(47,77,100,.15)!important;
 }
