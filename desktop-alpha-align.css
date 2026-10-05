@@ -1,0 +1,13 @@
+/* Desktop-only alignment for Shadchanim A-Z groups.
+   Keep each letter group aligned with the Everyone A-Z heading and main content edge. */
+@media (min-width:900px){
+  html:not([data-layout="phone"]) .alpha-group{
+    width:100%!important;
+    max-width:var(--desktop-content)!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  html:not([data-layout="phone"]) .alpha-letter{
+    margin-left:3px!important;
+  }
+}
