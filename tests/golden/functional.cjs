@@ -401,6 +401,44 @@ const checks = {
     record('S5', 'People without createdAt, contact dates or a name never crash lists, sorts, sheets or the duplicate check', ok ? 'PASS' : 'FAIL', det);
   },
 
+  // ---------- REPAIRS of audit bugs. Expected to FAIL on v58 and PASS after the fix. ----------
+  async R1_double_tap_interested_one_round() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await run(page, [nav('shidduchim'), seg('shidduchim', 'ideas'), ['tap', '[data-idea="idea_moshe_tamar"]']]);
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-act="idea-yes"]'); b.click(); b.click(); b.click(); });
+    await L.settle(page); await page.waitForTimeout(200);
+    const st = await L.idbRead(page); const sh = st.shidduchim.filter(s => s.guyId === 'p_moshe' && s.girlId === 'p_tamar');
+    const rounds = st.rounds.filter(r => sh.some(s => s.id === r.shidduchId));
+    const entries = st.entries.filter(e => sh.some(s => s.id === e.aboutId) && /Interested/.test(e.text || ''));
+    const ok = sh.length === 1 && rounds.length === 1 && entries.length === 1;
+    record('R1', 'Tapping Interested several times quickly creates one shidduch, one round and one ledger entry', ok ? 'PASS' : 'FAIL', { records: sh.length, rounds: rounds.map(r => `#${r.number}:${r.status}`), interestedEntries: entries.length });
+    await ctx.close();
+  },
+  async R2_active_pair_keeps_its_round() {
+    const det = {}; let ok = true;
+    for (const [key, mode, steps] of [
+      ['existingOffer', 'single', [nav('shidduchim'), seg('shidduchim', 'ideas'), ['tap', '[data-idea="idea_me_leah"]'], ['tap', '#overlay [data-act="idea-yes"]']]],
+      ['newOffer', 'shadchan', null]]) {
+      const { ctx, page } = await fresh({ mode }); const s0 = await L.idbRead(page);
+      if (steps) await run(page, steps);
+      else {
+        await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#qaIdea');
+        await page.selectOption('#iGuy', 'p_david'); await page.selectOption('#iGirl', 'p_noa'); await page.selectOption('#iBy', 'p_batya');
+        await L.tap(page, '#overlay [data-act="save-idea"]');
+        const mid = await L.idbRead(page); const ni = mid.ideas.find(i => !s0.ideas.some(o => o.id === i.id));
+        await L.tap(page, `[data-idea="${ni.id}"]`); await L.tap(page, '#overlay [data-act="idea-yes"]');
+      }
+      const st = await L.idbRead(page);
+      const sid = key === 'existingOffer' ? 'sh_me_leah' : 'sh_david_noa';
+      const r0 = s0.rounds.filter(r => r.shidduchId === sid), r1 = st.rounds.filter(r => r.shidduchId === sid);
+      const sh0 = s0.shidduchim.find(s => s.id === sid), sh1 = st.shidduchim.find(s => s.id === sid);
+      det[key] = { roundsBefore: r0.length, roundsAfter: r1.length, sameCurrentRound: sh0.currentRoundId === sh1.currentRoundId, activeRounds: r1.filter(r => r.status === 'active').length };
+      ok = ok && r1.length === r0.length && det[key].sameCurrentRound && det[key].activeRounds === 1;
+      await ctx.close();
+    }
+    record('R2', 'Interested on a pair that is already in progress keeps its current round (no second active round); an ended pair still reopens as Round 2 (F05)', ok ? 'PASS' : 'FAIL', det);
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });

@@ -166,7 +166,7 @@ shidduchDetail=function(sid){
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
-  if(b.dataset.act==='confirm-end-shidduch')confirmEndShidduch();
+  if(b.dataset.act==='confirm-end-shidduch')runOnce('end-shidduch',confirmEndShidduch);
 });
 
 if(data)render();

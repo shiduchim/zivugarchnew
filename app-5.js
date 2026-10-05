@@ -1,5 +1,8 @@
 function currentAdd(){if(ui.screen==='recent')addActivitySheet();else if(ui.screen==='guys')addPersonSheet('Guy');else if(ui.screen==='girls')addPersonSheet('Girl');else if(ui.screen==='shadchanim')addPersonSheet('Shadchan');else addIdeaSheet();}
 
+// A save action ignores repeated taps while it is still running (prevents double records).
+function runOnce(key,fn){if(runOnce.busy[key])return;runOnce.busy[key]=true;Promise.resolve().then(fn).finally(()=>{runOnce.busy[key]=false;});}
+runOnce.busy={};
 function handleClick(e){const b=e.target.closest('button');if(!b)return;
   if(b.dataset.screen){ui.screen=b.dataset.screen;ui.detail=null;ui.search='';ui.detailTab='';render();window.scrollTo({top:0,behavior:'smooth'});return;}
   if(b.dataset.person){ui.detail={type:'person',id:b.dataset.person};const p=person(b.dataset.person);ui.detailTab=p?.types?.includes('Shadchan')?'details':'profile';render();window.scrollTo(0,0);return;}
@@ -21,13 +24,13 @@ function handleClick(e){const b=e.target.closest('button');if(!b)return;
   else if(act==='add-source')addSourceSheet();
   else if(act==='add-idea')addIdeaSheet();
   else if(act==='close-sheet')closeSheet();
-  else if(act==='save-person')savePerson();
-  else if(act==='save-activity')saveActivity();
-  else if(act==='save-waiting')saveWaiting();
-  else if(act==='save-idea')saveIdea();
-  else if(act==='save-source')saveSource();
-  else if(act==='idea-no')chooseIdea(b.dataset.ideaId,false);
-  else if(act==='idea-yes')chooseIdea(b.dataset.ideaId,true);
+  else if(act==='save-person')runOnce(act,savePerson);
+  else if(act==='save-activity')runOnce(act,saveActivity);
+  else if(act==='save-waiting')runOnce(act,saveWaiting);
+  else if(act==='save-idea')runOnce(act,saveIdea);
+  else if(act==='save-source')runOnce(act,saveSource);
+  else if(act==='idea-no')runOnce('idea',()=>chooseIdea(b.dataset.ideaId,false));
+  else if(act==='idea-yes')runOnce('idea',()=>chooseIdea(b.dataset.ideaId,true));
   else if(act==='export-backup')exportBackup();
   else if(act==='import-backup')document.getElementById('backupFile')?.click();
   else if(act==='toggle-demo'){const wasDemo=data.meta.demo;keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});}
