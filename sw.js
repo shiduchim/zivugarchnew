@@ -1,5 +1,5 @@
-const CACHE='zivugmatch-v15';
-const CORE=['./','./index.html','./style.css?v=15','./appearance.css?v=15','./desktop.css?v=15','./easy.css?v=15','./skins.css?v=15','./app-1.js?v=15','./app-2.js?v=15','./app-3.js?v=15','./app-4.js?v=15','./app-ui.js?v=15','./app-easy.js?v=15','./app-5.js?v=15','./manifest.webmanifest','./icon.svg'];
+const CACHE='zivugmatch-v16';
+const CORE=['./','./index.html','./style.css?v=16','./appearance.css?v=16','./desktop.css?v=16','./easy.css?v=16','./skins.css?v=16','./app-1.js?v=16','./app-2.js?v=16','./app-3.js?v=16','./app-4.js?v=16','./app-ui.js?v=16','./nav-order.js?v=16','./app-easy.js?v=16','./app-5.js?v=16','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
