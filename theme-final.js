@@ -15,10 +15,14 @@ const FINAL_SKINS=[
 ];
 const FINAL_SKIN_IDS=new Set(FINAL_SKINS.map(x=>x[0]));
 skinCards=function(){return FINAL_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).join('');};
+
+// data-skin is the single appearance system. Legacy theme values may remain in saved
+// data for backwards compatibility, but they are deliberately prevented from styling the app.
 const applySettingsBeforeFinalSkins=applySettings;
 applySettings=function(){
 if(data?.settings && !FINAL_SKIN_IDS.has(data.settings.skin||'classic')) data.settings.skin='classic';
 applySettingsBeforeFinalSkins();
+document.documentElement.removeAttribute('data-theme');
 const skin=data?.settings?.skin||'classic';
 document.documentElement.dataset.skin=skin;
 const colors={
@@ -27,6 +31,7 @@ contrast:'#ffffff',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
 };
 document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||colors.classic);
 };
+
 // Cartoon changes only the visual treatment of navigation. The tabs and labels stay the same as every other theme.
 const navBeforeFinalSkins=nav;
 nav=function(){
@@ -101,5 +106,12 @@ if(app) new MutationObserver(queue).observe(app,{childList:true,subtree:true});
 queue();
 })();
 
-// Keep the existing settings screen, but it now renders only FINAL_SKINS via skinCards().
+// Retire the old warm/blue/sage/dark Theme picker. Skin is now the only appearance choice.
+const settingsSheetBeforeSkinOnly=settingsSheet;
+settingsSheet=function(){
+settingsSheetBeforeSkinOnly();
+const legacyThemeControl=overlay.querySelector('[data-setting="theme"]');
+legacyThemeControl?.closest('.setting-row')?.remove();
+};
+
 if(data){applySettings();render();}
