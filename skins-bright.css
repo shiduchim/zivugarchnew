@@ -1,0 +1,148 @@
+/* Bright readable overrides for the colorful skins.
+   Dark remains intentionally dark; the other personality themes use light surfaces and strong text contrast. */
+
+/* Shared readable card treatment for bright skins */
+html[data-skin="boys"] .warm-person-row,
+html[data-skin="boys"] .warm-activity-row,
+html[data-skin="boys"] .warm-match-row,
+html[data-skin="boys"] .warm-summary,
+html[data-skin="boys"] .warm-metric,
+html[data-skin="boys"] .warm-info-card,
+html[data-skin="boys"] .warm-history-card,
+html[data-skin="boys"] .warm-profile-card,
+html[data-skin="boys"] .warm-related-card,
+html[data-skin="boys"] .next-card,
+html[data-skin="girls"] .warm-person-row,
+html[data-skin="girls"] .warm-activity-row,
+html[data-skin="girls"] .warm-match-row,
+html[data-skin="girls"] .warm-summary,
+html[data-skin="girls"] .warm-metric,
+html[data-skin="girls"] .warm-info-card,
+html[data-skin="girls"] .warm-history-card,
+html[data-skin="girls"] .warm-profile-card,
+html[data-skin="girls"] .warm-related-card,
+html[data-skin="girls"] .next-card,
+html[data-skin="neon"] .warm-person-row,
+html[data-skin="neon"] .warm-activity-row,
+html[data-skin="neon"] .warm-match-row,
+html[data-skin="neon"] .warm-summary,
+html[data-skin="neon"] .warm-metric,
+html[data-skin="neon"] .warm-info-card,
+html[data-skin="neon"] .warm-history-card,
+html[data-skin="neon"] .warm-profile-card,
+html[data-skin="neon"] .warm-related-card,
+html[data-skin="neon"] .next-card,
+html[data-skin="ocean"] .warm-person-row,
+html[data-skin="ocean"] .warm-activity-row,
+html[data-skin="ocean"] .warm-match-row,
+html[data-skin="ocean"] .warm-summary,
+html[data-skin="ocean"] .warm-metric,
+html[data-skin="ocean"] .warm-info-card,
+html[data-skin="ocean"] .warm-history-card,
+html[data-skin="ocean"] .warm-profile-card,
+html[data-skin="ocean"] .warm-related-card,
+html[data-skin="ocean"] .next-card,
+html[data-skin="sunset"] .warm-person-row,
+html[data-skin="sunset"] .warm-activity-row,
+html[data-skin="sunset"] .warm-match-row,
+html[data-skin="sunset"] .warm-summary,
+html[data-skin="sunset"] .warm-metric,
+html[data-skin="sunset"] .warm-info-card,
+html[data-skin="sunset"] .warm-history-card,
+html[data-skin="sunset"] .warm-profile-card,
+html[data-skin="sunset"] .warm-related-card,
+html[data-skin="sunset"] .next-card{
+  color:var(--text)!important;
+  border:1px solid var(--line)!important;
+  box-shadow:0 7px 20px rgba(36,58,82,.08)!important;
+}
+
+/* BOYS — bright sky/cyan/teal instead of dark navy */
+html[data-skin="boys"]{
+  color-scheme:light;
+  --bg:#eaf9ff;--bg-2:#f5fdff;--surface:#ffffff;--surface-2:#dff6fb;--surface-3:#cceef7;
+  --text:#14334a;--text-2:#48697d;--text-3:#718b99;--line:rgba(26,115,144,.16);
+  --blue:#0b8fbd;--blue-2:#d8f3fb;--blue-3:#bceaf6;--sage:#1e9d78;--sage-2:#d9f5ea;
+  --peach:#d87858;--peach-2:#ffe7dc;--amber:#a97400;--amber-2:#fff1c8;
+  --shadow:0 12px 28px rgba(31,100,125,.10);--shadow-soft:0 6px 16px rgba(31,100,125,.08)
+}
+html[data-skin="boys"] body{background:radial-gradient(circle at 90% 3%,#b6eff7 0,transparent 30%),linear-gradient(155deg,#e8f9ff,#f7fdff 52%,#ddf6ef) fixed!important}
+html[data-skin="boys"] .warm-person-row,html[data-skin="boys"] .warm-activity-row,html[data-skin="boys"] .warm-match-row,html[data-skin="boys"] .warm-summary,html[data-skin="boys"] .warm-metric{background:rgba(255,255,255,.94)!important}
+html[data-skin="boys"] .warm-avatar,html[data-skin="boys"] .warm-person-big{background:linear-gradient(135deg,#65d8f1,#7fe3bf)!important;color:#12384b!important}
+html[data-skin="boys"] .warm-bottom-nav{background:rgba(247,253,255,.97)!important;border-top:1px solid rgba(15,135,170,.16)!important}
+html[data-skin="boys"] .warm-nav.active,html[data-skin="boys"] .warm-seg.active{background:#cfeff7!important;color:#0f6281!important}
+
+/* GIRLS — bright rose/lilac instead of deep plum */
+html[data-skin="girls"]{
+  color-scheme:light;
+  --bg:#fff0f7;--bg-2:#fff8fc;--surface:#ffffff;--surface-2:#f9e2ef;--surface-3:#efd9fb;
+  --text:#4b2941;--text-2:#77546c;--text-3:#9a7d90;--line:rgba(177,77,129,.15);
+  --blue:#c44d8d;--blue-2:#f8deeb;--blue-3:#efc7dd;--sage:#6f9f72;--sage-2:#e2f2e2;
+  --peach:#df7d7e;--peach-2:#ffe4e1;--amber:#a67813;--amber-2:#fff0c5;--lav:#8e62c9;--lav-2:#eee3fb;
+  --shadow:0 12px 28px rgba(126,63,102,.10);--shadow-soft:0 6px 16px rgba(126,63,102,.08)
+}
+html[data-skin="girls"] body{background:radial-gradient(circle at 13% 0,#ffd4e9 0,transparent 31%),radial-gradient(circle at 92% 14%,#ead8ff 0,transparent 30%),linear-gradient(160deg,#fff1f8,#fffafe 55%,#f8efff) fixed!important}
+html[data-skin="girls"] .warm-person-row,html[data-skin="girls"] .warm-activity-row,html[data-skin="girls"] .warm-match-row,html[data-skin="girls"] .warm-summary,html[data-skin="girls"] .warm-metric{background:rgba(255,255,255,.94)!important}
+html[data-skin="girls"] .warm-avatar,html[data-skin="girls"] .warm-person-big{background:linear-gradient(135deg,#ffb3d2,#d8b6ff)!important;color:#582744!important}
+html[data-skin="girls"] .warm-bottom-nav{background:rgba(255,249,253,.97)!important;border-top:1px solid rgba(181,83,134,.15)!important}
+html[data-skin="girls"] .warm-nav.active,html[data-skin="girls"] .warm-seg.active{background:#f6dceb!important;color:#9a3f72!important}
+
+/* NEON — vivid electric accents on a bright pearly background */
+html[data-skin="neon"]{
+  color-scheme:light;
+  --bg:#f7f3ff;--bg-2:#fcfbff;--surface:#ffffff;--surface-2:#eee7ff;--surface-3:#ddf9ff;
+  --text:#2e2450;--text-2:#62577e;--text-3:#8e84a6;--line:rgba(99,65,180,.16);
+  --blue:#5b48e8;--blue-2:#e5e0ff;--blue-3:#d2c9ff;--sage:#079b7d;--sage-2:#d9f7ef;
+  --peach:#df598d;--peach-2:#ffe0ec;--amber:#a27100;--amber-2:#fff0bd;--lav:#8a46dc;--lav-2:#eee1ff;
+  --shadow:0 12px 30px rgba(99,65,180,.11);--shadow-soft:0 6px 18px rgba(44,196,220,.10)
+}
+html[data-skin="neon"] body{background:radial-gradient(circle at 16% 0,#e2d9ff 0,transparent 32%),radial-gradient(circle at 90% 15%,#c9f8ff 0,transparent 30%),linear-gradient(150deg,#f8f4ff,#ffffff 55%,#eefcff) fixed!important}
+html[data-skin="neon"] .warm-person-row,html[data-skin="neon"] .warm-activity-row,html[data-skin="neon"] .warm-match-row,html[data-skin="neon"] .warm-summary,html[data-skin="neon"] .warm-metric{background:#fff!important;border-color:rgba(93,72,232,.18)!important;box-shadow:0 0 0 1px rgba(0,210,235,.05),0 8px 22px rgba(91,72,232,.10)!important}
+html[data-skin="neon"] .warm-nav.active,html[data-skin="neon"] .warm-seg.active{background:linear-gradient(135deg,#e8e2ff,#d9f9ff)!important;color:#4c3ac3!important}
+html[data-skin="neon"] .warm-bottom-nav{background:rgba(255,255,255,.96)!important}
+
+/* OCEAN — light aqua/seafoam with dark readable type */
+html[data-skin="ocean"]{
+  color-scheme:light;
+  --bg:#e8fbfb;--bg-2:#f6ffff;--surface:#ffffff;--surface-2:#d9f5f4;--surface-3:#cfeff7;
+  --text:#153d49;--text-2:#4f7178;--text-3:#7b969c;--line:rgba(27,132,144,.15);
+  --blue:#137f9f;--blue-2:#d6f1f6;--blue-3:#bde8ef;--sage:#238e73;--sage-2:#dcf4e9;
+  --peach:#d57d62;--peach-2:#ffe5dc;--amber:#9b7213;--amber-2:#fff0c5;
+  --shadow:0 12px 28px rgba(23,111,126,.10);--shadow-soft:0 6px 16px rgba(23,111,126,.08)
+}
+html[data-skin="ocean"] body{background:radial-gradient(circle at 88% 4%,#b5eff1 0,transparent 31%),linear-gradient(160deg,#e7fbfc,#f8ffff 48%,#e8f8ef) fixed!important}
+html[data-skin="ocean"] .warm-person-row,html[data-skin="ocean"] .warm-activity-row,html[data-skin="ocean"] .warm-match-row,html[data-skin="ocean"] .warm-summary,html[data-skin="ocean"] .warm-metric{background:rgba(255,255,255,.95)!important}
+html[data-skin="ocean"] .warm-bottom-nav{background:rgba(248,255,255,.97)!important}
+html[data-skin="ocean"] .warm-nav.active,html[data-skin="ocean"] .warm-seg.active{background:#d4f0f1!important;color:#116f82!important}
+
+/* SUNSET — bright peach/pink/violet, dark readable text */
+html[data-skin="sunset"]{
+  color-scheme:light;
+  --bg:#fff1eb;--bg-2:#fff9f6;--surface:#ffffff;--surface-2:#ffe4dc;--surface-3:#f4e2f6;
+  --text:#4d2e3f;--text-2:#76586a;--text-3:#9a7f8f;--line:rgba(199,94,100,.15);
+  --blue:#9b4c91;--blue-2:#f3e1f1;--blue-3:#e9d1e8;--sage:#5f9b78;--sage-2:#e0f2e7;
+  --peach:#e26f5a;--peach-2:#ffe1d8;--amber:#a66f09;--amber-2:#fff0bf;
+  --shadow:0 12px 28px rgba(170,79,92,.10);--shadow-soft:0 6px 16px rgba(170,79,92,.08)
+}
+html[data-skin="sunset"] body{background:radial-gradient(circle at 12% 0,#ffd1c3 0,transparent 31%),radial-gradient(circle at 93% 14%,#efddff 0,transparent 30%),linear-gradient(155deg,#fff0e9,#fffafa 52%,#f9edff) fixed!important}
+html[data-skin="sunset"] .warm-person-row,html[data-skin="sunset"] .warm-activity-row,html[data-skin="sunset"] .warm-match-row,html[data-skin="sunset"] .warm-summary,html[data-skin="sunset"] .warm-metric{background:rgba(255,255,255,.95)!important}
+html[data-skin="sunset"] .warm-bottom-nav{background:rgba(255,250,248,.97)!important}
+html[data-skin="sunset"] .warm-nav.active,html[data-skin="sunset"] .warm-seg.active{background:#f8dfeb!important;color:#90416e!important}
+
+/* High contrast stays light and extremely readable. */
+html[data-skin="contrast"]{color-scheme:light;--bg:#fff;--bg-2:#fff;--surface:#fff;--surface-2:#f2f2f2;--surface-3:#e8e8e8;--text:#000;--text-2:#222;--text-3:#4a4a4a;--line:#111;--blue:#0645ad;--blue-2:#e6f0ff;--blue-3:#cfe1ff;--sage:#116b35;--sage-2:#e2f4e8;--amber:#7a5600;--amber-2:#fff2bd;--shadow:none;--shadow-soft:none}
+html[data-skin="contrast"] body{background:#fff!important}
+html[data-skin="contrast"] .warm-person-row,html[data-skin="contrast"] .warm-activity-row,html[data-skin="contrast"] .warm-match-row,html[data-skin="contrast"] .warm-summary,html[data-skin="contrast"] .warm-metric{background:#fff!important;border:2px solid #111!important;box-shadow:none!important}
+
+/* Never allow inherited dark text colors from earlier skin rules to reduce readability. */
+html[data-skin="boys"] .warm-title-copy h1,html[data-skin="boys"] .warm-title-copy p,html[data-skin="boys"] .warm-person-top strong,html[data-skin="boys"] .warm-activity-top strong,
+html[data-skin="girls"] .warm-title-copy h1,html[data-skin="girls"] .warm-title-copy p,html[data-skin="girls"] .warm-person-top strong,html[data-skin="girls"] .warm-activity-top strong,
+html[data-skin="neon"] .warm-title-copy h1,html[data-skin="neon"] .warm-title-copy p,html[data-skin="neon"] .warm-person-top strong,html[data-skin="neon"] .warm-activity-top strong,
+html[data-skin="ocean"] .warm-title-copy h1,html[data-skin="ocean"] .warm-title-copy p,html[data-skin="ocean"] .warm-person-top strong,html[data-skin="ocean"] .warm-activity-top strong,
+html[data-skin="sunset"] .warm-title-copy h1,html[data-skin="sunset"] .warm-title-copy p,html[data-skin="sunset"] .warm-person-top strong,html[data-skin="sunset"] .warm-activity-top strong{color:var(--text)!important}
+
+html[data-skin="boys"] .warm-person-line,html[data-skin="boys"] .warm-activity-text,html[data-skin="boys"] time,
+html[data-skin="girls"] .warm-person-line,html[data-skin="girls"] .warm-activity-text,html[data-skin="girls"] time,
+html[data-skin="neon"] .warm-person-line,html[data-skin="neon"] .warm-activity-text,html[data-skin="neon"] time,
+html[data-skin="ocean"] .warm-person-line,html[data-skin="ocean"] .warm-activity-text,html[data-skin="ocean"] time,
+html[data-skin="sunset"] .warm-person-line,html[data-skin="sunset"] .warm-activity-text,html[data-skin="sunset"] time{color:var(--text-2)!important}
