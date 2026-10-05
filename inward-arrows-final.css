@@ -1,0 +1,19 @@
+/* Make the pair arrows clearly visible and unmistakably point inward. */
+.zm-inward-arrows{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  min-width:32px;
+  font-family:Arial,"Segoe UI Symbol",sans-serif!important;
+  font-size:21px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  color:#7c3aed!important;
+  transform:none!important;
+  white-space:nowrap;
+  text-shadow:0 1px 0 rgba(255,255,255,.7);
+}
+@media(max-width:520px){
+  .zm-inward-arrows{font-size:19px!important;min-width:29px}
+}
