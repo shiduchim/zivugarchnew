@@ -1,21 +1,2 @@
-/* Pair arrows match the same typography/color/spacing used by the pair names. */
-.zm-inward-arrows{
-  display:inline-block!important;
-  min-width:0!important;
-  margin:0!important;
-  font-family:inherit!important;
-  font-size:20px!important;
-  font-weight:800!important;
-  line-height:1.12!important;
-  letter-spacing:0!important;
-  color:#14244a!important;
-  transform:none!important;
-  white-space:nowrap;
-  text-shadow:none!important;
-}
-@media(max-width:520px){
-  .zm-inward-arrows{font-size:18px!important}
-}
-@media(max-width:370px){
-  .zm-inward-arrows{font-size:17px!important}
-}
+/* Pair arrow connector retired in v49. Keep hidden if any older cached markup survives briefly. */
+.zm-inward-arrows{display:none!important}
