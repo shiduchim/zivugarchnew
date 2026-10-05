@@ -1,58 +1,227 @@
-/* Neon v28 — one light electric skin with five clear section identities.
-   Components read only the shared --section-* variables. Status meaning stays independent. */
+/* Neon v30 — restore the bright electric look that worked, then add section identity only where it helps.
+   Recent = cyan, Guys = blue, Shadchanim = violet, Girls = pink, Shidduchim = green.
+   Status colors and action colors remain independent. */
+
 html[data-skin="neon"]{
   color-scheme:light;
-  --bg:#f4f7ff;--bg-2:#f8fcff;--surface:rgba(255,255,255,.9);--surface-2:#f1f4ff;--surface-3:#e8f8ff;
-  --text:#21163f;--text-2:#514b70;--text-3:#77708f;--line:rgba(70,85,140,.16);
-  --blue:#6047ff;--blue-2:#e7e1ff;--blue-3:#d5ccff;--sage:#0f9c73;--sage-2:#d9f8ee;
-  --peach:#e34291;--peach-2:#ffe0f0;--amber:#b87500;--amber-2:#fff0bd;--lav:#8b46df;--lav-2:#f0e2ff;
-  --shadow:0 12px 30px rgba(40,55,110,.11);--shadow-soft:0 7px 20px rgba(40,55,110,.08);
-  --neon-card:rgba(255,255,255,.9);--neon-edge:rgba(70,85,140,.16);--section-on:#071027;
-  --sec-recent-accent:#22D3EE;--sec-recent-ink:#0E7490;--sec-recent-soft:rgba(34,211,238,.14);--sec-recent-glow:rgba(34,211,238,.34);
-  --sec-guys-accent:#3182FF;--sec-guys-ink:#1D5FD6;--sec-guys-soft:rgba(49,130,255,.13);--sec-guys-glow:rgba(49,130,255,.34);
-  --sec-shadchanim-accent:#8B5CF6;--sec-shadchanim-ink:#6D3FE0;--sec-shadchanim-soft:rgba(139,92,246,.13);--sec-shadchanim-glow:rgba(139,92,246,.34);
-  --sec-girls-accent:#F43F9E;--sec-girls-ink:#B81D72;--sec-girls-soft:rgba(244,63,158,.12);--sec-girls-glow:rgba(244,63,158,.32);
-  --sec-shidduchim-accent:#22C55E;--sec-shidduchim-ink:#13773A;--sec-shidduchim-soft:rgba(34,197,94,.14);--sec-shidduchim-glow:rgba(34,197,94,.34);
-  --status-me-ink:#28538f;--status-me-edge:rgba(42,83,145,.28);--status-me-bg:linear-gradient(145deg,#e8f1ff,#dce9fb);
-  --status-them-ink:#8a5a00;--status-them-edge:rgba(184,117,0,.32);--status-them-bg:linear-gradient(145deg,#fff4c6,#ffe8a6);
-  --status-ok-ink:#0b7a59;--status-ok-edge:rgba(15,156,115,.30);--status-ok-bg:linear-gradient(145deg,#dcfbee,#c8f3df);
-  --section-accent:var(--sec-recent-accent);--section-ink:var(--sec-recent-ink);--section-soft:var(--sec-recent-soft);--section-glow:var(--sec-recent-glow);
+  --bg:#f5f2ff;
+  --bg-2:#f8fcff;
+  --surface:rgba(255,255,255,.88);
+  --surface-2:rgba(242,238,255,.90);
+  --surface-3:rgba(228,248,255,.92);
+  --text:#21163f;
+  --text-2:#51456f;
+  --text-3:#786f94;
+  --line:rgba(89,65,190,.18);
+  --blue:#6047ff;
+  --blue-2:#e7e1ff;
+  --blue-3:#d5ccff;
+  --sage:#0f9c73;
+  --sage-2:#d9f8ee;
+  --peach:#e34291;
+  --peach-2:#ffe0f0;
+  --amber:#b87500;
+  --amber-2:#fff0bd;
+  --lav:#8b46df;
+  --lav-2:#f0e2ff;
+  --shadow:0 14px 34px rgba(91,61,201,.14);
+  --shadow-soft:0 7px 20px rgba(32,178,216,.12);
+
+  --sec-recent-accent:#22d3ee;
+  --sec-recent-ink:#0e7490;
+  --sec-recent-soft:rgba(34,211,238,.15);
+  --sec-recent-glow:rgba(34,211,238,.30);
+  --sec-guys-accent:#3182ff;
+  --sec-guys-ink:#1d5fd6;
+  --sec-guys-soft:rgba(49,130,255,.14);
+  --sec-guys-glow:rgba(49,130,255,.30);
+  --sec-shadchanim-accent:#8b5cf6;
+  --sec-shadchanim-ink:#6d3fe0;
+  --sec-shadchanim-soft:rgba(139,92,246,.14);
+  --sec-shadchanim-glow:rgba(139,92,246,.30);
+  --sec-girls-accent:#f43f9e;
+  --sec-girls-ink:#b81d72;
+  --sec-girls-soft:rgba(244,63,158,.13);
+  --sec-girls-glow:rgba(244,63,158,.28);
+  --sec-shidduchim-accent:#22c55e;
+  --sec-shidduchim-ink:#13773a;
+  --sec-shidduchim-soft:rgba(34,197,94,.14);
+  --sec-shidduchim-glow:rgba(34,197,94,.28);
+
+  --section-accent:var(--sec-recent-accent);
+  --section-ink:var(--sec-recent-ink);
+  --section-soft:var(--sec-recent-soft);
+  --section-glow:var(--sec-recent-glow);
 }
-html[data-skin="neon"][data-section="recent"],html[data-skin="neon"] .warm-nav[data-screen="recent"]{--section-accent:var(--sec-recent-accent);--section-ink:var(--sec-recent-ink);--section-soft:var(--sec-recent-soft);--section-glow:var(--sec-recent-glow)}
-html[data-skin="neon"][data-section="guys"],html[data-skin="neon"] .warm-nav[data-screen="guys"]{--section-accent:var(--sec-guys-accent);--section-ink:var(--sec-guys-ink);--section-soft:var(--sec-guys-soft);--section-glow:var(--sec-guys-glow)}
-html[data-skin="neon"][data-section="shadchanim"],html[data-skin="neon"] .warm-nav[data-screen="shadchanim"]{--section-accent:var(--sec-shadchanim-accent);--section-ink:var(--sec-shadchanim-ink);--section-soft:var(--sec-shadchanim-soft);--section-glow:var(--sec-shadchanim-glow)}
-html[data-skin="neon"][data-section="girls"],html[data-skin="neon"] .warm-nav[data-screen="girls"]{--section-accent:var(--sec-girls-accent);--section-ink:var(--sec-girls-ink);--section-soft:var(--sec-girls-soft);--section-glow:var(--sec-girls-glow)}
-html[data-skin="neon"][data-section="shidduchim"],html[data-skin="neon"] .warm-nav[data-screen="shidduchim"],html[data-skin="neon"] .warm-match-row{--section-accent:var(--sec-shidduchim-accent);--section-ink:var(--sec-shidduchim-ink);--section-soft:var(--sec-shidduchim-soft);--section-glow:var(--sec-shidduchim-glow)}
-html[data-skin="neon"] body{background:radial-gradient(circle at 10% 3%,color-mix(in srgb,var(--section-accent) 24%,transparent),transparent 30%),radial-gradient(circle at 92% 7%,color-mix(in srgb,var(--section-accent) 11%,transparent),transparent 28%),linear-gradient(145deg,#f4f7ff,#fbfdff 52%,#f2fbff) fixed!important}
-html[data-skin="neon"] body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(rgba(70,100,200,.032) 1px,transparent 1px),linear-gradient(90deg,rgba(70,100,200,.032) 1px,transparent 1px);background-size:36px 36px}
-html[data-skin="neon"] .warm-person-row,html[data-skin="neon"] .warm-activity-row,html[data-skin="neon"] .warm-source-row,html[data-skin="neon"] .warm-match-row,html[data-skin="neon"] .warm-history-row,html[data-skin="neon"] .warm-search,html[data-skin="neon"] .warm-filter,html[data-skin="neon"] .warm-info-card,html[data-skin="neon"] .warm-profile-card,html[data-skin="neon"] .warm-history-card,html[data-skin="neon"] .warm-related-card,html[data-skin="neon"] .next-card,html[data-skin="neon"] .waiting-summary,html[data-skin="neon"] .all-clear{background:var(--neon-card)!important;border:1.5px solid var(--neon-edge)!important;box-shadow:0 8px 22px rgba(40,55,110,.09)!important;color:var(--text)!important}
-html[data-skin="neon"] .warm-person-row.selected{background:linear-gradient(var(--section-soft),var(--section-soft)),#fff!important;border-color:color-mix(in srgb,var(--section-accent) 58%,transparent)!important;box-shadow:inset 4px 0 0 var(--section-accent),0 0 16px var(--section-glow)!important}
-html[data-skin="neon"] .warm-match-row{border-color:color-mix(in srgb,var(--section-accent) 42%,var(--neon-edge))!important;box-shadow:inset 3px 0 0 var(--section-accent),0 8px 22px rgba(40,55,110,.09)!important}
-html[data-skin="neon"] .warm-segment,html[data-skin="neon"] .warm-tabs{background:rgba(246,248,255,.92)!important;border:1.5px solid var(--neon-edge)!important;box-shadow:0 8px 22px rgba(40,55,110,.08)!important}
-html[data-skin="neon"] .warm-seg.active{background:linear-gradient(var(--section-soft),var(--section-soft)),#fff!important;color:var(--section-ink)!important;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--section-accent) 55%,transparent),0 0 12px var(--section-glow)!important}
-html[data-skin="neon"] .warm-tabs button.active{background:linear-gradient(135deg,var(--section-accent),color-mix(in srgb,var(--section-accent) 72%,#fff))!important;color:var(--section-on)!important;box-shadow:0 0 16px var(--section-glow)!important}
-html[data-skin="neon"] .warm-summary,html[data-skin="neon"] .warm-metric{border:1.5px solid var(--neon-edge)!important;color:var(--text)!important;box-shadow:0 8px 22px rgba(40,55,110,.09)!important}
-html[data-skin="neon"] .warm-summary.blue{background:var(--status-me-bg)!important;border-color:var(--status-me-edge)!important}html[data-skin="neon"] .warm-summary.blue .warm-summary-icon{color:var(--status-me-ink)!important}
-html[data-skin="neon"] .warm-summary.amber{background:var(--status-them-bg)!important;border-color:var(--status-them-edge)!important}html[data-skin="neon"] .warm-summary.amber .warm-summary-icon{color:var(--status-them-ink)!important}
-html[data-skin="neon"] .warm-summary.sage{background:var(--status-ok-bg)!important;border-color:var(--status-ok-edge)!important}html[data-skin="neon"] .warm-summary.sage .warm-summary-icon{color:var(--status-ok-ink)!important}
-html[data-skin="neon"] .warm-summary-icon,html[data-skin="neon"] .warm-metric-icon{background:#fff!important;box-shadow:0 0 0 1px rgba(70,85,140,.12)!important}
-html[data-skin="neon"] .warm-metric.blue,html[data-skin="neon"] .warm-metric.sage{background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--section-accent) 10%,#fff))!important;border-color:color-mix(in srgb,var(--section-accent) 34%,transparent)!important}
-html[data-skin="neon"] .warm-metric.blue .warm-metric-icon,html[data-skin="neon"] .warm-metric.sage .warm-metric-icon{background:var(--section-soft)!important;color:var(--section-ink)!important}
-html[data-skin="neon"] .warm-metric.amber{background:var(--status-them-bg)!important;border-color:var(--status-them-edge)!important}html[data-skin="neon"] .warm-metric.amber .warm-metric-icon{color:var(--status-them-ink)!important}
-html[data-skin="neon"] .warm-contact{color:#2d3458!important;font-weight:800!important}html[data-skin="neon"] .warm-contact>span{background:var(--section-soft)!important;color:var(--section-ink)!important;border:1.5px solid color-mix(in srgb,var(--section-accent) 38%,transparent)!important;box-shadow:none!important}html[data-skin="neon"] .warm-contact.wait>span{background:var(--status-them-bg)!important;color:var(--status-them-ink)!important;border-color:var(--status-them-edge)!important}
-html[data-skin="neon"] nav.warm-bottom-nav{background:rgba(247,250,255,.95)!important;border-color:var(--neon-edge)!important;box-shadow:0 -8px 26px rgba(40,55,110,.10)!important;backdrop-filter:blur(18px) saturate(135%)}
-html[data-skin="neon"] .warm-bottom-nav .warm-nav{color:#5c5678!important}html[data-skin="neon"] .warm-bottom-nav .warm-nav .warm-nav-icon{background:var(--section-soft)!important;color:var(--section-ink)!important}html[data-skin="neon"] .warm-bottom-nav .warm-nav.active{background:linear-gradient(var(--section-soft),var(--section-soft))!important;color:var(--section-ink)!important;box-shadow:inset 0 3px 0 var(--section-accent)!important}html[data-skin="neon"] .warm-bottom-nav .warm-nav.active .warm-nav-icon{background:var(--section-accent)!important;color:var(--section-on)!important;box-shadow:0 0 15px var(--section-glow)!important}
-@media(min-width:900px){html[data-skin="neon"]:not([data-layout="phone"]) .warm-bottom-nav .warm-nav.active{box-shadow:inset 4px 0 0 var(--section-accent)!important}}
-html[data-skin="neon"] .warm-title-copy h1,html[data-skin="neon"] .warm-detail-name h1,html[data-skin="neon"] .warm-person-top strong,html[data-skin="neon"] .warm-activity-top strong,html[data-skin="neon"] .warm-info-card strong,html[data-skin="neon"] .warm-profile-card strong{color:var(--text)!important}
-html[data-skin="neon"] .warm-title-copy h1::after{content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:4px;background:linear-gradient(90deg,var(--section-accent),color-mix(in srgb,var(--section-accent) 20%,transparent));box-shadow:0 0 12px var(--section-glow)}
-html[data-skin="neon"] .warm-add{background:var(--section-soft);color:var(--section-ink);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--section-accent) 45%,transparent)}
-html[data-skin="neon"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--section-accent) 28%,transparent),color-mix(in srgb,var(--section-accent) 10%,transparent) 38%,transparent 72%)}
-html[data-skin="neon"] .warm-detail-name>span{background:var(--section-soft)!important;color:var(--section-ink)!important;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--section-accent) 48%,transparent)}
-html[data-skin="neon"] .warm-person-big,html[data-skin="neon"] .warm-avatar,html[data-skin="neon"] .warm-match-avatar{background:linear-gradient(135deg,color-mix(in srgb,var(--section-accent) 18%,#fff),color-mix(in srgb,var(--section-accent) 38%,#fff))!important;color:var(--section-on)!important;box-shadow:0 0 0 2px color-mix(in srgb,var(--section-accent) 55%,#fff),0 0 12px color-mix(in srgb,var(--section-accent) 22%,transparent)!important}
-html[data-skin="neon"] .detail-shell{color:var(--text)}html[data-skin="neon"] .back-btn,html[data-skin="neon"] .more-btn{min-width:44px;min-height:44px;background:#fff;color:var(--section-ink);border:1.5px solid color-mix(in srgb,var(--section-accent) 35%,var(--neon-edge));box-shadow:0 5px 16px rgba(40,55,110,.08)}html[data-skin="neon"] .detail-name{color:var(--text)}html[data-skin="neon"] .detail-name::after{content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:4px;background:linear-gradient(90deg,var(--section-accent),transparent);box-shadow:0 0 12px var(--section-glow)}
-html[data-skin="neon"] .pair-hero{background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--section-accent) 10%,#fff));border:1.5px solid color-mix(in srgb,var(--section-accent) 34%,var(--neon-edge));box-shadow:0 10px 28px rgba(40,55,110,.10)}html[data-skin="neon"] .person-avatar,html[data-skin="neon"] .avatar.heart{background:linear-gradient(135deg,color-mix(in srgb,var(--section-accent) 18%,#fff),color-mix(in srgb,var(--section-accent) 38%,#fff));color:var(--section-on);box-shadow:0 0 0 2px color-mix(in srgb,var(--section-accent) 55%,#fff),0 0 12px color-mix(in srgb,var(--section-accent) 22%,transparent)}html[data-skin="neon"] .type-chip,html[data-skin="neon"] .stage-pill{background:var(--section-soft);color:var(--section-ink);border:1.5px solid color-mix(in srgb,var(--section-accent) 45%,transparent)}
-html[data-skin="neon"] .detail-tile{background:linear-gradient(145deg,#fff,color-mix(in srgb,var(--section-accent) 8%,#fff));border:1.5px solid color-mix(in srgb,var(--section-accent) 28%,var(--neon-edge));color:var(--text)}html[data-skin="neon"] .detail-tile.amber{background:var(--status-them-bg);border-color:var(--status-them-edge)}html[data-skin="neon"] .detail-tile.amber span,html[data-skin="neon"] .detail-tile.amber strong{color:var(--status-them-ink)}html[data-skin="neon"] .tabbar{background:rgba(246,248,255,.92);border:1.5px solid var(--neon-edge);box-shadow:0 8px 22px rgba(40,55,110,.08)}html[data-skin="neon"] .tab-btn{min-height:44px;color:var(--text-2)}html[data-skin="neon"] .tab-btn.active{background:linear-gradient(135deg,var(--section-accent),color-mix(in srgb,var(--section-accent) 72%,#fff));color:var(--section-on);box-shadow:0 0 16px var(--section-glow)}
-html[data-skin="neon"] .list-card,html[data-skin="neon"] .timeline,html[data-skin="neon"] .info-card,html[data-skin="neon"] .profile-card,html[data-skin="neon"] .progress-card{background:var(--neon-card);border:1.5px solid var(--neon-edge);box-shadow:0 8px 22px rgba(40,55,110,.09);color:var(--text)}
-html[data-skin="neon"] .warm-seg,html[data-skin="neon"] .warm-tabs button,html[data-skin="neon"] .warm-back,html[data-skin="neon"] .warm-more,html[data-skin="neon"] .warm-circle,html[data-skin="neon"] .warm-add{min-height:44px}html[data-skin="neon"] .warm-back,html[data-skin="neon"] .warm-more,html[data-skin="neon"] .warm-circle{min-width:44px}
-.skin-swatch.neon{background:linear-gradient(135deg,#22D3EE 0,#3182FF 28%,#8B5CF6 52%,#F43F9E 76%,#22C55E 100%)!important;color:#fff!important;border:1px solid rgba(70,85,140,.24)!important;box-shadow:0 0 14px rgba(49,130,255,.25)!important}
-@media(prefers-reduced-motion:reduce){html[data-skin="neon"] *{transition:none!important}}
+
+html[data-skin="neon"][data-section="recent"],html[data-skin="neon"] .warm-nav[data-screen="recent"]{
+  --section-accent:var(--sec-recent-accent);--section-ink:var(--sec-recent-ink);--section-soft:var(--sec-recent-soft);--section-glow:var(--sec-recent-glow)
+}
+html[data-skin="neon"][data-section="guys"],html[data-skin="neon"] .warm-nav[data-screen="guys"]{
+  --section-accent:var(--sec-guys-accent);--section-ink:var(--sec-guys-ink);--section-soft:var(--sec-guys-soft);--section-glow:var(--sec-guys-glow)
+}
+html[data-skin="neon"][data-section="shadchanim"],html[data-skin="neon"] .warm-nav[data-screen="shadchanim"]{
+  --section-accent:var(--sec-shadchanim-accent);--section-ink:var(--sec-shadchanim-ink);--section-soft:var(--sec-shadchanim-soft);--section-glow:var(--sec-shadchanim-glow)
+}
+html[data-skin="neon"][data-section="girls"],html[data-skin="neon"] .warm-nav[data-screen="girls"]{
+  --section-accent:var(--sec-girls-accent);--section-ink:var(--sec-girls-ink);--section-soft:var(--sec-girls-soft);--section-glow:var(--sec-girls-glow)
+}
+html[data-skin="neon"][data-section="shidduchim"],html[data-skin="neon"] .warm-nav[data-screen="shidduchim"],html[data-skin="neon"] .warm-match-row{
+  --section-accent:var(--sec-shidduchim-accent);--section-ink:var(--sec-shidduchim-ink);--section-soft:var(--sec-shidduchim-soft);--section-glow:var(--sec-shidduchim-glow)
+}
+
+/* Keep the original multicolor Neon atmosphere instead of recoloring the whole screen per section. */
+html[data-skin="neon"] body{
+  background:
+    radial-gradient(circle at 10% 3%,rgba(0,220,255,.32),transparent 28%),
+    radial-gradient(circle at 90% 8%,rgba(255,59,190,.27),transparent 30%),
+    radial-gradient(circle at 76% 86%,rgba(96,71,255,.24),transparent 34%),
+    linear-gradient(145deg,#f7f1ff 0,#f7fcff 48%,#effff9 100%) fixed!important;
+}
+html[data-skin="neon"] body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:linear-gradient(rgba(96,71,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,190,225,.035) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+
+/* Original sleek translucent Neon cards. */
+html[data-skin="neon"] .warm-person-row,
+html[data-skin="neon"] .warm-activity-row,
+html[data-skin="neon"] .warm-source-row,
+html[data-skin="neon"] .warm-match-row,
+html[data-skin="neon"] .warm-search,
+html[data-skin="neon"] .warm-filter,
+html[data-skin="neon"] .warm-info-card,
+html[data-skin="neon"] .warm-profile-card,
+html[data-skin="neon"] .warm-history-card,
+html[data-skin="neon"] .warm-related-card,
+html[data-skin="neon"] .next-card,
+html[data-skin="neon"] .waiting-summary,
+html[data-skin="neon"] .all-clear{
+  background:rgba(255,255,255,.88)!important;
+  border:1.5px solid rgba(96,71,255,.24)!important;
+  border-radius:15px!important;
+  box-shadow:0 0 0 1px rgba(0,205,235,.07),0 10px 28px rgba(91,61,201,.12),0 0 22px rgba(0,205,235,.06)!important;
+  color:#21163f!important;
+}
+
+/* Section identity is an accent, not a wholesale recolor. */
+html[data-skin="neon"] .warm-person-row.selected{
+  background:linear-gradient(135deg,var(--section-soft),rgba(255,255,255,.96))!important;
+  color:var(--section-ink)!important;
+  border-color:color-mix(in srgb,var(--section-accent) 52%,rgba(96,71,255,.20))!important;
+  box-shadow:inset 4px 0 0 var(--section-accent),0 0 16px var(--section-glow)!important;
+}
+html[data-skin="neon"] .warm-match-row{
+  border-color:rgba(34,197,94,.28)!important;
+  box-shadow:inset 3px 0 0 var(--sec-shidduchim-accent),0 10px 28px rgba(91,61,201,.10)!important;
+}
+
+/* Status colors stay independent from section colors. */
+html[data-skin="neon"] .warm-summary,
+html[data-skin="neon"] .warm-metric{
+  border:1.5px solid rgba(80,58,180,.18)!important;
+  color:#21163f!important;
+  box-shadow:0 9px 24px rgba(91,61,201,.11)!important;
+}
+html[data-skin="neon"] .warm-summary.blue,
+html[data-skin="neon"] .warm-metric.blue{background:linear-gradient(145deg,#daf8ff,#dfe6ff)!important;border-color:rgba(0,174,220,.30)!important}
+html[data-skin="neon"] .warm-summary.amber,
+html[data-skin="neon"] .warm-metric.amber{background:linear-gradient(145deg,#fff2bd,#ffe0f2)!important;border-color:rgba(236,86,153,.25)!important}
+html[data-skin="neon"] .warm-summary.sage,
+html[data-skin="neon"] .warm-metric.sage{background:linear-gradient(145deg,#d8fff2,#e7e1ff)!important;border-color:rgba(18,167,124,.26)!important}
+html[data-skin="neon"] .warm-summary-icon,
+html[data-skin="neon"] .warm-metric-icon{background:#fff!important;box-shadow:0 0 0 1px rgba(96,71,255,.15),0 0 16px rgba(0,196,228,.10)!important}
+
+/* Keep the colorful contact actions from the good Neon version. */
+html[data-skin="neon"] .warm-contact{color:#35275e!important;font-weight:800!important}
+html[data-skin="neon"] .warm-contact>span{border:1.5px solid rgba(84,62,185,.20)!important;box-shadow:0 0 16px rgba(96,71,255,.11)!important}
+html[data-skin="neon"] .warm-contact.phone>span{background:#d4fbff!important;color:#0083a4!important}
+html[data-skin="neon"] .warm-contact.email>span{background:#ffe0f1!important;color:#c12d7b!important}
+html[data-skin="neon"] .warm-contact.message>span{background:#dcfff0!important;color:#07865f!important}
+html[data-skin="neon"] .warm-contact.sms>span{background:#e8e0ff!important;color:#6946dc!important}
+html[data-skin="neon"] .warm-contact.wait>span{background:#fff0bd!important;color:#a86f00!important}
+
+/* Tabs keep the sleek Neon form, but use the current section color. */
+html[data-skin="neon"] .warm-tabs,
+html[data-skin="neon"] .warm-segment{
+  background:rgba(248,246,255,.88)!important;
+  border:1.5px solid rgba(96,71,255,.18)!important;
+  box-shadow:0 8px 22px rgba(91,61,201,.10)!important;
+}
+html[data-skin="neon"] .warm-tabs button.active,
+html[data-skin="neon"] .warm-seg.active{
+  background:linear-gradient(135deg,var(--section-ink),var(--section-accent))!important;
+  color:#fff!important;
+  box-shadow:0 0 18px var(--section-glow)!important;
+}
+
+/* Each nav item advertises its own section color. */
+html[data-skin="neon"] .warm-bottom-nav{
+  background:rgba(249,247,255,.93)!important;
+  border-color:rgba(96,71,255,.18)!important;
+  box-shadow:0 -8px 26px rgba(84,56,186,.12)!important;
+  backdrop-filter:blur(18px) saturate(135%);
+}
+html[data-skin="neon"] .warm-nav{color:#65597d!important}
+html[data-skin="neon"] .warm-nav .warm-nav-icon{
+  background:var(--section-soft)!important;
+  color:var(--section-ink)!important;
+  border:1px solid color-mix(in srgb,var(--section-accent) 28%,transparent)!important;
+}
+html[data-skin="neon"] .warm-nav.active{
+  background:linear-gradient(135deg,var(--section-soft),rgba(255,255,255,.75))!important;
+  color:var(--section-ink)!important;
+  box-shadow:inset 0 3px 0 var(--section-accent)!important;
+}
+html[data-skin="neon"] .warm-nav.active .warm-nav-icon{
+  background:linear-gradient(135deg,var(--section-ink),var(--section-accent))!important;
+  color:#fff!important;
+  box-shadow:0 0 15px var(--section-glow)!important;
+}
+@media(min-width:900px){
+  html[data-skin="neon"]:not([data-layout="phone"]) .warm-nav.active{box-shadow:inset 4px 0 0 var(--section-accent)!important}
+}
+
+/* Profile identity follows the actual person type. */
+html[data-skin="neon"] .warm-detail-name h1,
+html[data-skin="neon"] .warm-title-copy h1,
+html[data-skin="neon"] .warm-person-top strong,
+html[data-skin="neon"] .warm-activity-top strong,
+html[data-skin="neon"] .warm-info-card strong,
+html[data-skin="neon"] .warm-profile-card strong{color:#21163f!important}
+html[data-skin="neon"] .warm-title-copy h1::after{
+  content:"";display:block;width:42px;height:4px;margin-top:8px;border-radius:4px;
+  background:linear-gradient(90deg,var(--section-accent),transparent);box-shadow:0 0 12px var(--section-glow)
+}
+html[data-skin="neon"] .warm-detail-name>span{
+  background:var(--section-soft)!important;
+  color:var(--section-ink)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 34%,transparent)!important;
+}
+html[data-skin="neon"] .warm-person-big,
+html[data-skin="neon"] .warm-avatar{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--section-accent) 26%,#fff),color-mix(in srgb,var(--section-accent) 54%,#fff))!important;
+  color:#241742!important;
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--section-accent) 45%,#fff),0 0 20px var(--section-glow)!important;
+}
+html[data-skin="neon"] .warm-match-avatar{
+  background:linear-gradient(135deg,#d8fff2,#a9f0c9)!important;
+  color:#13773a!important;
+  box-shadow:0 0 0 2px rgba(34,197,94,.32),0 0 16px rgba(34,197,94,.20)!important;
+}
+html[data-skin="neon"] .warm-add{
+  background:var(--section-soft)!important;color:var(--section-ink)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--section-accent) 35%,transparent)!important;
+}
+html[data-skin="neon"] .warm-profile-card h3{color:#3c2779!important}
+html[data-skin="neon"] .warm-info-card>div{border-color:rgba(96,71,255,.12)!important}
+
+.skin-swatch.neon{
+  background:linear-gradient(135deg,#45e6ff 0,#7350ff 48%,#f04db6 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(82,53,180,.24)!important;
+  box-shadow:0 0 14px rgba(96,71,255,.25)!important;
+}
+
+@media (prefers-reduced-motion:reduce){html[data-skin="neon"] *{transition:none!important}}
