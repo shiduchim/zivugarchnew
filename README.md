@@ -1,24 +1,23 @@
-# ZivugArch Fresh — Calm UI Prototype
+# ZivugMatch
 
-This is a fresh UI interpretation of the same shidduch architecture, designed around one principle: **show only what matters now**.
+Working product build based on the agreed shidduch architecture and the approved Warm Modern Dashboard visual direction.
 
-It does not copy the `shidarch` screen structure. It keeps the underlying product decisions but rethinks the presentation from scratch to feel calmer, clearer, and more modern on a phone.
+## Product structure
 
-All people and activity in this prototype are fictional. No messages are sent and no production data is stored.
+- Recent
+- Guys
+- Girls
+- Shadchanim
+- Shidduchim
 
-## Prototype focus
+The app uses one permanent person record per real person, one activity/history stream, permanent Sources, Ideas before Shidduchim, one permanent shidduch per guy-girl pair with rounds, and separate Waiting on them / Waiting on me items.
 
-- Five stable bottom tabs: Recent, Guys, Girls, Shadchanim, Shidduchim
-- A single calm `Today` focus area rather than many dashboard controls
-- Shadchanim reduced to All / Needs attention / Sources on the main screen
-- Waiting-on-them / waiting-on-me shown as information, not as a wall of buttons
-- Advanced filters hidden in a sheet
-- Person pages centered on contact actions, current attention, at-a-glance details, and History
-- Idea before shidduch
-- Source batch and shidduch detail pages
-- Warm / Dark theme
-- Single / Shadchan mode kept in settings instead of occupying the main header
+## UI direction
 
-## GitHub Pages
+Warm cream background, navy text, serif screen titles, pastel initials, calm blue active states, compact line icons, soft cards, and the same person-page hierarchy as the approved mockup. No external fonts or images are required.
 
-Publish the repository root from the `main` branch in **Settings → Pages** to view it as a phone prototype.
+## Storage
+
+Data is stored locally in IndexedDB. Backup/restore is available from Settings. The first launch contains made-up demo data so the screens can be evaluated; Settings can clear it and start fresh.
+
+This repository is now the working product build rather than the earlier prototype.
