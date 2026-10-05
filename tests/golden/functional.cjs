@@ -318,7 +318,7 @@ const checks = {
     const btn = await page.$('#app [data-act="export-backup"]');
     if (btn) { const [dl] = await Promise.all([page.waitForEvent('download'), page.evaluate(() => document.querySelector('#app [data-act="export-backup"]').click())]); exported = fs.readFileSync(await dl.path(), 'utf8').includes('Golden Real Person'); }
     // Any way to reach a save must not replace the stored real data.
-    if (await page.$('[data-act="settings"]')) await setting(page, 'density', 'compact');
+    if (await page.$('[data-act="settings"]')) await setting(page, 'appearance', '2');
     const s1 = await L.idbRead(page);
     const kept = s1.people.some(p => p.id === 'p_golden_real') && JSON.stringify(s0.people) === JSON.stringify(s1.people);
     const ok = kept && !demoShown && exported === true;
@@ -333,7 +333,7 @@ const checks = {
     await page.addInitScript(() => { if (!location.pathname.endsWith('/index.html')) return; const orig = indexedDB.open.bind(indexedDB); let first = true;
       indexedDB.open = function (...a) { if (first) { first = false; const req = {}; setTimeout(() => { req.error = new DOMException('simulated', 'UnknownError'); req.onerror && req.onerror({}); }, 0); return req; } return orig(...a); }; });
     await L.openApp(page);
-    await setting(page, 'density', 'compact'); await L.closeSheets(page);
+    await setting(page, 'appearance', '2'); await L.closeSheets(page);
     await page.waitForTimeout(150);
     const s1 = await L.idbRead(page);
     const kept = s1.people.some(p => p.id === 'p_golden_real');
@@ -539,7 +539,7 @@ const checks = {
     const toast = await page.$eval('#toast', e => e.textContent);
     const shownReal = (await page.content()).includes('Golden Real Person');
     const s1 = await L.idbRead(page);
-    if (await page.$('[data-act="settings"]')) await setting(page, 'density', 'compact');
+    if (await page.$('[data-act="settings"]')) await setting(page, 'appearance', '2');
     const s2 = await L.idbRead(page);
     const lost = !s2.people.some(p => p.id === 'p_golden_real');
     record('K2', 'If the first render throws (e.g. a backup without openItems), the app silently shows demo data; the next save overwrites the real data', lost ? 'KNOWN' : 'CHANGED', { toast, realShown: shownReal, storedStillRealBeforeSave: s1.people.some(p => p.id === 'p_golden_real'), realLostAfterOneSettingTap: lost, pageErrors: page.__errors.slice(0, 3) });

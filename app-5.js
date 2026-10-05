@@ -68,4 +68,5 @@ async function init(){
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}
-init();
+// Start once every script has loaded, so the first render already uses the final screen code.
+document.addEventListener('DOMContentLoaded',init);
