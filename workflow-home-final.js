@@ -40,15 +40,9 @@ function zmHearBackSummary(items){
   return `<div class="zm-hear-section"><div class="warm-section-title zm-home-section-title"><h2>To hear back</h2></div><button class="zm-hear-back-row" data-act="show-wait-them"><span>${esc(line)}</span><b>›</b></button></div>`;
 }
 
-function zmHomeShidduchRow(s){
-  const st=(typeof zmStageForShidduch==='function')?zmStageForShidduch(s):{label:getCurrentRound(s)?.stage||'Current'};
-  return `<button class="warm-match-row zm-home-shidduch" data-shidduch="${esc(s.id)}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong></div><p>${esc(st.label||'Current')}</p></div><div class="warm-chevron">›</div></button>`;
-}
-
 recentScreen=function(){
   const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
   const them=data.openItems.filter(x=>x.status==='open'&&x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  const current=data.shidduchim.filter(s=>s.status==='active');
   let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
   if(ui.search){
     const q=ui.search.toLowerCase();
@@ -60,19 +54,11 @@ recentScreen=function(){
     ?`<div class="next-list">${todoTop.map(zmTodoCard).join('')}</div>${todoMore?`<button class="see-all-next" data-act="show-wait-me">See all ${mine.length}</button>`:''}`
     :`<div class="all-clear zm-home-clear">${icon('check')}<div><strong>${them.length?'Nothing to do right now':'All caught up'}</strong></div></div>`;
 
-  const currentTop=current.slice(0,3);
-  const currentHtml=currentTop.length
-    ?`<div class="warm-stack">${currentTop.map(zmHomeShidduchRow).join('')}</div>${current.length>3?`<button class="see-all-next" data-act="show-active">View all ${current.length}</button>`:''}`
-    :`<div class="zm-empty-current">When a shidduch starts, it'll show up here.</div>`;
-
-  const subtitle=mine.length?`${mine.length} to do`:them.length?'Nothing to do right now':'You are caught up';
-  return `${header('Recent',subtitle,{add:true})}
+  return `${header('Recent','',{add:true})}
     ${searchBox('Find anyone or anything…')}
     <div class="warm-section-title zm-home-section-title"><h2>My to-do list</h2></div>
     ${todo}
     ${zmHearBackSummary(them)}
-    <div class="warm-section-title zm-home-section-title"><h2>Current shidduchim</h2></div>
-    ${currentHtml}
     <div class="warm-section-title earlier-title"><h2>History</h2><button data-act="add-activity">Add note</button></div>
     ${activityFeed(entries)}`;
 };
