@@ -467,6 +467,20 @@ const checks = {
     await ctx.close();
   },
 
+  async R5_shidduch_more_menu() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    await run(page, shidduchPath('sh_david_noa', false));
+    await L.tap(page, '#app [data-act="detail-menu"]');
+    const menu = await page.$$eval('#overlay [data-act]', els => els.map(e => e.dataset.act));
+    let endSheet = null;
+    if (menu.includes('end-shidduch')) { await L.tap(page, '#overlay [data-act="end-shidduch"]'); endSheet = await page.$eval('#overlay h2', e => e.textContent).catch(() => null); }
+    await L.openApp(page); await run(page, shidduchPath('sh_ari_rina', true));
+    const endedMore = await page.$$eval('#app .more-btn', els => els.map(e => ({ act: e.dataset.act || null, visible: getComputedStyle(e).visibility })));
+    const ok = menu.includes('end-shidduch') && endSheet === 'End shidduch' && endedMore.every(m => !m.act && m.visible === 'hidden');
+    record('R5', 'The ⋯ on a shidduch page opens a menu with End shidduch; on an ended shidduch (no actions) it is hidden', ok ? 'PASS' : 'FAIL', { activeMenu: menu, endSheet, endedMoreButton: endedMore });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });

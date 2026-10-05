@@ -20,7 +20,7 @@ shidduchDetail=function(sid){
         </div>
         <div class="detail-meta">Round ${esc(r?.number||1)}</div>
       </div>
-      <button class="more-btn" data-act="detail-menu" aria-label="More">⋯</button>
+      ${shidduchMenuActions(s).length?'<button class="more-btn" data-act="detail-menu" aria-label="More">⋯</button>':'<button class="more-btn" aria-hidden="true" tabindex="-1" style="visibility:hidden">⋯</button>'}
     </div>
   </div>`;
 
