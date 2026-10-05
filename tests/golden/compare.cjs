@@ -14,7 +14,7 @@ for (const k of keys) {
   if (k.endsWith('__storage_unchanged')) { if (!a.ok || !b.ok) out.storage.push(k); continue; }
   // Compare the saved DOM with <script> tags and whitespace-only lines removed (adding, removing or
   // cache-busting a script is not a UI change; screenshots still catch any visible spacing change).
-  const norm = run => { const f = path.join(run, 'html', k + '.html'); return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').replace(/\n?<script[^>]*>\n?<\/script>/g, '').split('\n').filter(l => l.trim() !== '').join('\n') : null; };
+  const norm = run => { const f = path.join(run, 'html', k + '.html'); return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').replace(/\n?<script[^>]*>\n?<\/script>/g, '').split('\n').map(l => l.trim()).filter(l => l !== '').join('\n') : null; };
   const ha = norm(A), hb = norm(B);
   if (ha === null || hb === null ? a.html !== b.html : ha !== hb) out.html.push(k);
   if (a.png && b.png && a.png !== b.png) out.png.push(k);

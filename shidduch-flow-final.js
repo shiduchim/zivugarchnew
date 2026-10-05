@@ -53,12 +53,6 @@ function universalAddSheet(){
   go('#qaIdea',()=>addIdeaSheet());go('#qaGuy',()=>addPersonSheet('Guy'));go('#qaShad',()=>addPersonSheet('Shadchan'));go('#qaGirl',()=>addPersonSheet('Girl'));go('#qaNote',()=>addActivitySheet());
 }
 
-const showToastBeforeOffers=showToast;
-showToast=function(msg){
-  const mapped=msg==='Idea saved'?'Offer saved':msg==='Idea closed'?'Offer closed':msg;
-  return showToastBeforeOffers(mapped);
-};
-
 const personDetailBeforeOffers=personDetail;
 personDetail=function(pid){
   return personDetailBeforeOffers(pid)

@@ -3,16 +3,6 @@
 // Final plain-language workflow for the home screen and person profiles.
 // An open item lives in exactly one place: My to-do list or To hear back.
 
-// Main-screen header rule: Settings is global, so keep the gear only on Recent.
-const zmHeaderBeforeRecentOnlySettings=header;
-header=function(title,sub,opts={}){
-  let html=zmHeaderBeforeRecentOnlySettings(title,sub,opts);
-  if(title!=='Recent'){
-    html=html.replace(/<button class="warm-circle" data-act="settings" aria-label="Settings">[\s\S]*?<\/button>/,'');
-  }
-  return html;
-};
-
 // Keep the new workflow words everywhere, including Shadchanim filters.
 const zmSegmentBeforeWorkflowWords=segment;
 segment=function(items,active,scope){

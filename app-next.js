@@ -27,7 +27,7 @@ function settingsSheet(){
       </div>
     </div>
 
-    <div class="settings-heading">Skin</div>
+    <div class="settings-heading">Style</div>
     <p class="skin-help">Same app, different personality. Navigation stays in the same place in every skin.</p>
     <div class="skin-picker skin-picker-many">${skinCards()}</div>
 
@@ -38,7 +38,7 @@ function settingsSheet(){
 
     <div class="settings-heading">Use</div>
     <div class="sheet-section">
-      <div class="setting-row"><div class="setting-copy"><b>Mode</b><span>Same data, different focus</span></div><div class="option-group">${['single','shadchan'].map(v=>`<button class="option ${s.mode===v?'active':''}" data-setting="mode" data-value="${v}">${v==='single'?'Single':'Shadchan'}</button>`).join('')}</div></div>
+      <div class="setting-row"><div class="setting-copy"><b>Mode</b><span>Single = for yourself. Shadchan = matching others.</span></div><div class="option-group">${['single','shadchan'].map(v=>`<button class="option ${s.mode===v?'active':''}" data-setting="mode" data-value="${v}">${v==='single'?'Single':'Shadchan'}</button>`).join('')}</div></div>
     </div>
 
     <div class="settings-heading">Data</div>

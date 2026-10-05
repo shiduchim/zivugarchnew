@@ -18,7 +18,7 @@ applySettings=function(){
 function warmWordmark(){return `<div class="warm-wordmark"><span>Zivug</span><b>Match</b><em>ב״ה</em></div>`;}
 
 function header(title,sub,{add=false,back=false,filter=false}={}){
-  return `<header class="warm-header">${warmWordmark()}<div class="warm-title-row">${back?`<button class="warm-back" data-act="back" aria-label="Back">${icon('back')}</button>`:''}<div class="warm-title-copy"><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div><div class="warm-title-actions">${add?`<button class="warm-add" data-act="add-current">Add</button>`:''}${filter?`<button class="warm-circle" data-act="filters" aria-label="Filter">${icon('filter')}</button>`:''}<button class="warm-circle" data-act="settings" aria-label="Settings">${icon('gear')}</button></div></div></header>`;
+  return `<header class="warm-header">${warmWordmark()}<div class="warm-title-row">${back?`<button class="warm-back" data-act="back" aria-label="Back">${icon('back')}</button>`:''}<div class="warm-title-copy"><h1>${esc(title)}</h1>${sub?`<p>${esc(sub)}</p>`:''}</div><div class="warm-title-actions">${add?`<button class="warm-add" data-act="add-current">Add</button>`:''}${filter?`<button class="warm-circle" data-act="filters" aria-label="Filter">${icon('filter')}</button>`:''}${title==='Recent'?`<button class="warm-circle" data-act="settings" aria-label="Settings">${icon('gear')}</button>`:''}</div></div></header>`;
 }
 
 function searchBox(ph){return `<div class="warm-search-row"><label class="warm-search">${icon('search')}<input data-role="search" value="${esc(ui.search)}" placeholder="${esc(ph)}" /></label><button class="warm-filter" data-act="filters" aria-label="Filter and sort">${icon('filter')}</button></div>`;}
