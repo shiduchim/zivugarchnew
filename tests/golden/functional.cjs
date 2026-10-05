@@ -439,6 +439,20 @@ const checks = {
     record('R2', 'Interested on a pair that is already in progress keeps its current round (no second active round); an ended pair still reopens as Round 2 (F05)', ok ? 'PASS' : 'FAIL', det);
   },
 
+  async R3_contacts_only_when_opened_and_whatsapp_international() {
+    const { ctx, page } = await fresh({ mode: 'single' }); const s0 = await L.idbRead(page);
+    await run(page, personPath('p_dina', 'single'));
+    for (const c of ['call', 'email', 'wa', 'sms']) await L.tap(page, `.warm-contact-row [data-contact="${c}"]`);
+    const s1 = await L.idbRead(page);
+    const loggedWithoutNumber = s1.entries.length - s0.entries.length;
+    const toast = await page.$eval('#toast', e => e.textContent);
+    const urls = await page.evaluate(() => typeof contactUrl === 'function' ? ['050-555-0101', '+972 50-555-0101', '0097250-555-0101', '02-555-0000', '+1 (212) 555-0000'].map(n => contactUrl({ phone: n }, 'wa')) : null);
+    const exp = ['whatsapp://send?phone=972505550101', 'whatsapp://send?phone=972505550101', 'whatsapp://send?phone=972505550101', 'whatsapp://send?phone=97225550000', 'whatsapp://send?phone=12125550000'];
+    const ok = loggedWithoutNumber === 0 && JSON.stringify(urls) === JSON.stringify(exp);
+    record('R3', 'Contact buttons log nothing when there is no number/email to open; WhatsApp gets the international (972) number', ok ? 'PASS' : 'FAIL', { loggedWithoutNumber, toast, whatsappUrls: urls });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
