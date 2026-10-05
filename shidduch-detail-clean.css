@@ -1,0 +1,30 @@
+/* Simplified, stage-aware shidduch detail. */
+.zm-clean-hero{margin:10px 0 14px;padding:18px 18px 14px;border-radius:24px;background:color-mix(in srgb,var(--surface,#fff) 92%,transparent);box-shadow:var(--warm-shadow-soft,0 4px 14px rgba(70,53,34,.055));border:1px solid color-mix(in srgb,var(--line,rgba(64,77,90,.10)) 70%,transparent)}
+.zm-clean-hero .pair-people{justify-content:center;margin-bottom:8px}
+.zm-clean-hero .zm-stage{margin-top:2px;width:100%}
+
+.zm-clean-card{margin-top:12px;border:1px solid color-mix(in srgb,var(--line,rgba(64,77,90,.10)) 90%,transparent);border-radius:18px;background:var(--surface,#fff);overflow:hidden;box-shadow:var(--warm-shadow-soft,0 4px 14px rgba(70,53,34,.055))}
+.zm-clean-card.ended{background:color-mix(in srgb,#8f97a2 6%,var(--surface,#fff))}
+.zm-clean-heading{padding:11px 14px 8px;font-size:12px;font-weight:850;color:var(--text,#23384d)}
+.zm-clean-row{display:grid;grid-template-columns:minmax(105px,.7fr) minmax(0,1.3fr);gap:12px;align-items:center;padding:11px 14px;border-top:1px solid color-mix(in srgb,var(--line,rgba(64,77,90,.10)) 80%,transparent)}
+.zm-clean-row span{font-size:10.5px;color:var(--text-2,#6f7881);font-weight:650}
+.zm-clean-row strong{font-size:11.5px;color:var(--text,#23384d);font-weight:800;overflow-wrap:anywhere}
+.zm-clean-row.next strong{color:var(--blue,#557ea6)}
+
+.zm-role-section{margin-top:14px}
+.zm-role-section>.zm-clean-heading{padding:0 3px 7px}
+.zm-role-chip{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;font-size:8.5px;font-weight:850;line-height:1;background:var(--blue-2,#e7f0f8);color:var(--blue,#557ea6)}
+.zm-role-chip.girl{background:var(--rose-2,#f5e7e5);color:var(--rose,#b77a76)}
+.zm-role-chip.shadchan{background:var(--lav-2,#eeeaf6);color:var(--lav,#8b82a9)}
+.zm-date-row{grid-template-columns:42px 1fr auto!important}
+
+/* Small visual fixes requested during the same pass. */
+.skin-swatch.neon{border-radius:50%!important}
+.zm-stage-card:not(.zm-ended-card) .warm-match-avatar.filled{background:#fde6f1!important;color:#df3e88!important}
+
+@media(max-width:520px){
+  .zm-clean-hero{margin:8px 0 12px;padding:15px 12px 12px;border-radius:21px}
+  .zm-clean-row{grid-template-columns:108px minmax(0,1fr);padding:11px 12px;gap:9px}
+  .zm-clean-row span{font-size:10px}
+  .zm-clean-row strong{font-size:11px}
+}
