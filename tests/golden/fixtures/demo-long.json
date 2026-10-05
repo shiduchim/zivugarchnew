@@ -1,0 +1,2115 @@
+{
+ "version": 1,
+ "settings": {
+  "mode": "single",
+  "theme": "warm",
+  "density": "comfortable",
+  "iconSize": "medium",
+  "dashboard": "summary-first",
+  "summaryCards": true,
+  "seededDemo": true,
+  "appearance": "1",
+  "layout": "auto",
+  "skin": "classic"
+ },
+ "people": [
+  {
+   "id": "p_me",
+   "name": "Me",
+   "types": [
+    "Guy"
+   ],
+   "city": "",
+   "phone": "",
+   "email": "",
+   "createdAt": "2026-03-19T09:00:00.000Z",
+   "profileText": "My current profile",
+   "profileVersion": 4,
+   "isMe": true
+  },
+  {
+   "id": "p_miriam",
+   "name": "Miriam Cohen",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-0101",
+   "email": "miriam@example.com",
+   "createdAt": "2026-04-08T09:00:00.000Z",
+   "profileText": "",
+   "profileVersion": null
+  },
+  {
+   "id": "p_rivka",
+   "name": "Rivka Stern",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-0102",
+   "email": "",
+   "createdAt": "2026-05-28T09:00:00.000Z"
+  },
+  {
+   "id": "p_batya",
+   "name": "Batya Levy",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-0103",
+   "email": "",
+   "createdAt": "2026-07-07T09:00:00.000Z"
+  },
+  {
+   "id": "p_dina",
+   "name": "Dina Weiss",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "",
+   "email": "",
+   "createdAt": "2026-09-05T09:00:00.000Z"
+  },
+  {
+   "id": "p_leah",
+   "name": "Leah Rosen",
+   "types": [
+    "Girl"
+   ],
+   "city": "Jerusalem",
+   "age": 34,
+   "occupation": "Teacher",
+   "phone": "",
+   "email": "",
+   "createdAt": "2026-08-21T09:00:00.000Z",
+   "profileText": "Leah is 34 and lives in Jerusalem. She works in education and is described as warm, thoughtful and grounded. This is made-up demonstration text.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_tamar",
+   "name": "Tamar Gold",
+   "types": [
+    "Girl"
+   ],
+   "city": "Jerusalem",
+   "age": 33,
+   "occupation": "Accountant",
+   "createdAt": "2026-09-13T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for Tamar.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_noa",
+   "name": "Noa Weiss",
+   "types": [
+    "Girl"
+   ],
+   "city": "Beit Shemesh",
+   "age": 36,
+   "occupation": "Designer",
+   "createdAt": "2026-07-27T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for Noa.",
+   "profileVersion": 2
+  },
+  {
+   "id": "p_rina",
+   "name": "Rina Cohen",
+   "types": [
+    "Girl"
+   ],
+   "city": "Tzfat",
+   "age": 35,
+   "occupation": "Therapist",
+   "createdAt": "2026-06-27T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for Rina.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_david",
+   "name": "David Klein",
+   "types": [
+    "Guy"
+   ],
+   "city": "Jerusalem",
+   "age": 35,
+   "occupation": "Engineer",
+   "createdAt": "2026-09-10T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for David.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_moshe",
+   "name": "Moshe Green",
+   "types": [
+    "Guy"
+   ],
+   "city": "Tzfat",
+   "age": 39,
+   "occupation": "Teacher",
+   "createdAt": "2026-08-06T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for Moshe.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_ari",
+   "name": "Ari Stern",
+   "types": [
+    "Guy"
+   ],
+   "city": "Beit Shemesh",
+   "age": 36,
+   "occupation": "Accountant",
+   "createdAt": "2026-07-17T09:00:00.000Z",
+   "profileText": "Made-up demonstration profile for Ari.",
+   "profileVersion": 1
+  },
+  {
+   "id": "p_s_0",
+   "name": "Sarah Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1100",
+   "createdAt": "2026-09-30T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_1",
+   "name": "Sarah Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1101",
+   "createdAt": "2026-09-29T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_2",
+   "name": "Sarah Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1102",
+   "createdAt": "2026-09-28T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_3",
+   "name": "Sarah Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1103",
+   "createdAt": "2026-09-27T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_4",
+   "name": "Sarah Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1104",
+   "createdAt": "2026-09-26T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_5",
+   "name": "Sarah Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1105",
+   "createdAt": "2026-09-25T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_6",
+   "name": "Sarah Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1106",
+   "createdAt": "2026-09-24T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_7",
+   "name": "Sarah Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1107",
+   "createdAt": "2026-09-23T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_8",
+   "name": "Sarah Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1108",
+   "createdAt": "2026-09-22T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_9",
+   "name": "Rachel Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1109",
+   "createdAt": "2026-09-21T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_10",
+   "name": "Rachel Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1110",
+   "createdAt": "2026-09-20T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_11",
+   "name": "Rachel Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1111",
+   "createdAt": "2026-09-19T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_12",
+   "name": "Rachel Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1112",
+   "createdAt": "2026-09-18T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_13",
+   "name": "Rachel Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1113",
+   "createdAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_14",
+   "name": "Rachel Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1114",
+   "createdAt": "2026-09-16T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_15",
+   "name": "Rachel Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1115",
+   "createdAt": "2026-09-15T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_16",
+   "name": "Rachel Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1116",
+   "createdAt": "2026-09-14T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_17",
+   "name": "Rachel Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1117",
+   "createdAt": "2026-09-13T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_18",
+   "name": "Esther Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1118",
+   "createdAt": "2026-09-12T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_19",
+   "name": "Esther Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1119",
+   "createdAt": "2026-09-11T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_20",
+   "name": "Esther Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1120",
+   "createdAt": "2026-09-10T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_21",
+   "name": "Esther Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1121",
+   "createdAt": "2026-09-09T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_22",
+   "name": "Esther Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1122",
+   "createdAt": "2026-09-08T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_23",
+   "name": "Esther Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1123",
+   "createdAt": "2026-09-07T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_24",
+   "name": "Esther Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1124",
+   "createdAt": "2026-09-06T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_25",
+   "name": "Esther Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1125",
+   "createdAt": "2026-09-05T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_26",
+   "name": "Esther Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1126",
+   "createdAt": "2026-09-04T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_27",
+   "name": "Frumi Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1127",
+   "createdAt": "2026-09-03T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_28",
+   "name": "Frumi Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1128",
+   "createdAt": "2026-09-02T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_29",
+   "name": "Frumi Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1129",
+   "createdAt": "2026-09-01T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_30",
+   "name": "Frumi Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1130",
+   "createdAt": "2026-08-31T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_31",
+   "name": "Frumi Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1131",
+   "createdAt": "2026-08-30T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_32",
+   "name": "Frumi Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1132",
+   "createdAt": "2026-08-29T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_33",
+   "name": "Frumi Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1133",
+   "createdAt": "2026-08-28T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_34",
+   "name": "Frumi Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1134",
+   "createdAt": "2026-08-27T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_35",
+   "name": "Frumi Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1135",
+   "createdAt": "2026-08-26T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_36",
+   "name": "Tova Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1136",
+   "createdAt": "2026-08-25T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_37",
+   "name": "Tova Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1137",
+   "createdAt": "2026-08-24T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_38",
+   "name": "Tova Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1138",
+   "createdAt": "2026-08-23T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_39",
+   "name": "Tova Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1139",
+   "createdAt": "2026-08-22T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_40",
+   "name": "Tova Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1140",
+   "createdAt": "2026-08-21T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_41",
+   "name": "Tova Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1141",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_42",
+   "name": "Tova Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1142",
+   "createdAt": "2026-08-19T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_43",
+   "name": "Tova Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1143",
+   "createdAt": "2026-08-18T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_44",
+   "name": "Tova Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1144",
+   "createdAt": "2026-08-17T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_45",
+   "name": "Nechama Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1145",
+   "createdAt": "2026-08-16T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_46",
+   "name": "Nechama Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1146",
+   "createdAt": "2026-08-15T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_47",
+   "name": "Nechama Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1147",
+   "createdAt": "2026-08-14T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_48",
+   "name": "Nechama Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1148",
+   "createdAt": "2026-08-13T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_49",
+   "name": "Nechama Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1149",
+   "createdAt": "2026-08-12T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_50",
+   "name": "Nechama Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1150",
+   "createdAt": "2026-08-11T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_51",
+   "name": "Nechama Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1151",
+   "createdAt": "2026-08-10T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_52",
+   "name": "Nechama Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1152",
+   "createdAt": "2026-08-09T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_53",
+   "name": "Nechama Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1153",
+   "createdAt": "2026-08-08T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_54",
+   "name": "Shira Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1154",
+   "createdAt": "2026-08-07T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_55",
+   "name": "Shira Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1155",
+   "createdAt": "2026-08-06T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_56",
+   "name": "Shira Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1156",
+   "createdAt": "2026-08-05T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_57",
+   "name": "Shira Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1157",
+   "createdAt": "2026-08-04T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_58",
+   "name": "Shira Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1158",
+   "createdAt": "2026-08-03T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_59",
+   "name": "Shira Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1159",
+   "createdAt": "2026-08-02T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_60",
+   "name": "Shira Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1160",
+   "createdAt": "2026-08-01T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_61",
+   "name": "Shira Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1161",
+   "createdAt": "2026-07-31T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_62",
+   "name": "Shira Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1162",
+   "createdAt": "2026-07-30T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_63",
+   "name": "Malky Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1163",
+   "createdAt": "2026-07-29T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_64",
+   "name": "Malky Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1164",
+   "createdAt": "2026-07-28T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_65",
+   "name": "Malky Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1165",
+   "createdAt": "2026-07-27T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_66",
+   "name": "Malky Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1166",
+   "createdAt": "2026-07-26T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_67",
+   "name": "Malky Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1167",
+   "createdAt": "2026-07-25T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_68",
+   "name": "Malky Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1168",
+   "createdAt": "2026-07-24T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_69",
+   "name": "Malky Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1169",
+   "createdAt": "2026-07-23T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_70",
+   "name": "Malky Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1170",
+   "createdAt": "2026-07-22T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_71",
+   "name": "Malky Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1171",
+   "createdAt": "2026-07-21T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_72",
+   "name": "Devorah Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1172",
+   "createdAt": "2026-07-20T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_73",
+   "name": "Devorah Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1173",
+   "createdAt": "2026-07-19T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_74",
+   "name": "Devorah Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1174",
+   "createdAt": "2026-07-18T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_75",
+   "name": "Devorah Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1175",
+   "createdAt": "2026-07-17T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_76",
+   "name": "Devorah Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1176",
+   "createdAt": "2026-07-16T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_77",
+   "name": "Devorah Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1177",
+   "createdAt": "2026-07-15T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_78",
+   "name": "Devorah Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1178",
+   "createdAt": "2026-07-14T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_79",
+   "name": "Devorah Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1179",
+   "createdAt": "2026-07-13T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_80",
+   "name": "Devorah Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1180",
+   "createdAt": "2026-09-30T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_81",
+   "name": "Chana Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1181",
+   "createdAt": "2026-09-29T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_82",
+   "name": "Chana Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1182",
+   "createdAt": "2026-09-28T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_83",
+   "name": "Chana Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1183",
+   "createdAt": "2026-09-27T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_84",
+   "name": "Chana Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1184",
+   "createdAt": "2026-09-26T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_85",
+   "name": "Chana Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1185",
+   "createdAt": "2026-09-25T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_86",
+   "name": "Chana Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1186",
+   "createdAt": "2026-09-24T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_87",
+   "name": "Chana Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1187",
+   "createdAt": "2026-09-23T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_88",
+   "name": "Chana Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1188",
+   "createdAt": "2026-09-22T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_89",
+   "name": "Chana Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1189",
+   "createdAt": "2026-09-21T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_90",
+   "name": "Gitty Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1190",
+   "createdAt": "2026-09-20T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_91",
+   "name": "Gitty Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1191",
+   "createdAt": "2026-09-19T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_92",
+   "name": "Gitty Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1192",
+   "createdAt": "2026-09-18T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_93",
+   "name": "Gitty Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1193",
+   "createdAt": "2026-09-17T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_94",
+   "name": "Gitty Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1194",
+   "createdAt": "2026-09-16T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_95",
+   "name": "Gitty Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1195",
+   "createdAt": "2026-09-15T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_96",
+   "name": "Gitty Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1196",
+   "createdAt": "2026-09-14T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_97",
+   "name": "Gitty Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1197",
+   "createdAt": "2026-09-13T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_98",
+   "name": "Gitty Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1198",
+   "createdAt": "2026-09-12T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_99",
+   "name": "Bracha Adler",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1199",
+   "createdAt": "2026-09-11T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_100",
+   "name": "Bracha Berger",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1200",
+   "createdAt": "2026-09-10T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_101",
+   "name": "Bracha Deutsch",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1201",
+   "createdAt": "2026-09-09T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_102",
+   "name": "Bracha Engel",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1202",
+   "createdAt": "2026-09-08T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_103",
+   "name": "Bracha Fischer",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Bnei Brak",
+   "phone": "050-555-1203",
+   "createdAt": "2026-09-07T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_104",
+   "name": "Bracha Gross",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Haifa",
+   "phone": "050-555-1204",
+   "createdAt": "2026-09-06T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_105",
+   "name": "Bracha Horowitz",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Jerusalem",
+   "phone": "050-555-1205",
+   "createdAt": "2026-09-05T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_106",
+   "name": "Bracha Jacobs",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Beit Shemesh",
+   "phone": "050-555-1206",
+   "createdAt": "2026-09-04T09:00:00.000Z"
+  },
+  {
+   "id": "p_s_107",
+   "name": "Bracha Kaplan",
+   "types": [
+    "Shadchan"
+   ],
+   "city": "Tzfat",
+   "phone": "050-555-1207",
+   "createdAt": "2026-09-03T09:00:00.000Z"
+  }
+ ],
+ "entries": [
+  {
+   "id": "e1",
+   "at": "2026-10-05T09:00:00.000Z",
+   "type": "message",
+   "channel": "WhatsApp",
+   "direction": "in",
+   "fromPersonId": "p_miriam",
+   "toPersonId": "p_me",
+   "personIds": [
+    "p_miriam",
+    "p_me"
+   ],
+   "aboutType": "shidduch",
+   "aboutId": "sh_me_leah",
+   "text": "She's thinking about it. I'll ask tonight.",
+   "result": "Waiting on them"
+  },
+  {
+   "id": "e2",
+   "at": "2026-10-05T08:18:00.000Z",
+   "type": "call",
+   "channel": "Call",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_miriam",
+   "personIds": [
+    "p_me",
+    "p_miriam"
+   ],
+   "aboutType": "shidduch",
+   "aboutId": "sh_me_leah",
+   "text": "Spoke for 7 minutes about Leah.",
+   "result": "Waiting on them"
+  },
+  {
+   "id": "e3",
+   "at": "2026-10-05T01:48:00.000Z",
+   "type": "profile",
+   "channel": "WhatsApp",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_miriam",
+   "personIds": [
+    "p_me",
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_me",
+   "text": "Sent my profile v4.",
+   "profileVersion": 4,
+   "result": ""
+  },
+  {
+   "id": "e4",
+   "at": "2026-10-04T16:12:00.000Z",
+   "type": "source",
+   "channel": "WhatsApp",
+   "direction": "in",
+   "fromPersonId": "p_rivka",
+   "toPersonId": "p_me",
+   "personIds": [
+    "p_rivka",
+    "p_me"
+   ],
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "text": "Rivka's 10 shadchanim · list progress updated.",
+   "result": ""
+  },
+  {
+   "id": "e5",
+   "at": "2026-10-04T09:00:00.000Z",
+   "type": "date",
+   "channel": "In person",
+   "direction": "none",
+   "personIds": [
+    "p_me",
+    "p_leah"
+   ],
+   "aboutType": "date",
+   "aboutId": "date_me_leah_1",
+   "text": "Date 1 happened. My feedback was positive.",
+   "result": ""
+  },
+  {
+   "id": "e6",
+   "at": "2026-10-03T09:00:00.000Z",
+   "type": "profile",
+   "channel": "WhatsApp",
+   "direction": "in",
+   "fromPersonId": "p_miriam",
+   "toPersonId": "p_me",
+   "personIds": [
+    "p_miriam",
+    "p_me",
+    "p_leah"
+   ],
+   "aboutType": "idea",
+   "aboutId": "idea_me_leah",
+   "text": "Leah's profile v1 received from Miriam.",
+   "result": "Idea for me"
+  },
+  {
+   "id": "e7",
+   "at": "2026-09-30T09:00:00.000Z",
+   "type": "call",
+   "channel": "Call",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_rivka",
+   "personIds": [
+    "p_me",
+    "p_rivka"
+   ],
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "text": "Called Rivka about the list.",
+   "result": ""
+  },
+  {
+   "id": "e8",
+   "at": "2026-09-26T09:00:00.000Z",
+   "type": "message",
+   "channel": "WhatsApp",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_s_0",
+   "personIds": [
+    "p_me",
+    "p_s_0"
+   ],
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "text": "Introduced myself and sent my profile.",
+   "result": "Waiting on them"
+  },
+  {
+   "id": "e9",
+   "at": "2026-09-27T09:00:00.000Z",
+   "type": "message",
+   "channel": "WhatsApp",
+   "direction": "in",
+   "fromPersonId": "p_s_0",
+   "toPersonId": "p_me",
+   "personIds": [
+    "p_s_0",
+    "p_me"
+   ],
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "text": "Thanks, I will keep you in mind.",
+   "result": ""
+  },
+  {
+   "id": "e10",
+   "at": "2026-09-28T09:00:00.000Z",
+   "type": "message",
+   "channel": "WhatsApp",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_s_1",
+   "personIds": [
+    "p_me",
+    "p_s_1"
+   ],
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "text": "Sent introduction and profile.",
+   "result": "Waiting on them"
+  },
+  {
+   "id": "e11",
+   "at": "2026-09-29T09:00:00.000Z",
+   "type": "call",
+   "channel": "Call",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_batya",
+   "personIds": [
+    "p_me",
+    "p_batya"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_batya",
+   "text": "Introductory call.",
+   "result": ""
+  },
+  {
+   "id": "e12",
+   "at": "2026-09-23T09:00:00.000Z",
+   "type": "message",
+   "channel": "WhatsApp",
+   "direction": "out",
+   "fromPersonId": "p_me",
+   "toPersonId": "p_dina",
+   "personIds": [
+    "p_me",
+    "p_dina"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_dina",
+   "text": "First introduction.",
+   "result": ""
+  },
+  {
+   "id": "e_long_01",
+   "at": "2026-10-04T04:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 1 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_02",
+   "at": "2026-10-03T02:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 2 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_03",
+   "at": "2026-10-02T00:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 3 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_04",
+   "at": "2026-09-30T22:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 4 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_05",
+   "at": "2026-09-29T20:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 5 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_06",
+   "at": "2026-09-28T18:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 6 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_07",
+   "at": "2026-09-27T16:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 7 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_08",
+   "at": "2026-09-26T14:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 8 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_09",
+   "at": "2026-09-25T12:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 9 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_10",
+   "at": "2026-09-24T10:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 10 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_11",
+   "at": "2026-09-23T08:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 11 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_12",
+   "at": "2026-09-22T06:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 12 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_13",
+   "at": "2026-09-21T04:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 13 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_14",
+   "at": "2026-09-20T02:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 14 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_15",
+   "at": "2026-09-19T00:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 15 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_16",
+   "at": "2026-09-17T22:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 16 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_17",
+   "at": "2026-09-16T20:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 17 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_18",
+   "at": "2026-09-15T18:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 18 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_19",
+   "at": "2026-09-14T16:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 19 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_20",
+   "at": "2026-09-13T14:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 20 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_21",
+   "at": "2026-09-12T12:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 21 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_22",
+   "at": "2026-09-11T10:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 22 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_23",
+   "at": "2026-09-10T08:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 23 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_24",
+   "at": "2026-09-09T06:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 24 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_25",
+   "at": "2026-09-08T04:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 25 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_26",
+   "at": "2026-09-07T02:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 26 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_27",
+   "at": "2026-09-06T00:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 27 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_28",
+   "at": "2026-09-04T22:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 28 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_29",
+   "at": "2026-09-03T20:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 29 about general availability and follow-up timing.",
+   "result": ""
+  },
+  {
+   "id": "e_long_30",
+   "at": "2026-09-02T18:00:00.000Z",
+   "type": "note",
+   "channel": "App",
+   "direction": "none",
+   "personIds": [
+    "p_miriam"
+   ],
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "text": "Made-up test note 30 about general availability and follow-up timing.",
+   "result": ""
+  }
+ ],
+ "sources": [
+  {
+   "id": "src_rivka10",
+   "name": "Rivka's 10 shadchanim",
+   "kind": "list",
+   "fromPersonId": "p_rivka",
+   "createdAt": "2026-08-26T09:00:00.000Z",
+   "peopleIds": [
+    "p_miriam",
+    "p_rivka",
+    "p_batya",
+    "p_dina",
+    "p_s_0",
+    "p_s_1",
+    "p_s_2",
+    "p_s_3",
+    "p_s_4",
+    "p_s_5"
+   ],
+   "followUpDays": 7,
+   "note": "Write to each one and introduce yourself."
+  },
+  {
+   "id": "src_event",
+   "name": "Tzfat shidduch evening",
+   "kind": "event",
+   "createdAt": "2026-06-07T09:00:00.000Z",
+   "peopleIds": [
+    "p_miriam",
+    "p_s_1",
+    "p_s_4"
+   ]
+  },
+  {
+   "id": "src_sarah",
+   "name": "Sarah's list",
+   "kind": "list",
+   "createdAt": "2026-07-22T09:00:00.000Z",
+   "peopleIds": [
+    "p_s_6",
+    "p_s_7",
+    "p_s_8",
+    "p_s_9"
+   ],
+   "followUpDays": 7
+  }
+ ],
+ "ideas": [
+  {
+   "id": "idea_me_leah",
+   "guyId": "p_me",
+   "girlId": "p_leah",
+   "suggestedByPersonId": "p_miriam",
+   "createdAt": "2026-09-25T09:00:00.000Z",
+   "status": "open",
+   "privateReason": ""
+  },
+  {
+   "id": "idea_moshe_tamar",
+   "guyId": "p_moshe",
+   "girlId": "p_tamar",
+   "suggestedByPersonId": "p_rivka",
+   "createdAt": "2026-10-01T09:00:00.000Z",
+   "status": "open",
+   "privateReason": ""
+  }
+ ],
+ "shidduchim": [
+  {
+   "id": "sh_me_leah",
+   "guyId": "p_me",
+   "girlId": "p_leah",
+   "createdAt": "2026-09-26T09:00:00.000Z",
+   "status": "active",
+   "currentRoundId": "round_me_leah_1",
+   "suggestedByPersonId": "p_miriam",
+   "shadchanIds": [
+    "p_miriam"
+   ],
+   "private": true
+  },
+  {
+   "id": "sh_david_noa",
+   "guyId": "p_david",
+   "girlId": "p_noa",
+   "createdAt": "2026-09-10T09:00:00.000Z",
+   "status": "active",
+   "currentRoundId": "round_david_noa_1",
+   "suggestedByPersonId": "p_rivka",
+   "shadchanIds": [
+    "p_rivka"
+   ],
+   "private": false
+  },
+  {
+   "id": "sh_ari_rina",
+   "guyId": "p_ari",
+   "girlId": "p_rina",
+   "createdAt": "2026-07-17T09:00:00.000Z",
+   "status": "ended",
+   "currentRoundId": "round_ari_rina_1",
+   "suggestedByPersonId": "p_batya",
+   "shadchanIds": [
+    "p_batya"
+   ],
+   "private": false
+  }
+ ],
+ "rounds": [
+  {
+   "id": "round_me_leah_1",
+   "shidduchId": "sh_me_leah",
+   "number": 1,
+   "createdAt": "2026-09-26T09:00:00.000Z",
+   "status": "active",
+   "guyStatus": "yes",
+   "girlStatus": "thinking",
+   "stage": "Waiting for her side"
+  },
+  {
+   "id": "round_david_noa_1",
+   "shidduchId": "sh_david_noa",
+   "number": 1,
+   "createdAt": "2026-09-10T09:00:00.000Z",
+   "status": "active",
+   "guyStatus": "yes",
+   "girlStatus": "yes",
+   "stage": "Dating"
+  },
+  {
+   "id": "round_ari_rina_1",
+   "shidduchId": "sh_ari_rina",
+   "number": 1,
+   "createdAt": "2026-07-17T09:00:00.000Z",
+   "status": "ended",
+   "guyStatus": "no",
+   "girlStatus": "yes",
+   "stage": "Ended"
+  }
+ ],
+ "dates": [
+  {
+   "id": "date_me_leah_1",
+   "roundId": "round_me_leah_1",
+   "number": 1,
+   "when": "2026-09-30T09:00:00.000Z",
+   "state": "happened",
+   "guyFeedback": "Positive",
+   "girlFeedback": "Thinking"
+  },
+  {
+   "id": "date_david_noa_1",
+   "roundId": "round_david_noa_1",
+   "number": 1,
+   "when": "2026-09-23T09:00:00.000Z",
+   "state": "happened",
+   "guyFeedback": "Positive",
+   "girlFeedback": "Positive"
+  },
+  {
+   "id": "date_david_noa_2",
+   "roundId": "round_david_noa_1",
+   "number": 2,
+   "when": "2026-10-03T09:00:00.000Z",
+   "state": "happened",
+   "guyFeedback": "Positive",
+   "girlFeedback": "Positive"
+  }
+ ],
+ "openItems": [
+  {
+   "id": "oi1",
+   "direction": "them",
+   "personId": "p_miriam",
+   "aboutType": "shidduch",
+   "aboutId": "sh_me_leah",
+   "label": "Leah's feedback",
+   "createdAt": "2026-10-02T09:00:00.000Z",
+   "status": "open"
+  },
+  {
+   "id": "oi2",
+   "direction": "me",
+   "personId": "p_miriam",
+   "aboutType": "person",
+   "aboutId": "p_miriam",
+   "label": "Send updated profile v4",
+   "createdAt": "2026-10-04T09:00:00.000Z",
+   "status": "open"
+  },
+  {
+   "id": "oi3",
+   "direction": "me",
+   "personId": "p_batya",
+   "aboutType": "person",
+   "aboutId": "p_batya",
+   "label": "Reply about availability",
+   "createdAt": "2026-10-03T09:00:00.000Z",
+   "status": "open"
+  },
+  {
+   "id": "oi4",
+   "direction": "them",
+   "personId": "p_s_0",
+   "aboutType": "person",
+   "aboutId": "p_s_0",
+   "label": "Reply to introduction",
+   "createdAt": "2026-09-27T09:00:00.000Z",
+   "status": "open"
+  },
+  {
+   "id": "oi5",
+   "direction": "them",
+   "personId": "p_s_1",
+   "aboutType": "person",
+   "aboutId": "p_s_1",
+   "label": "Opinion on my profile",
+   "createdAt": "2026-09-29T09:00:00.000Z",
+   "status": "open"
+  },
+  {
+   "id": "oi6",
+   "direction": "them",
+   "personId": "p_rivka",
+   "aboutType": "source",
+   "aboutId": "src_rivka10",
+   "label": "Two names to clarify",
+   "createdAt": "2026-10-01T09:00:00.000Z",
+   "status": "open"
+  }
+ ],
+ "profileVersions": [],
+ "files": [],
+ "folders": [],
+ "meta": {
+  "createdAt": "2026-10-05T09:00:00.000Z",
+  "updatedAt": "2026-10-05T09:00:00.000Z",
+  "demo": true
+ }
+}

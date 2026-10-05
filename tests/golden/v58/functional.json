@@ -1,0 +1,584 @@
+[
+ {
+  "id": "F01",
+  "title": "Opening every screen, sub-tab, page and sheet writes nothing",
+  "status": "PASS",
+  "details": {
+   "single": {
+    "visited": 62,
+    "writes": 0,
+    "storedUnchanged": true
+   },
+   "shadchan": {
+    "visited": 65,
+    "writes": 0,
+    "storedUnchanged": true
+   }
+  }
+ },
+ {
+  "id": "F02",
+  "title": "Switching Single ↔ Shadchan changes only settings.mode (records, IDs and counts unchanged; survives reload)",
+  "status": "PASS",
+  "details": {
+   "toShadchan": {
+    "records": [],
+    "settings": [
+     "mode"
+    ],
+    "meta": []
+   },
+   "backToSingle": {
+    "records": [],
+    "settings": [],
+    "meta": []
+   },
+   "reload": {
+    "records": [],
+    "settings": [],
+    "meta": []
+   },
+   "countsSingle": {
+    "shadchanim": [
+     "112",
+     "4",
+     "2",
+     "107",
+     "3"
+    ],
+    "shidduchim": [
+     "2",
+     "2",
+     "1"
+    ]
+   },
+   "countsShadchan": {
+    "shadchanim": [
+     "112",
+     "4",
+     "2",
+     "107",
+     "3"
+    ],
+    "shidduchim": [
+     "2",
+     "2",
+     "1"
+    ]
+   }
+  }
+ },
+ {
+  "id": "F03",
+  "title": "Changing skin (all 11), layout feel, size, icons, layout and summary cards changes only that setting (24 changes)",
+  "status": "PASS",
+  "details": {
+   "bad": [],
+   "endVsStart": {
+    "records": [],
+    "settings": [],
+    "meta": []
+   }
+  }
+ },
+ {
+  "id": "F04",
+  "title": "Recent and every person History show the same ledger entries (by ID); a new note is written once and shows in both",
+  "status": "PASS",
+  "details": {
+   "ledger": 12,
+   "uniqueIds": 12,
+   "recentMatchesLedger": true,
+   "people": {
+    "Miriam Cohen": "4 ✓",
+    "Me": "12 ✓",
+    "Rivka Stern": "2 ✓",
+    "Leah Rosen": "2 ✓",
+    "Sarah Adler": "2 ✓",
+    "Sarah Berger": "1 ✓",
+    "Batya Levy": "1 ✓",
+    "Dina Weiss": "1 ✓"
+   },
+   "addNote": {
+    "added": 1,
+    "inRecent": 1,
+    "inHistory": 1
+   }
+  }
+ },
+ {
+  "id": "K9",
+  "title": "Interested on a pair whose round is still active opens Round 2 while Round 1 stays active",
+  "status": "KNOWN",
+  "details": {
+   "a": [
+    "#1:active",
+    "#2:active"
+   ],
+   "b": [
+    "#1:active",
+    "#2:active"
+   ]
+  }
+ },
+ {
+  "id": "F05",
+  "title": "One permanent shidduch per pair: Interested never creates a second record; an ended pair suggested again reopens the same record as Round 2",
+  "status": "PASS",
+  "details": {
+   "a_existingActivePair": {
+    "shidduchimBefore": 3,
+    "after": 3,
+    "pairRecords": 1,
+    "rounds": [
+     "#1:active",
+     "#2:active"
+    ]
+   },
+   "b_newOfferActivePair": {
+    "pairRecords": 1,
+    "sameRecordId": true,
+    "status": "active",
+    "rounds": [
+     "#1:active",
+     "#2:active"
+    ],
+    "leftoverEndedFields": []
+   },
+   "c_endedPairSuggestedAgain": {
+    "pairRecords": 1,
+    "sameRecordId": true,
+    "status": "active",
+    "rounds": [
+     "#1:ended",
+     "#2:active"
+    ],
+    "leftoverEndedFields": []
+   }
+  }
+ },
+ {
+  "id": "F06",
+  "title": "All permanent IDs unchanged after browsing, mode/skin switches and reloads; a saved person survives reload with the same ID",
+  "status": "PASS",
+  "details": {
+   "seedIdsMatch": true,
+   "recordsUnchanged": true,
+   "idCounts": {
+    "people": 120,
+    "entries": 12,
+    "sources": 3,
+    "ideas": 2,
+    "shidduchim": 3,
+    "rounds": 3,
+    "dates": 3,
+    "openItems": 6,
+    "profileVersions": 0,
+    "files": 0,
+    "folders": 0
+   },
+   "addedId": "p_muv0r6o0_szdl2w",
+   "identicalAfterReload": true,
+   "listedInGuys": true
+  }
+ },
+ {
+  "id": "F07",
+  "title": "Recent filter (Calls) and sort (Oldest) change only History; to-do and To hear back stay; nothing is written",
+  "status": "PASS",
+  "details": {
+   "calls": [
+    "e2",
+    "e7",
+    "e11"
+   ],
+   "oldest": [
+    "e11",
+    "e7",
+    "e2"
+   ],
+   "todo": [
+    2,
+    2
+   ],
+   "hearBack": 1,
+   "writes": 0
+  }
+ },
+ {
+  "id": "F08",
+  "title": "Nav order Recent · Guys · Shadchanim · Girls · Shidduchim; Single mode: Guys = My profile (opens own profile), Girls = only profiles applicable to me",
+  "status": "PASS",
+  "details": {
+   "single": {
+    "screens": [
+     "recent",
+     "guys",
+     "shadchanim",
+     "girls",
+     "shidduchim"
+    ],
+    "labels": [
+     "Recent",
+     "My profile",
+     "Shadchanim",
+     "Girls",
+     "Shidduchim"
+    ],
+    "guysTap": {
+     "detailName": "Me",
+     "profileTabActive": true,
+     "personRows": 0
+    },
+    "afterBackFromMyProfile": [
+     "p_david",
+     "p_moshe",
+     "p_ari"
+    ],
+    "girls": {
+     "rows": [
+      "p_leah"
+     ],
+     "tabs": [],
+     "subtitle": "Profiles applicable to you"
+    }
+   },
+   "shadchan": {
+    "screens": [
+     "recent",
+     "guys",
+     "shadchanim",
+     "girls",
+     "shidduchim"
+    ],
+    "labels": [
+     "Recent",
+     "Guys",
+     "Shadchanim",
+     "Girls",
+     "Shidduchim"
+    ],
+    "guysTap": {
+     "detailName": null,
+     "profileTabActive": false,
+     "personRows": 3
+    },
+    "girls": {
+     "rows": [
+      "p_leah",
+      "p_tamar",
+      "p_noa",
+      "p_rina"
+     ],
+     "tabs": [
+      "all",
+      "recent"
+     ],
+     "subtitle": "Browse and search"
+    }
+   }
+  }
+ },
+ {
+  "id": "F09",
+  "title": "v58 UX rules: Recent sections, gear only on Recent, Shadchanim/Shidduchim tab wording, stage bar + Thinking rule, no empty status boxes, What's next?, contact order, WhatsApp/SMS icons",
+  "status": "PASS",
+  "details": {
+   "recentSections": [
+    "My to-do list",
+    "To hear back",
+    "History"
+   ],
+   "recentHasCurrentShidduchim": false,
+   "gear": {
+    "recent": 1,
+    "guys": 0,
+    "shadchanim": 0,
+    "girls": 0,
+    "shidduchim": 0
+   },
+   "shadchanimTabs": [
+    "All",
+    "To hear back",
+    "My to-do",
+    "Time to contact",
+    "Sources"
+   ],
+   "shidduchimTabs": [
+    "Offers",
+    "In Progress",
+    "Ended"
+   ],
+   "stageInProgress": [
+    "sh_me_leah: References",
+    "sh_david_noa: Date 2"
+   ],
+   "stageEnded": [
+    "sh_ari_rina: Profile sent"
+   ],
+   "stageSegments": [
+    "Profile sent",
+    "References",
+    "Date 1",
+    "Date 2",
+    "Date 3",
+    "Date 4",
+    "Date 5",
+    "Date 6",
+    "Date 7",
+    "Date 8",
+    "Marriage"
+   ],
+   "dina": {
+    "boxes": 0,
+    "metricGrid": 0,
+    "statusText": "Last contact: Sep 23"
+   },
+   "miriam": {
+    "boxes": [
+     "My to-do",
+     "To hear back from Miriam"
+    ],
+    "contacts": [
+     "call",
+     "email",
+     "wa",
+     "sms",
+     "wait"
+    ],
+    "contactLabels": [
+     "Call",
+     "Email",
+     "WhatsApp",
+     "SMS",
+     "What's next?"
+    ]
+   },
+   "setTurnAnywhere": false,
+   "icons": {
+    "whatsapp": true,
+    "sms": true
+   },
+   "whatsNextSheetTitle": "What's next?"
+  }
+ },
+ {
+  "id": "F09b",
+  "title": "Recent hides \"To hear back\" when there are no such items",
+  "status": "PASS",
+  "details": {
+   "sections": [
+    "My to-do list",
+    "History"
+   ]
+  }
+ },
+ {
+  "id": "F10",
+  "title": "Profile header is compact from the start, pins at top on scroll without resizing (10 skins × 2 widths); Shadchanim header sticks",
+  "status": "PASS",
+  "details": {
+   "classic/phone": "✓ h=60 avatar=38",
+   "game/phone": "✓ h=60 avatar=38",
+   "dark/phone": "✓ h=60 avatar=38",
+   "glass/phone": "✓ h=60 avatar=38",
+   "boys/phone": "✓ h=60 avatar=38",
+   "girls/phone": "✓ h=60 avatar=38",
+   "kids/phone": {
+    "atTop": {
+     "cls": "",
+     "top": 39,
+     "h": 313.8,
+     "avatar": 38,
+     "scrollW": 412,
+     "clientW": 412
+    },
+    "scrolled": {
+     "cls": "is-stuck zm-fixed",
+     "top": 0,
+     "h": 94,
+     "avatar": 38,
+     "scrollW": 412,
+     "clientW": 412
+    },
+    "back": {
+     "cls": "",
+     "top": 39,
+     "h": 313.8,
+     "avatar": 38,
+     "scrollW": 412,
+     "clientW": 412
+    },
+    "shad": {
+     "cls": "zm-shadchan-sticky-head is-stuck",
+     "top": 0
+    }
+   },
+   "contrast/phone": "✓ h=60 avatar=38",
+   "neon/phone": "✓ h=60 avatar=38",
+   "ocean/phone": "✓ h=60 avatar=38",
+   "sunset/phone": "✓ h=60 avatar=38",
+   "classic/desktop": "✓ h=64 avatar=42",
+   "game/desktop": "✓ h=64 avatar=42",
+   "dark/desktop": "✓ h=64 avatar=42",
+   "glass/desktop": "✓ h=64 avatar=42",
+   "boys/desktop": "✓ h=64 avatar=42",
+   "girls/desktop": "✓ h=64 avatar=42",
+   "kids/desktop": {
+    "atTop": {
+     "cls": "",
+     "top": 62,
+     "h": 317.8,
+     "avatar": 42,
+     "scrollW": 1280,
+     "clientW": 1280
+    },
+    "scrolled": {
+     "cls": "is-stuck zm-fixed",
+     "top": 0,
+     "h": 100,
+     "avatar": 42,
+     "scrollW": 1280,
+     "clientW": 1280
+    },
+    "back": {
+     "cls": "",
+     "top": 62,
+     "h": 317.8,
+     "avatar": 42,
+     "scrollW": 1280,
+     "clientW": 1280
+    },
+    "shad": {
+     "cls": "zm-shadchan-sticky-head is-stuck",
+     "top": 0
+    }
+   },
+   "contrast/desktop": "✓ h=64 avatar=42",
+   "neon/desktop": "✓ h=64 avatar=42",
+   "ocean/desktop": "✓ h=64 avatar=42",
+   "sunset/desktop": "✓ h=64 avatar=42"
+  }
+ },
+ {
+  "id": "K8",
+  "title": "Cartoon skin: profile header is not compact (≈314 px tall at top, squeezed column, empty block) and shrinks when pinned",
+  "status": "KNOWN",
+  "details": {
+   "phone": {
+    "good": false,
+    "atTopHeight": 313.8,
+    "pinnedHeight": 94,
+    "shadchanimHeadSticks": true
+   },
+   "desktop": {
+    "good": false,
+    "atTopHeight": 317.8,
+    "pinnedHeight": 100,
+    "shadchanimHeadSticks": true
+   }
+  }
+ },
+ {
+  "id": "S1",
+  "title": "A display error on real data never swaps in demo data; real data stays stored and can be exported",
+  "status": "FAIL",
+  "details": {
+   "realDataKept": false,
+   "demoShown": true,
+   "exportButton": false,
+   "exportContainsRealData": null,
+   "screen": "ZivugMatchב״הRecentAdd\n    \n    My to-do list\n    \n    BL\n    Reply about availa"
+  }
+ },
+ {
+  "id": "S2",
+  "title": "If storage fails once at startup, the temporary demo data is never saved over the real data",
+  "status": "FAIL",
+  "details": {
+   "realDataKept": false,
+   "storedPeople": 120,
+   "toast": "Local storage unavailable; using temporary data"
+  }
+ },
+ {
+  "id": "K1",
+  "title": "Settings \"Load demo\" replaces all real data with no confirm and no undo",
+  "status": "KNOWN",
+  "details": {
+   "realPersonStillThere": false,
+   "peopleAfter": 120,
+   "demoFlag": true
+  }
+ },
+ {
+  "id": "K2",
+  "title": "If the first render throws (e.g. a backup without openItems), the app silently shows demo data; the next save overwrites the real data",
+  "status": "KNOWN",
+  "details": {
+   "toast": "Local storage unavailable; using temporary data",
+   "realShown": false,
+   "storedStillRealBeforeSave": true,
+   "realLostAfterOneSettingTap": true,
+   "pageErrors": [
+    "console: TypeError: Cannot read properties of undefined (reading 'filter')\n    at counts (http://127.0.0.1:8801/app-2.js?v=58:57:47)\n    at recentScreen (http://127.0.0.1:8801/app-ui.js?v=58:51:11)\n    at render (http://127.0.0.1:8801/app-3.js?v=58:21:343)\n    at init (http://127.0.0.1:8801/app-5.js?v=58:57:151)"
+   ]
+  }
+ },
+ {
+  "id": "K3",
+  "title": "Restore replaces everything and keeps no recoverable copy of the previous data",
+  "status": "KNOWN",
+  "details": {
+   "peopleAfter": 5,
+   "storedKeys": [
+    "state"
+   ]
+  }
+ },
+ {
+  "id": "K4",
+  "title": "A person without createdAt (and no contact) crashes the Guys list sort",
+  "status": "KNOWN",
+  "details": {
+   "errors": [
+    "Cannot read properties of undefined (reading 'localeCompare')"
+   ],
+   "guysScreenShown": false
+  }
+ },
+ {
+  "id": "K5",
+  "title": "Double tap on Interested opens two active rounds (no status guard)",
+  "status": "KNOWN",
+  "details": {
+   "records": 1,
+   "rounds": [
+    "#1:active",
+    "#2:active"
+   ]
+  }
+ },
+ {
+  "id": "K6",
+  "title": "Tapping WhatsApp on a person with no phone still logs an outgoing contact (\"WhatsApp opened.\")",
+  "status": "KNOWN",
+  "details": {
+   "added": [
+    "message/out: WhatsApp opened."
+   ],
+   "toast": "WhatsApp logged · add phone to open it"
+  }
+ },
+ {
+  "id": "K7",
+  "title": "Visual/navigation quirks",
+  "status": "KNOWN",
+  "details": {
+   "fakeProfileVersionRow": true,
+   "profileHorizontalOverflowPx": 92,
+   "shidduchMoreButtonOpensSomething": false,
+   "backAfterLeavingShidduch": "shidduch page (stale)"
+  }
+ }
+]
