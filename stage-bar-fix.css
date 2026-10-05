@@ -1,0 +1,23 @@
+/* Stage bar correction: one clear stage color and the stage name attached to the selected point. */
+.zm-stage-track-wrap{position:relative;padding-top:16px;min-width:0}
+.zm-stage-floating{position:absolute;top:0;transform:translateX(-50%);font-size:9px;font-weight:850;line-height:1;color:var(--zm-stage-color);white-space:nowrap;pointer-events:none}
+.zm-stage-floating.edge-start{left:0!important;transform:none}
+.zm-stage-floating.edge-end{left:auto!important;right:0;transform:none}
+.zm-stage-note{margin-top:5px;font-size:9px;font-weight:700;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+
+/* The bar should read as one stage color, not a rainbow of every earlier step. */
+.zm-stage:not(.ended) .zm-stage-seg.done,
+.zm-stage:not(.ended) .zm-stage-seg.now{background:var(--zm-stage-color)!important;color:var(--zm-stage-color)!important}
+.zm-stage.ended .zm-stage-seg.done,
+.zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
+
+/* Remove the old text row above the track. The floating stage label now owns that job. */
+.zm-stage-meta{display:none!important}
+.zm-stage{margin-top:4px}
+.zm-stage-track{margin-top:0}
+
+@media(max-width:520px){
+  .zm-stage-track-wrap{padding-top:15px}
+  .zm-stage-floating{font-size:8.5px}
+  .zm-stage-note{font-size:8.5px}
+}
