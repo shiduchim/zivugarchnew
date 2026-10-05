@@ -304,7 +304,8 @@ const checks = {
 
   // ---------- SAFETY requirements for step B. Expected to FAIL on v58 and PASS after the approved fix. ----------
   async S1_render_error_keeps_real_data() {
-    const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { delete fx.openItems; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
+    // A corrupt history row (null) makes the first render throw on any build.
+    const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.entries.push(null); fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
     const s0 = await L.idbRead(page);
     const text = await page.$eval('#app', a => a.textContent);
     const demoShown = /Local storage unavailable/.test(await page.$eval('#toast', e => e.textContent));
@@ -356,6 +357,27 @@ const checks = {
     record('S3', 'Load demo / Clear demo keep a recoverable copy: Undo on the toast and Restore in Settings bring the real data back', ok ? 'PASS' : 'FAIL', det);
   },
 
+  async S4_restore_is_recoverable() {
+    const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }) });
+    const s0 = await L.idbRead(page);
+    const backup = FIX('demo'); backup.people = backup.people.slice(0, 5); delete backup.openItems; delete backup.dates;
+    await L.tap(page, '[data-act="settings"]');
+    await page.setInputFiles('#backupFile', { name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(backup)) });
+    await page.waitForTimeout(200); await L.settle(page);
+    const restored = await L.idbRead(page);
+    const n = page.__errors.length;
+    const screenOk = !!(await page.$('#app nav')) && (await domList(page, '#app h2')).includes('History');
+    for (const t of ['guys', 'shadchanim', 'girls', 'shidduchim', 'recent']) await L.tap(page, `button[data-screen="${t}"]`);
+    const errors = page.__errors.slice(n);
+    const undoBtn = await page.$('#toast [data-act="undo-safety"]');
+    if (undoBtn) { await L.tap(page, '#toast [data-act="undo-safety"]'); await page.waitForTimeout(150); await L.settle(page); }
+    const undone = await L.idbRead(page);
+    const back = JSON.stringify(undone.people) === JSON.stringify(s0.people) && JSON.stringify(undone.openItems) === JSON.stringify(s0.openItems);
+    const ok = restored.people.length === 5 && Array.isArray(restored.openItems) && screenOk && !errors.length && !!undoBtn && back;
+    record('S4', 'Restore keeps the replaced data (Undo brings it back); a partial backup (missing lists) loads without breaking any screen', ok ? 'PASS' : 'FAIL', { restoredPeople: restored.people.length, missingListsFilled: Array.isArray(restored.openItems) && Array.isArray(restored.dates), screenOk, errors, undoOnToast: !!undoBtn, realDataBackAfterUndo: back });
+    await ctx.close();
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
@@ -387,7 +409,7 @@ const checks = {
     const st = await L.idbRead(page);
     const keys = await page.evaluate(() => new Promise(r => { const q = indexedDB.open('ZivugMatchDB', 1); q.onsuccess = () => { const k = q.result.transaction('kv').objectStore('kv').getAllKeys(); k.onsuccess = () => r(k.result); }; }));
     const lost = !st.people.some(p => p.id === 'p_golden_real');
-    record('K3', 'Restore replaces everything and keeps no recoverable copy of the previous data', lost && keys.length === 1 ? 'KNOWN' : 'CHANGED', { peopleAfter: st.people.length, storedKeys: keys });
+    record('K3', 'Restore replaces everything and keeps no recoverable copy of the previous data', lost && !keys.includes('safetyCopies') ? 'KNOWN' : 'CHANGED', { peopleAfter: st.people.length, storedKeys: keys });
     await ctx.close();
   },
   async K4_missing_createdAt_crashes_list() {

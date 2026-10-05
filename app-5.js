@@ -57,7 +57,7 @@ overlay.addEventListener('click',e=>{if(e.target.classList.contains('scrim'))clo
 async function init(){
   try{data=await dbGet(STATE_KEY);}
   catch(err){console.error(err);storageBlocked=true;data=demoData();applySettings();render();showToast('Local storage unavailable; using temporary data');return;}
-  try{if(!data){data=demoData();await save();}data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();loadSafetyCopies();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  try{if(!data){data=demoData();await save();}normalizeData(data);data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();loadSafetyCopies();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}

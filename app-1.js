@@ -118,12 +118,17 @@ async function dbPut(key,val){const db=await openDb();return new Promise((resolv
 let storageBlocked=false;
 async function save(){if(storageBlocked){showToast('Not saved: local storage is unavailable');return;}data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
 
+// Older or partial data (e.g. a backup without some lists) gets empty lists so screens never break.
+// Nothing else is changed and no record is invented.
+const DATA_LISTS=['people','entries','sources','ideas','shidduchim','rounds','dates','openItems','profileVersions','files','folders'];
+function normalizeData(d){for(const k of DATA_LISTS)if(!Array.isArray(d[k]))d[k]=[];if(!d.meta||typeof d.meta!=='object')d.meta={demo:false};if(!d.settings||typeof d.settings!=='object')d.settings={};return d;}
+
 // Safety copies: before data is replaced as a whole (demo, restore), the current data is kept
 // under its own key so it can be brought back with Undo or from Settings. Newest first.
 const SAFETY_KEY='safetyCopies',SAFETY_MAX=5;
 let safetyCopies=[];
 async function loadSafetyCopies(){try{safetyCopies=((await dbGet(SAFETY_KEY))||[]).map(({id,at,reason})=>({id,at,reason}));}catch(e){safetyCopies=[];}}
 async function keepSafetyCopy(reason){if(storageBlocked)return null;const list=(await dbGet(SAFETY_KEY))||[];const copy={id:id('safe'),at:iso(),reason,data:JSON.parse(JSON.stringify(data))};list.unshift(copy);list.splice(SAFETY_MAX);await dbPut(SAFETY_KEY,list);safetyCopies=list.map(({id,at,reason})=>({id,at,reason}));return copy.id;}
-async function restoreSafetyCopy(copyId){const list=(await dbGet(SAFETY_KEY))||[];const c=list.find(x=>x.id===copyId)||list[0];if(!c){showToast('Nothing to restore');return;}const back=await keepSafetyCopy('restoring earlier data');data=c.data;await save();closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast('Earlier data restored',back);}
+async function restoreSafetyCopy(copyId){const list=(await dbGet(SAFETY_KEY))||[];const c=list.find(x=>x.id===copyId)||list[0];if(!c){showToast('Nothing to restore');return;}const back=await keepSafetyCopy('restoring earlier data');data=normalizeData(c.data);await save();closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast('Earlier data restored',back);}
 
 function person(pid){return data.people.find(p=>p.id===pid)}
