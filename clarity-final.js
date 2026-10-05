@@ -114,7 +114,7 @@ addPersonSheet=function(typePreset){
 };
 
 addActivitySheet=function(pid=''){
-  const peopleOptions=data.people.filter(p=>!p.isMe).sort((a,b)=>a.name.localeCompare(b.name));
+  const peopleOptions=data.people.filter(p=>!p.isMe).sort(byName);
   openSheet(`<h2>Add activity</h2><p class="lead">Add something that happened outside the app. It will also appear in this person's History.</p><div class="form-grid"><div class="field"><label>Person</label><select id="aPerson"><option value="">Choose…</option>${peopleOptions.map(p=>`<option value="${p.id}" ${pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="aType"><option value="note">Note</option><option value="call">Call</option><option value="message">Message</option><option value="profile">Profile</option><option value="referral">Referral</option></select></div><div class="field"><label>What happened?</label><textarea id="aText" placeholder="Short note…"></textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-activity">Save</button></div>`);
 };
 

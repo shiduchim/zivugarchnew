@@ -69,7 +69,7 @@ peopleScreen=function(type){
 shadchanScreen=function(){
   const all=byType('Shadchan'),them=all.filter(p=>openForPerson(p.id,'them').length),mine=all.filter(p=>openForPerson(p.id,'me').length),needs=all.filter(needsContactPerson);
   let arr=all;const v=ui.screenView.shadchanim;if(v==='them')arr=them;if(v==='me')arr=mine;if(v==='needs')arr=needs;if(v==='sources')return sourceScreenEmbedded(all.length,them.length,mine.length,needs.length);
-  const q=ui.search.toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.phone||''}`).toLowerCase().includes(q));arr=arr.sort((a,b)=>(lastContact(b.id)||b.createdAt).localeCompare(lastContact(a.id)||a.createdAt));
+  const q=ui.search.toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.phone||''}`).toLowerCase().includes(q));arr=arr.sort(byRecentContact);
   const tabs=[{value:'all',label:'All',count:all.length},{value:'them',label:'Waiting on them',count:them.length},{value:'me',label:'Waiting on me',count:mine.length},{value:'needs',label:'Needs contact',count:needs.length},{value:'sources',label:'Sources',count:data.sources.length}];
   return `${header('Shadchanim',`${all.length} people in your network`,{add:true})}${searchBox('Search name, phone or city…')}${segment(tabs,v,'shadchanim')}<div class="warm-stack">${arr.map((p,i)=>personRow(p,{selected:i===0})).join('')||empty('No shadchanim in this view','Nothing needs your attention here right now.')}</div>`;
 };

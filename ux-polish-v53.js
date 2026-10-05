@@ -78,7 +78,7 @@ peopleScreen=function(type){
   let arr=byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
   const q=ui.search.trim().toLowerCase();
   if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
-  arr=arr.sort((a,b)=>(lastContact(b.id)||b.createdAt).localeCompare(lastContact(a.id)||a.createdAt));
+  arr=arr.sort(byRecentContact);
   return `${header('Girls','Profiles applicable to you',{add:true})}${searchBox('Search girls…')}<div class="warm-stack">${arr.map(p=>personRow(p)).join('')||empty('No applicable profiles yet','Profiles connected to an open offer or current shidduch with you will appear here.','add-current')}</div>`;
 };
 

@@ -11,6 +11,10 @@ function openForPerson(pid,dir){return data.openItems.filter(x=>x.status==='open
 function shidduchimForPerson(pid){return data.shidduchim.filter(s=>s.guyId===pid||s.girlId===pid||s.shadchanIds?.includes(pid));}
 function ideasForPerson(pid){return data.ideas.filter(i=>i.guyId===pid||i.girlId===pid);}
 function lastContact(pid){const e=entriesForPerson(pid).find(x=>['call','message','profile','note'].includes(x.type));return e?.at||null;}
+// Sort helpers that tolerate people without a contact date, createdAt or name (they go last).
+function recentKey(p){return String(lastContact(p.id)||p.createdAt||'');}
+function byRecentContact(a,b){return recentKey(b).localeCompare(recentKey(a));}
+function byName(a,b){return String(a.name||'').localeCompare(String(b.name||''));}
 function fmtDay(ts){if(!ts)return'No contact yet';const d=new Date(ts),now=new Date();const diff=Math.floor((now-d)/86400000);if(diff<=0)return'Today';if(diff===1)return'Yesterday';if(diff<7)return`${diff} days ago`;return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 function fmtTime(ts){return new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});}
 function fmtDate(ts){return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:new Date(ts).getFullYear()===new Date().getFullYear()?undefined:'numeric'});}
@@ -69,7 +73,7 @@ function recentScreen(){
 function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe);const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));if(type==='Girl'&&data.settings.mode==='single'){
   const view=ui.screenView.girls;if(view==='for-me')arr=arr.filter(p=>ideasForPerson(p.id).some(i=>i.status==='open'&&(i.guyId===me().id||i.girlId===me().id))||shidduchimForPerson(p.id).some(s=>s.status==='active'&&(s.guyId===me().id||s.girlId===me().id)));if(view==='previous')arr=arr.filter(p=>shidduchimForPerson(p.id).some(s=>s.status==='ended'&&(s.guyId===me().id||s.girlId===me().id))||ideasForPerson(p.id).some(i=>i.status==='not-applicable'&&(i.guyId===me().id||i.girlId===me().id)));
   }
-  return arr.sort((a,b)=>(lastContact(b.id)||b.createdAt).localeCompare(lastContact(a.id)||a.createdAt));
+  return arr.sort(byRecentContact);
 }
 function peopleScreen(type){const isGirl=type==='Girl',key=isGirl?'girls':'guys';let tabs;if(isGirl&&data.settings.mode==='single')tabs=[{value:'for-me',label:'For me'},{value:'previous',label:'Previous'}];else tabs=[{value:'all',label:'All'},{value:'recent',label:'Recently added'}];const arr=filteredPeople(type);return `${header(isGirl?'Girls':'Guys',isGirl&&data.settings.mode==='single'?'Profiles relevant to you':'Browse and search',{add:true})}${searchBox(`Search ${isGirl?'girls':'guys'}…`)}${segment(tabs,ui.screenView[key],key)}${arr.length?`<div class="list-card">${arr.map((p,i)=>personRow(p,{selected:i===0&&isGirl})).join('')}</div>`:empty(`No ${isGirl?'girls':'guys'} here yet`,`Add a ${isGirl?'girl':'guy'} profile and the app will keep its history, sources and shidduchim together.`,'add-current')}`;}
 

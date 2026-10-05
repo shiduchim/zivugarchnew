@@ -378,6 +378,29 @@ const checks = {
     await ctx.close();
   },
 
+  async S5_missing_dates_and_names_never_crash() {
+    const det = {}; let ok = true;
+    for (const mode of ['shadchan', 'single']) {
+      const { ctx, page } = await fresh({ mode, mutate: fx => {
+        fx.people.splice(1, 0, { id: 'p_golden_nodate', name: 'Golden No Date', types: ['Guy'] }, { id: 'p_golden_noname', types: ['Shadchan'] }, { id: 'p_golden_girl', name: 'Golden Girl', types: ['Girl'] });
+        fx.ideas.push({ id: 'idea_golden', guyId: 'p_me', girlId: 'p_golden_girl', status: 'open' });
+        fx.entries.push({ id: 'e_golden_nodate', type: 'call', direction: 'out', personIds: ['p_me', 'p_golden_nodate'], text: 'Made-up call without a date' });
+      } });
+      const n = page.__errors.length;
+      const visits = [[nav('guys')], [nav('girls')], ...['all', 'them', 'me', 'needs', 'sources'].map(v => [nav('shadchanim'), seg('shadchanim', v)]), [nav('shidduchim')], [['tap', 'button[data-act="add-activity"]']], [['tap', '[data-act="add-current"]'], ['tap', '#qaGuy']]];
+      for (const v of visits) { await L.openApp(page); await run(page, v); }
+      await page.fill('#fName', 'Golden No Date'); await L.tap(page, '#overlay [data-act="save-person"]');
+      await L.openApp(page);
+      if (mode === 'shadchan') { await L.tap(page, 'button[data-screen="guys"]'); det.guysOrder = await domList(page, '#app [data-person]', 'data-person'); }
+      else { await L.tap(page, 'button[data-screen="girls"]'); det.singleGirls = await domList(page, '#app [data-person]', 'data-person'); }
+      det[mode + 'Errors'] = page.__errors.slice(n);
+      ok = ok && !det[mode + 'Errors'].length;
+      await ctx.close();
+    }
+    ok = ok && det.guysOrder?.includes('p_golden_nodate') && det.singleGirls?.includes('p_golden_girl');
+    record('S5', 'People without createdAt, contact dates or a name never crash lists, sorts, sheets or the duplicate check', ok ? 'PASS' : 'FAIL', det);
+  },
+
   // ---------- KNOWN v58 bugs: recorded, not "passing". Step B is expected to change K1–K4 on purpose. ----------
   async K1_demo_toggle_wipes_real_data() {
     const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.meta.demo = false; fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });

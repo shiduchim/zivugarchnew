@@ -139,7 +139,7 @@ recentScreen=function(){return (data.settings.skin==='easy')?easyRecent():improv
 const previousShadchanScreenNext=shadchanScreen;
 shadchanScreen=function(){
   if(ui.screenView.shadchanim!=='all'||ui.search)return previousShadchanScreenNext();
-  const all=byType('Shadchan').sort((a,b)=>a.name.localeCompare(b.name));
+  const all=byType('Shadchan').sort(byName);
   const active=all.filter(p=>openForPerson(p.id).length||shidduchimForPerson(p.id).some(s=>s.status==='active'));
   const activeIds=new Set(active.map(p=>p.id)),rest=all.filter(p=>!activeIds.has(p.id));
   const groups={};for(const p of rest){const k=(p.name?.[0]||'#').toUpperCase();(groups[k]??=[]).push(p);}
