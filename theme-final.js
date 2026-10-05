@@ -83,15 +83,18 @@ return SECTIONS.has(tab)?tab:'recent';
 }
 function sync(){
 queued=false;
-const detail=app?.querySelector('.warm-detail-page');
+const warmDetail=app?.querySelector('.warm-detail-page');
+const legacyDetail=app?.querySelector('.detail-shell');
 if(root.dataset.skin!=='neon'){
 root.removeAttribute('data-section');
-if(detail) detail.removeAttribute('data-section');
+if(warmDetail) warmDetail.removeAttribute('data-section');
+if(legacyDetail) legacyDetail.removeAttribute('data-section');
 return;
 }
 const s=currentSection();
 if(root.dataset.section!==s) root.dataset.section=s;
-if(detail&&SECTIONS.has(s)&&detail.dataset.section!==s) detail.dataset.section=s;
+if(warmDetail&&SECTIONS.has(s)&&warmDetail.dataset.section!==s) warmDetail.dataset.section=s;
+if(legacyDetail&&ui?.detail?.type==='shidduch'&&legacyDetail.dataset.section!=='shidduchim') legacyDetail.dataset.section='shidduchim';
 }
 function queue(){if(!queued){queued=true;requestAnimationFrame(sync);}}
 if(app) new MutationObserver(queue).observe(app,{childList:true,subtree:true});
