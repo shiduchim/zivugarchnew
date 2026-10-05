@@ -1,0 +1,67 @@
+/* Distinct high-impact skins. Loaded last so these rules override the earlier experimental skin library. */
+
+.skin-swatch.glass{background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(98,177,238,.60),rgba(189,119,231,.50));color:#214f7e;border:1px solid rgba(255,255,255,.95);box-shadow:inset 0 0 14px rgba(255,255,255,.85),0 5px 14px rgba(47,77,125,.18)}
+.skin-swatch.boys{background:linear-gradient(135deg,#052a42,#0782a0,#27d5e6);color:#fff}
+.skin-swatch.girls{background:linear-gradient(135deg,#5c2148,#c23878,#d29cff);color:#fff}
+.skin-swatch.kids{background:linear-gradient(135deg,#ffe64f,#70d8ff,#ff82b6);color:#253451;border:2px solid #253451}
+.skin-swatch.neon{background:linear-gradient(135deg,#120b2a,#7d2aff,#00dcff);color:#fff}
+.skin-swatch.ocean{background:linear-gradient(135deg,#022a43,#077f91,#43ddd0);color:#fff}
+.skin-swatch.sunset{background:linear-gradient(135deg,#702752,#ff645d,#ffb348);color:#fff}
+
+/* Frosted Glass: genuinely translucent, blurred and layered like Windows acrylic/mica. */
+html[data-skin="glass"]{color-scheme:light;--bg:transparent;--bg-2:transparent;--surface:rgba(255,255,255,.31);--surface-2:rgba(255,255,255,.20);--surface-3:rgba(255,255,255,.27);--text:#17344f;--text-2:#4b6780;--text-3:#738ba2;--line:rgba(255,255,255,.62);--blue:#316fa8;--blue-2:rgba(189,222,249,.54);--blue-3:rgba(139,199,240,.52);--sage:#3f8e76;--sage-2:rgba(185,234,213,.52);--peach:#c26e66;--peach-2:rgba(251,202,193,.48);--amber:#9d711d;--amber-2:rgba(255,231,170,.54);--shadow:0 20px 48px rgba(32,62,101,.18);--shadow-soft:0 9px 25px rgba(32,62,101,.13)}
+html[data-skin="glass"] body{background:radial-gradient(circle at 8% 8%,rgba(255,153,194,.84),transparent 26%),radial-gradient(circle at 90% 15%,rgba(83,180,255,.92),transparent 30%),radial-gradient(circle at 75% 82%,rgba(126,91,239,.70),transparent 34%),linear-gradient(145deg,#d8edff 0,#eedcf8 43%,#d8f4f0 100%) fixed!important}
+html[data-skin="glass"] body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.24),transparent 36%,rgba(255,255,255,.12));z-index:-1}
+html[data-skin="glass"] .warm-person-row,html[data-skin="glass"] .warm-activity-row,html[data-skin="glass"] .warm-source-row,html[data-skin="glass"] .warm-match-row,html[data-skin="glass"] .warm-summary,html[data-skin="glass"] .warm-metric,html[data-skin="glass"] .warm-search,html[data-skin="glass"] .warm-filter,html[data-skin="glass"] .warm-circle,html[data-skin="glass"] .warm-info-card,html[data-skin="glass"] .warm-history-card,html[data-skin="glass"] .warm-profile-card,html[data-skin="glass"] .warm-related-card,html[data-skin="glass"] .next-card,html[data-skin="glass"] .waiting-summary,html[data-skin="glass"] .all-clear,html[data-skin="glass"] .sheet,html[data-skin="glass"] .warm-bottom-nav{background:rgba(255,255,255,.30)!important;border:1px solid rgba(255,255,255,.68)!important;box-shadow:0 18px 44px rgba(39,71,111,.17),inset 0 1px 0 rgba(255,255,255,.78)!important;-webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%)}
+html[data-skin="glass"] .warm-bottom-nav{background:rgba(250,253,255,.34)!important}
+html[data-skin="glass"] .warm-segment{background:rgba(255,255,255,.17)!important;border:1px solid rgba(255,255,255,.45)!important;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+html[data-skin="glass"] .warm-seg.active,html[data-skin="glass"] .warm-nav.active{background:rgba(255,255,255,.58)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.82)!important}
+html[data-skin="glass"] .warm-add{background:rgba(45,110,169,.70)!important;color:#fff!important;border:1px solid rgba(255,255,255,.60)!important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+
+/* Boys: strong navy, cyan and teal. */
+html[data-skin="boys"]{color-scheme:dark;--bg:#05283c;--bg-2:#07354d;--surface:#0b4158;--surface-2:#08364a;--surface-3:#0f526b;--text:#f4fcff;--text-2:#b7dce8;--text-3:#7db3c5;--line:rgba(86,225,245,.18);--blue:#48dcf5;--blue-2:#0e5a72;--blue-3:#11768f;--sage:#55d9b1;--sage-2:#124f49;--peach:#f0a27b;--peach-2:#624238;--amber:#ffd166;--amber-2:#59491f;--shadow:0 14px 32px rgba(0,0,0,.30);--shadow-soft:0 7px 18px rgba(0,0,0,.23)}
+html[data-skin="boys"] body{background:radial-gradient(circle at 88% 5%,#0a7184 0,transparent 28%),linear-gradient(155deg,#031c2b,#063a52 50%,#0b6571 100%) fixed!important}
+html[data-skin="boys"] .warm-person-row,html[data-skin="boys"] .warm-activity-row,html[data-skin="boys"] .warm-match-row,html[data-skin="boys"] .next-card,html[data-skin="boys"] .warm-summary{background:linear-gradient(145deg,#0b3a50,#0b485d)!important;border:1px solid rgba(74,222,244,.17)!important}
+html[data-skin="boys"] .warm-avatar,html[data-skin="boys"] .warm-person-big{background:linear-gradient(135deg,#18b9d5,#63e5c7)!important;color:#032735!important}
+html[data-skin="boys"] .warm-bottom-nav{background:#05283cf3!important;border-top:1px solid rgba(94,230,248,.20)!important}
+html[data-skin="boys"] .warm-nav.active,html[data-skin="boys"] .warm-seg.active{background:#0e566f!important;color:#76efff!important}
+
+/* Girls: strong plum, rose and lilac. */
+html[data-skin="girls"]{color-scheme:dark;--bg:#51203e;--bg-2:#63264c;--surface:#763057;--surface-2:#602748;--surface-3:#843861;--text:#fff8fc;--text-2:#f0c7dc;--text-3:#ca94af;--line:rgba(255,196,226,.17);--blue:#ff91c6;--blue-2:#893660;--blue-3:#a64574;--sage:#b4d49b;--sage-2:#4f5a3a;--peach:#ff9c9f;--peach-2:#7a3b46;--amber:#ffd17e;--amber-2:#6b4a2b;--lav:#d09cff;--lav-2:#59366f;--shadow:0 14px 32px rgba(45,8,31,.35);--shadow-soft:0 7px 18px rgba(45,8,31,.27)}
+html[data-skin="girls"] body{background:radial-gradient(circle at 17% 0,#9b3e73 0,transparent 30%),radial-gradient(circle at 91% 18%,#744f9e 0,transparent 28%),linear-gradient(158deg,#481a36,#712a54 58%,#4e1d3e) fixed!important}
+html[data-skin="girls"] .warm-person-row,html[data-skin="girls"] .warm-activity-row,html[data-skin="girls"] .warm-match-row,html[data-skin="girls"] .next-card,html[data-skin="girls"] .warm-summary{background:linear-gradient(145deg,#753058,#873965)!important;border:1px solid rgba(255,183,219,.14)!important}
+html[data-skin="girls"] .warm-avatar,html[data-skin="girls"] .warm-person-big{background:linear-gradient(135deg,#ff8fc5,#c99aff)!important;color:#42142e!important}
+html[data-skin="girls"] .warm-bottom-nav{background:#4e1e3cf3!important;border-top:1px solid rgba(255,176,217,.18)!important}
+html[data-skin="girls"] .warm-nav.active,html[data-skin="girls"] .warm-seg.active{background:#81325e!important;color:#ffd6ea!important}
+
+/* Cartoon: deliberately child-simple, bright, chunky and illustrated. */
+html[data-skin="kids"]{color-scheme:light;--bg:#fff5bf;--bg-2:#fffbdc;--surface:#fff;--surface-2:#fff0a3;--surface-3:#dff5ff;--text:#223252;--text-2:#52637f;--text-3:#7e89a0;--line:#263654;--blue:#4e9cf5;--blue-2:#dcedff;--blue-3:#bfe2ff;--sage:#5dcc8d;--sage-2:#dff5e7;--peach:#ff8c73;--peach-2:#ffe1d8;--amber:#e8aa27;--amber-2:#fff0a9;--lav:#9b82f4;--lav-2:#e9e2ff;--rose:#f06d9d;--rose-2:#ffe0eb;--shadow:5px 6px 0 rgba(35,50,82,.15);--shadow-soft:3px 4px 0 rgba(35,50,82,.12);--radius-lg:22px;--radius-md:16px;--density-row:84px;--avatar:54px}
+html[data-skin="kids"] body{background:linear-gradient(180deg,#fff5bd,#fffbe0 40%,#e8f7ff 100%) fixed!important}
+html[data-skin="kids"] .warm-title-copy h1,html[data-skin="kids"] .warm-detail-name h1{font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:950!important;letter-spacing:-.04em!important}
+html[data-skin="kids"] .warm-person-row,html[data-skin="kids"] .warm-activity-row,html[data-skin="kids"] .warm-match-row,html[data-skin="kids"] .next-card,html[data-skin="kids"] .kid-mission,html[data-skin="kids"] .waiting-summary,html[data-skin="kids"] .warm-summary{border:2px solid #263654!important;box-shadow:4px 5px 0 rgba(38,54,84,.13)!important;border-radius:22px!important}
+html[data-skin="kids"] .kid-action-grid button{border:2px solid #263654!important;box-shadow:4px 5px 0 rgba(38,54,84,.13)!important;font-weight:900}
+html[data-skin="kids"] .cartoon-nav{background:#fff!important;border-top:2px solid #263654!important;box-shadow:0 -5px 0 rgba(38,54,84,.08)!important}
+html[data-skin="kids"] .cartoon-nav .warm-nav{color:#43516c!important;font-weight:850!important}
+html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{font-size:24px!important;line-height:1!important;background:transparent!important;width:38px!important;height:34px!important;display:grid!important;place-items:center!important}
+html[data-skin="kids"] .cartoon-nav .warm-nav.active{background:#fff0a8!important;border:2px solid #263654!important;border-radius:16px!important;color:#223252!important}
+html[data-skin="kids"] .warm-avatar{border:2px solid #263654!important;box-shadow:2px 3px 0 rgba(38,54,84,.12)!important}
+
+/* Neon: black-purple with electric cyan glow. */
+html[data-skin="neon"]{color-scheme:dark;--bg:#0c081e;--bg-2:#15102d;--surface:#171231;--surface-2:#211746;--surface-3:#222047;--text:#faf6ff;--text-2:#cbbdf1;--text-3:#8979ad;--line:rgba(0,230,255,.20);--blue:#00e5ff;--blue-2:#14384d;--blue-3:#165a70;--sage:#53ffb1;--sage-2:#174636;--peach:#ff739f;--peach-2:#4b2035;--amber:#ffe66d;--amber-2:#4f4521;--lav:#ae75ff;--lav-2:#352056;--shadow:0 0 28px rgba(93,35,255,.24);--shadow-soft:0 0 17px rgba(0,229,255,.12)}
+html[data-skin="neon"] body{background:radial-gradient(circle at 18% 0,#2d1268,transparent 34%),radial-gradient(circle at 92% 24%,#00516b,transparent 29%),#0c081e!important}
+html[data-skin="neon"] .warm-person-row,html[data-skin="neon"] .warm-activity-row,html[data-skin="neon"] .warm-match-row,html[data-skin="neon"] .next-card{border:1px solid rgba(0,229,255,.28)!important;box-shadow:0 0 20px rgba(0,229,255,.07),0 0 30px rgba(137,74,255,.10)!important}
+html[data-skin="neon"] .warm-nav.active,html[data-skin="neon"] .warm-seg.active{background:linear-gradient(135deg,#38216e,#123f58)!important;color:#68efff!important}
+
+/* Ocean: saturated deep sea palette. */
+html[data-skin="ocean"]{color-scheme:dark;--bg:#022a43;--bg-2:#043a53;--surface:#075069;--surface-2:#06445a;--surface-3:#08627a;--text:#effeff;--text-2:#b5e5e7;--text-3:#79b9c0;--line:rgba(96,229,220,.17);--blue:#51d7e0;--blue-2:#0b6374;--blue-3:#128091;--sage:#56d7aa;--sage-2:#175b4c;--peach:#f4a37f;--peach-2:#69473a;--amber:#ffd271;--amber-2:#5e4d25;--shadow:0 15px 35px rgba(0,20,35,.30);--shadow-soft:0 7px 18px rgba(0,20,35,.23)}
+html[data-skin="ocean"] body{background:linear-gradient(160deg,#011d31,#043f57 45%,#087f8c 100%) fixed!important}
+html[data-skin="ocean"] .warm-bottom-nav{background:#022a43f4!important}
+html[data-skin="ocean"] .warm-nav.active,html[data-skin="ocean"] .warm-seg.active{background:#087085!important;color:#7ff4ef!important}
+
+/* Sunset: vivid coral, orange and violet. */
+html[data-skin="sunset"]{color-scheme:dark;--bg:#68264d;--bg-2:#7b3155;--surface:#8d3a5e;--surface-2:#75304e;--surface-3:#9d4665;--text:#fff8f1;--text-2:#ffd7c5;--text-3:#d9a5a0;--line:rgba(255,216,190,.17);--blue:#ffbd66;--blue-2:#9a4a57;--blue-3:#bd5d63;--sage:#9ed7aa;--sage-2:#556846;--peach:#ff7b6e;--peach-2:#8b3d48;--amber:#ffd166;--amber-2:#705024;--lav:#ca8cff;--lav-2:#62386f;--shadow:0 15px 34px rgba(62,14,47,.34);--shadow-soft:0 7px 18px rgba(62,14,47,.26)}
+html[data-skin="sunset"] body{background:radial-gradient(circle at 88% 8%,#ff9f4f 0,transparent 24%),radial-gradient(circle at 12% 10%,#a54179 0,transparent 32%),linear-gradient(160deg,#61224b,#9a3d5a 57%,#e26456 120%) fixed!important}
+html[data-skin="sunset"] .warm-nav.active,html[data-skin="sunset"] .warm-seg.active{background:#a94763!important;color:#ffe2a9!important}
+
+/* Keep overview cards pinned visually at the top of Recent. */
+.top-overview{margin-top:4px!important;margin-bottom:15px!important}
