@@ -1,0 +1,29 @@
+/* Shidduch header: readable pair names with arrows pointing inward. */
+.zm-pair-head{display:block;margin-bottom:10px}
+.zm-pair-appmark{display:flex;align-items:center;margin-bottom:5px;padding:0 42px}
+.zm-pair-appmark .wordmark{font-size:13px}
+.zm-pair-appmark .bh{margin-left:auto}
+.zm-pair-head-row{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;gap:8px;align-items:start}
+.zm-pair-title-wrap{min-width:0;text-align:center}
+.zm-pair-title{display:grid;grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);align-items:center;gap:4px;min-width:0}
+.zm-pair-name{appearance:none;border:0;background:transparent;padding:0;margin:0;font:700 25px/1.05 Georgia,"Times New Roman",serif;letter-spacing:-.025em;cursor:pointer;white-space:normal;overflow-wrap:anywhere;min-width:0}
+.zm-pair-name.guy{text-align:right;color:#2f63d8}
+.zm-pair-name.girl{text-align:left;color:#d83f84}
+.zm-pair-name:hover,.zm-pair-name:focus-visible{text-decoration:underline;text-underline-offset:3px}
+.zm-inward-arrows{font:800 23px/1 system-ui,-apple-system,"Segoe UI",sans-serif;color:#8b5cf6;letter-spacing:-6px;transform:translateX(-2px)}
+.zm-pair-title-wrap .detail-meta{margin-top:5px;font-size:10.5px;color:var(--text-2,#6f7881)}
+
+/* Once the names are in the header, the hero only needs the stage bar. */
+.zm-clean-hero{padding-top:14px!important}
+.zm-clean-hero .zm-stage{margin-top:0!important}
+
+@media(max-width:520px){
+  .zm-pair-appmark{padding:0 40px}
+  .zm-pair-title{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:3px}
+  .zm-pair-name{font-size:21px;line-height:1.06}
+  .zm-inward-arrows{font-size:20px;letter-spacing:-5px}
+}
+@media(max-width:370px){
+  .zm-pair-name{font-size:19px}
+  .zm-pair-title{grid-template-columns:minmax(0,1fr) 25px minmax(0,1fr)}
+}
