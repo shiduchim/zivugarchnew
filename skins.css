@@ -1,0 +1,51 @@
+/* Selectable skins. These change only presentation, never app data or navigation. */
+
+.skin-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:8px 0 14px}
+.skin-choice{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:10px;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:9px;align-items:center;box-shadow:var(--shadow-soft)}
+.skin-choice.active{border-color:color-mix(in srgb,var(--blue) 45%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 12%,transparent),var(--shadow-soft)}
+.skin-swatch{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:18px;font-weight:900}
+.skin-choice b{display:block;font-size:11px}.skin-choice small{display:block;font-size:8.5px;color:var(--text-3);margin-top:2px;line-height:1.2}
+.skin-swatch.classic{background:linear-gradient(135deg,#f6e8dc,#e5f0f7);color:#426987}.skin-swatch.game{background:linear-gradient(135deg,#8f7cf6,#4fc6dd);color:white;box-shadow:inset 0 -5px 0 rgba(0,0,0,.08)}.skin-swatch.dark{background:#1b2230;color:#c7d7ff}.skin-swatch.contrast{background:#000;color:#ffdf2b;border:2px solid #ffdf2b}.skin-swatch.boys{background:linear-gradient(135deg,#dff2ff,#dff5ec);color:#217197}.skin-swatch.girls{background:linear-gradient(135deg,#fde9f2,#eee5ff);color:#a95888}
+
+/* Classic: approved Warm Modern look. */
+html[data-skin="classic"]{color-scheme:light}
+
+/* Game: playful, polished, still easy to read. */
+html[data-skin="game"]{--bg:#f5f3ff;--bg-2:#fbfaff;--surface:#ffffff;--surface-2:#ecebff;--text:#23294a;--text-2:#68708c;--text-3:#9aa0b7;--line:rgba(62,58,115,.10);--blue:#6f61d8;--blue-2:#edeaff;--blue-3:#ddd8ff;--sage:#4fa988;--sage-2:#e2f5ee;--peach:#e08a69;--peach-2:#fae9e2;--amber:#c28a36;--amber-2:#fff0d4;--lav:#8171db;--lav-2:#eeeaff;--shadow:0 12px 28px rgba(76,65,142,.10);--shadow-soft:0 5px 14px rgba(76,65,142,.08)}
+html[data-skin="game"] body{background:radial-gradient(circle at 15% 0,#efeaff 0,transparent 34%),radial-gradient(circle at 100% 20%,#e6fbff 0,transparent 32%),#f7f6ff!important}
+html[data-skin="game"] .warm-person-row,html[data-skin="game"] .warm-activity-row,html[data-skin="game"] .warm-source-row,html[data-skin="game"] .warm-match-row,html[data-skin="game"] .warm-summary,html[data-skin="game"] .warm-metric{border-radius:22px!important;border:1px solid rgba(104,91,200,.08)!important;box-shadow:0 12px 24px rgba(92,78,170,.09)!important}
+html[data-skin="game"] .warm-nav.active,html[data-skin="game"] .warm-seg.active,html[data-skin="game"] .warm-tabs button.active{background:linear-gradient(135deg,#ece8ff,#e4f7ff)!important;color:#6155c8!important}
+html[data-skin="game"] .warm-add,.html-game-fix{background:linear-gradient(135deg,#7867e8,#58bdd2)!important;color:white!important;box-shadow:0 6px 14px rgba(93,82,194,.22)!important}
+html[data-skin="game"] .warm-avatar,html[data-skin="game"] .warm-person-big{box-shadow:inset 0 -4px 0 rgba(0,0,0,.05)}
+@media (hover:hover){html[data-skin="game"] .warm-person-row:hover,html[data-skin="game"] .warm-activity-row:hover,html[data-skin="game"] .warm-source-row:hover,html[data-skin="game"] .warm-match-row:hover{transform:translateY(-3px) scale(1.006)}}
+
+/* Dark: comfortable dark UI, not pure black. */
+html[data-skin="dark"]{color-scheme:dark;--bg:#15191f;--bg-2:#1a2028;--surface:#212833;--surface-2:#2a3340;--surface-3:#27313d;--text:#f2f5f8;--text-2:#b4bdc8;--text-3:#818b97;--line:rgba(255,255,255,.09);--blue:#9dc0e2;--blue-2:#293c50;--blue-3:#35506b;--sage:#a6c4ad;--sage-2:#293a30;--peach:#d7a48e;--peach-2:#3e302b;--amber:#e1bd73;--amber-2:#40351f;--lav:#c0b3df;--lav-2:#352f46;--shadow:0 12px 30px rgba(0,0,0,.28);--shadow-soft:0 5px 16px rgba(0,0,0,.22)}
+html[data-skin="dark"] body{background:linear-gradient(135deg,#12161b,#171d24 55%,#12171c)!important}
+html[data-skin="dark"] .warm-person-row,html[data-skin="dark"] .warm-activity-row,html[data-skin="dark"] .warm-source-row,html[data-skin="dark"] .warm-match-row,html[data-skin="dark"] .warm-search,html[data-skin="dark"] .warm-filter,html[data-skin="dark"] .warm-circle,html[data-skin="dark"] .warm-info-card,html[data-skin="dark"] .warm-history-card,html[data-skin="dark"] .warm-profile-card,html[data-skin="dark"] .warm-related-card{background:#212833!important;color:#f2f5f8!important}
+html[data-skin="dark"] .warm-title-copy h1,html[data-skin="dark"] .warm-detail-name h1,html[data-skin="dark"] .warm-person-top strong,html[data-skin="dark"] .warm-activity-top strong,html[data-skin="dark"] .warm-source-main strong,html[data-skin="dark"] .warm-match-main strong{color:#f4f7fa!important}
+html[data-skin="dark"] .warm-bottom-nav{background:rgba(31,38,48,.97)!important}
+html[data-skin="dark"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,#332c31 0,#25232a 35%,transparent 72%)!important}
+
+/* High contrast: accessibility-oriented strong separation. */
+html[data-skin="contrast"]{color-scheme:light;--bg:#fff;--bg-2:#fff;--surface:#fff;--surface-2:#f2f2f2;--text:#000;--text-2:#111;--text-3:#444;--line:#000;--blue:#0046d5;--blue-2:#dce8ff;--blue-3:#bfd4ff;--sage:#006b35;--sage-2:#d9f4e4;--peach:#8a3c00;--peach-2:#ffe2cc;--amber:#6d5200;--amber-2:#fff2b8;--shadow:none;--shadow-soft:none}
+html[data-skin="contrast"] body{background:#fff!important}
+html[data-skin="contrast"] button,html[data-skin="contrast"] input,html[data-skin="contrast"] textarea,html[data-skin="contrast"] select{font-weight:700}
+html[data-skin="contrast"] .warm-person-row,html[data-skin="contrast"] .warm-activity-row,html[data-skin="contrast"] .warm-source-row,html[data-skin="contrast"] .warm-match-row,html[data-skin="contrast"] .warm-search,html[data-skin="contrast"] .warm-filter,html[data-skin="contrast"] .warm-circle,html[data-skin="contrast"] .warm-summary,html[data-skin="contrast"] .warm-metric,html[data-skin="contrast"] .warm-info-card,html[data-skin="contrast"] .warm-history-card,html[data-skin="contrast"] .warm-profile-card,html[data-skin="contrast"] .warm-related-card{border:2px solid #000!important;box-shadow:none!important;background:#fff!important}
+html[data-skin="contrast"] .warm-nav.active,html[data-skin="contrast"] .warm-seg.active,html[data-skin="contrast"] .warm-tabs button.active{background:#000!important;color:#fff!important;outline:2px solid #ffdf2b!important}
+html[data-skin="contrast"] button:focus-visible,html[data-skin="contrast"] input:focus-visible,html[data-skin="contrast"] textarea:focus-visible{outline:4px solid #ffdf2b!important;outline-offset:2px!important}
+html[data-skin="contrast"] .warm-add{background:#000!important;color:#fff!important;border:2px solid #ffdf2b!important}
+
+/* Boys: cool blue + teal. */
+html[data-skin="boys"]{--bg:#eef7fb;--bg-2:#f7fbfd;--surface:#fff;--surface-2:#e4f0f5;--text:#17344a;--text-2:#607785;--text-3:#8da0aa;--blue:#387da3;--blue-2:#dceef7;--blue-3:#cae5f2;--sage:#4f9b84;--sage-2:#ddf0e9;--peach:#b8866f;--peach-2:#f2e6df;--shadow:0 9px 24px rgba(37,88,117,.07);--shadow-soft:0 4px 14px rgba(37,88,117,.055)}
+html[data-skin="boys"] body{background:linear-gradient(180deg,#eff8fc,#edf6f8 62%,#f5fafb)!important}
+html[data-skin="boys"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,#dceef7 0,#eaf4f7 35%,transparent 72%)!important}
+html[data-skin="boys"] .warm-nav.active .warm-nav-icon,html[data-skin="boys"] .warm-seg.active{background:#dceef7!important}
+
+/* Girls: rose + lilac, still calm and professional. */
+html[data-skin="girls"]{--bg:#fbf2f6;--bg-2:#fff8fb;--surface:#fff;--surface-2:#f4e8ef;--text:#4a2940;--text-2:#7f6475;--text-3:#aa93a1;--blue:#a85f8b;--blue-2:#f4e2ec;--blue-3:#ebd1df;--sage:#8b9f86;--sage-2:#e8eee5;--peach:#c57c89;--peach-2:#f8e5e9;--lav:#8b72b2;--lav-2:#eee6f7;--shadow:0 9px 24px rgba(123,72,105,.07);--shadow-soft:0 4px 14px rgba(123,72,105,.055)}
+html[data-skin="girls"] body{background:linear-gradient(180deg,#fcf3f7,#f9f1f7 55%,#f8f3fb)!important}
+html[data-skin="girls"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,#f6dfe8 0,#f3e8ef 35%,transparent 72%)!important}
+html[data-skin="girls"] .warm-nav.active .warm-nav-icon,html[data-skin="girls"] .warm-seg.active{background:#f4e2ec!important}
+
+@media(max-width:430px){.skin-picker{grid-template-columns:1fr 1fr}.skin-choice{grid-template-columns:38px 1fr;padding:9px}.skin-swatch{width:38px;height:38px;border-radius:11px}}
