@@ -45,8 +45,22 @@ nav=function(){
   return `<nav class="warm-bottom-nav cartoon-nav">${items.map(([screen,emoji,label])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon cartoon-emoji">${emoji}</span><span>${label}</span></button>`).join('')}</nav>`;
 };
 
-// Cartoon gets the extra-simple Today screen; all other skins use the improved Recent screen.
-recentScreen=function(){return (data.settings.skin==='kids')?easyRecent():improvedRecent();};
+function topOverviewHtml(){
+  const c=counts();
+  return `<div class="warm-summary-grid top-overview">${summaryCard('blue',c.me,'Waiting on me','show-wait-me')}${summaryCard('amber',c.them,'Waiting on them','show-wait-them')}${summaryCard('sage',c.active,'Active shidduchim','show-active')}</div>`;
+}
+
+// Put the three v15-style overview cards back at the very top of Recent.
+// Cartoon keeps its special Today screen underneath them.
+recentScreen=function(){
+  const overview=topOverviewHtml();
+  if((data.settings.skin||'classic')==='kids'){
+    const base=easyRecent();
+    return base.replace('<div class="kid-mission">',`${overview}<div class="kid-mission">`);
+  }
+  const base=improvedRecent();
+  return base.replace('<div class="warm-search-row">',`${overview}<div class="warm-search-row">`);
+};
 
 // Keep the existing settings screen, but it now renders only FINAL_SKINS via skinCards().
 if(data){applySettings();render();}
