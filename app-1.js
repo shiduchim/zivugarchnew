@@ -115,6 +115,7 @@ function emptyData(){return {version:1,settings:{...defaultSettings(),seededDemo
 function openDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 async function dbGet(key){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function dbPut(key,val){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(val,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}
-async function save(){data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
+let storageBlocked=false;
+async function save(){if(storageBlocked){showToast('Not saved: local storage is unavailable');return;}data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
 
 function person(pid){return data.people.find(p=>p.id===pid)}

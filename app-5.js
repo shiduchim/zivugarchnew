@@ -54,7 +54,10 @@ document.addEventListener('change',handleChange);
 overlay.addEventListener('click',e=>{if(e.target.classList.contains('scrim'))closeSheet();});
 
 async function init(){
-  try{data=await dbGet(STATE_KEY);if(!data){data=demoData();await save();}data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  }catch(err){console.error(err);data=demoData();applySettings();render();showToast('Local storage unavailable; using temporary data');}
+  try{data=await dbGet(STATE_KEY);}
+  catch(err){console.error(err);storageBlocked=true;data=demoData();applySettings();render();showToast('Local storage unavailable; using temporary data');return;}
+  try{if(!data){data=demoData();await save();}data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }catch(err){console.error(err);showLoadProblem();}
 }
+function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}
 init();
