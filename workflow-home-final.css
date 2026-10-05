@@ -1,0 +1,93 @@
+/* Calm workflow hierarchy: act on mine, quietly remember theirs. */
+.zm-home-section-title{margin-top:16px;margin-bottom:8px}
+.zm-home-section-title h2{font-size:14px}
+
+.zm-home-clear{min-height:54px;margin-bottom:4px}
+.zm-home-clear strong{font-size:13px}
+
+.zm-todo-card .next-copy strong{font-size:13px;line-height:1.2}
+.zm-todo-card .next-copy span{margin-top:3px}
+.zm-todo-card .next-copy small{margin-top:3px;color:var(--text-3,#96999c)}
+
+.zm-hear-section{margin-top:14px}
+.zm-hear-back-row{
+  width:100%;
+  min-height:48px;
+  border:0;
+  border-radius:14px;
+  padding:11px 13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-align:left;
+  background:rgba(255,255,255,.42);
+  color:inherit;
+  box-shadow:0 2px 9px rgba(45,55,65,.035);
+}
+.zm-hear-back-row span{
+  min-width:0;
+  flex:1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12.5px;
+  color:var(--text-2,#68727b);
+}
+.zm-hear-back-row b{font-size:18px;line-height:1;color:var(--text-3,#9aa0a5);font-weight:500}
+
+.zm-home-shidduch{min-height:66px}
+.zm-home-shidduch .warm-match-main p{margin-top:3px}
+.zm-empty-current{
+  padding:9px 3px 4px;
+  font-size:12px;
+  line-height:1.4;
+  color:var(--text-3,#8b9095);
+}
+
+/* Person profile: no empty status cards. */
+.zm-person-status-area{margin:9px 0 11px}
+.zm-person-open-box{
+  width:100%;
+  min-height:58px;
+  border:0;
+  border-radius:16px;
+  padding:11px 13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-align:left;
+  color:inherit;
+  margin-bottom:8px;
+}
+.zm-person-open-box.mine{background:#edf4fa}
+.zm-person-open-box.theirs{background:#fbf4e7}
+.zm-person-open-box>span{min-width:0;flex:1;display:block}
+.zm-person-open-box b{display:block;font-size:12px;color:#26374b}
+.zm-person-open-box small{display:block;margin-top:4px;font-size:11.5px;line-height:1.25;color:#737b82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zm-person-open-box em{font-style:normal;font-size:10.5px;font-weight:800;color:#66829a}
+.zm-person-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+  padding:2px 2px 0;
+  font-size:10.8px;
+  color:var(--text-3,#858b90);
+}
+.zm-person-meta i{font-style:normal;opacity:.55}
+
+.zm-whats-next span{background:#eef1f3!important;color:#65727d!important}
+
+html[data-skin="dark"] .zm-hear-back-row,
+html[data-skin="midnight"] .zm-hear-back-row{background:rgba(255,255,255,.06)}
+html[data-skin="dark"] .zm-person-open-box.mine{background:rgba(80,145,205,.16)}
+html[data-skin="dark"] .zm-person-open-box.theirs{background:rgba(208,154,66,.16)}
+html[data-skin="dark"] .zm-person-open-box b{color:inherit}
+
+html[data-skin="contrast"] .zm-hear-back-row,
+html[data-skin="contrast"] .zm-person-open-box{border:2px solid currentColor;box-shadow:none}
+
+@media(max-width:520px){
+  .zm-person-meta{font-size:10.5px}
+  .zm-hear-back-row{min-height:46px}
+}
