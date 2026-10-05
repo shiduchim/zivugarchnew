@@ -490,3 +490,29 @@ html[data-skin="kids"] button:focus-visible{
   outline:3px solid #7c5cff!important;
   outline-offset:3px!important;
 }
+
+/* Current profile structure (since v50): one column with the compact identity bar
+   (back · avatar · name · ⋯), the open-item boxes, the contact tiles, the tabs and the content.
+   The hero grid above was written for the older page; it squeezed these blocks into its columns and
+   left its backdrop as an empty block. Cartoon keeps its outlines, paper and colours, and the bar
+   keeps the same compact size as every other skin (it never grows or shrinks while scrolling). */
+html[data-skin="kids"] .warm-detail-page{display:block!important}
+html[data-skin="kids"] .warm-detail-page::before{content:none!important;display:none!important}
+html[data-skin="kids"] .warm-detail-page>.zm-person-status-area,
+html[data-skin="kids"] .warm-detail-page>.warm-contact-row,
+html[data-skin="kids"] .warm-detail-page>.warm-tabs,
+html[data-skin="kids"] .warm-detail-page>.warm-detail-content{margin-top:14px!important}
+html[data-skin="kids"] .zm-profile-identity{border:var(--cartoon-outline)!important;border-radius:22px!important;background:var(--cartoon-paper)!important;box-shadow:var(--cartoon-lift)!important;color:var(--cartoon-navy)!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-back,
+html[data-skin="kids"] .zm-profile-identity>.warm-more,
+html[data-skin="kids"] .zm-profile-identity>.warm-person-big{grid-column:auto!important;grid-row:auto!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-back,
+html[data-skin="kids"] .zm-profile-identity>.warm-more{width:44px!important;height:44px!important;min-height:44px!important;padding:0!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-back::after{content:none!important}
+html[data-skin="kids"] body .zm-profile-identity .warm-person-big.zm-profile-avatar{border:2.5px solid var(--cartoon-navy)!important;border-radius:13px!important;background:linear-gradient(145deg,var(--cartoon-mint),var(--cartoon-sky-strong))!important;color:var(--cartoon-navy)!important;box-shadow:none!important;font-family:var(--cartoon-display)!important}
+html[data-skin="kids"] .zm-profile-copy h1{font-family:var(--cartoon-display)!important;color:var(--cartoon-navy)!important}
+html[data-skin="kids"] .zm-profile-meta{color:var(--cartoon-muted)!important}
+@media(max-width:520px){
+  html[data-skin="kids"] .zm-profile-identity>.warm-back,
+  html[data-skin="kids"] .zm-profile-identity>.warm-more{width:40px!important;height:40px!important;min-height:40px!important}
+}
