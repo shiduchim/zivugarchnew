@@ -1,0 +1,430 @@
+/* Final High Contrast skin.
+   One visual layer, two system-driven modes, same app structure and data.
+   Dark uses deep navy. Regular uses pale blue-white with navy ink. */
+
+html[data-skin="contrast"]{
+  color-scheme:dark;
+  --hc-bg:#0B1735;
+  --hc-surface:#112248;
+  --hc-raise:#18305F;
+  --hc-ink:#F8FBFF;
+  --hc-ink2:#CFDAF0;
+  --hc-edge:#A8BEE8;
+  --hc-card-edge:#7F98CC;
+  --hc-rule:#5E78B0;
+  --hc-accent:#3FE0F5;
+  --hc-accent2:#7BAEFF;
+  --hc-on-accent:#08142E;
+  --hc-hover:#14506E;
+  --hc-blue:#8CBBFF;
+  --hc-blue-edge:#6FA8FF;
+  --hc-blue-bg:#17356E;
+  --hc-amber:#FFC24D;
+  --hc-amber-edge:#FFC24D;
+  --hc-amber-bg:#3A2B0B;
+  --hc-green:#4BE89A;
+  --hc-green-edge:#4BE89A;
+  --hc-green-bg:#0C3A2D;
+  --hc-red:#FF8A96;
+  --hc-red-bg:#4A1530;
+  --hc-disabled:#1B2A52;
+  --hc-disabled-ink:#A5B6DC;
+  --hc-disabled-edge:#7388BA;
+  --hc-focus-gap:#0B1735;
+  --hc-focus-ring:#F8FBFF;
+  --hc-grid:rgba(143,170,230,.08);
+  --hc-top-glow:rgba(63,224,245,.10);
+  --hc-card-hi:rgba(248,251,255,.07);
+  --hc-select-glow:0 0 0 1px var(--hc-accent),0 0 18px rgba(63,224,245,.34);
+
+  --bg:var(--hc-bg);
+  --bg-2:var(--hc-bg);
+  --surface:var(--hc-surface);
+  --surface-2:var(--hc-raise);
+  --surface-3:var(--hc-raise);
+  --text:var(--hc-ink);
+  --text-2:var(--hc-ink2);
+  --text-3:var(--hc-ink2);
+  --line:var(--hc-card-edge);
+  --blue:var(--hc-accent);
+  --blue-2:var(--hc-blue-bg);
+  --blue-3:var(--hc-blue-bg);
+  --sage:var(--hc-green);
+  --sage-2:var(--hc-green-bg);
+  --amber:var(--hc-amber);
+  --amber-2:var(--hc-amber-bg);
+  --peach:var(--hc-red);
+  --peach-2:var(--hc-red-bg);
+  --shadow:none;
+  --shadow-soft:none;
+  font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+@media (prefers-color-scheme:light){
+  html[data-skin="contrast"]{
+    color-scheme:light;
+    --hc-bg:#EAF0FA;
+    --hc-surface:#FFFFFF;
+    --hc-raise:#E1EAF8;
+    --hc-ink:#0F1D45;
+    --hc-ink2:#34476F;
+    --hc-edge:#1F3A7A;
+    --hc-card-edge:#5A74B5;
+    --hc-rule:#7A8FBF;
+    --hc-accent:#1245C2;
+    --hc-accent2:#0A7C99;
+    --hc-on-accent:#FFFFFF;
+    --hc-hover:#D5E4FF;
+    --hc-blue:#1546B8;
+    --hc-blue-edge:#1F5BD6;
+    --hc-blue-bg:#E2ECFF;
+    --hc-amber:#8A4B00;
+    --hc-amber-edge:#C77700;
+    --hc-amber-bg:#FFF0C7;
+    --hc-green:#0B6B3A;
+    --hc-green-edge:#0B6B3A;
+    --hc-green-bg:#DDF5E6;
+    --hc-red:#B1121F;
+    --hc-red-bg:#FFE1E4;
+    --hc-disabled:#E6EAF3;
+    --hc-disabled-ink:#56627F;
+    --hc-disabled-edge:#707E9E;
+    --hc-focus-gap:#FFFFFF;
+    --hc-focus-ring:#0F1D45;
+    --hc-grid:transparent;
+    --hc-top-glow:rgba(18,69,194,.09);
+    --hc-card-hi:rgba(255,255,255,.80);
+    --hc-select-glow:0 0 0 1px var(--hc-accent),0 4px 14px rgba(18,69,194,.26);
+  }
+}
+
+html[data-skin="contrast"] body{
+  color:var(--hc-ink);
+  background:
+    radial-gradient(900px 380px at 50% -120px,var(--hc-top-glow),transparent 70%),
+    linear-gradient(var(--hc-grid) 1px,transparent 1px) 0 0/32px 32px,
+    linear-gradient(90deg,var(--hc-grid) 1px,transparent 1px) 0 0/32px 32px,
+    var(--hc-bg)!important;
+}
+@media (prefers-color-scheme:light){
+  html[data-skin="contrast"] body{
+    background:radial-gradient(900px 380px at 50% -120px,var(--hc-top-glow),transparent 70%),var(--hc-bg)!important;
+  }
+}
+
+/* A single centered working column. */
+html[data-skin="contrast"] .page>*{max-width:760px!important}
+html[data-skin="contrast"] .warm-detail-page{max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
+html[data-skin="contrast"] .warm-stack{grid-template-columns:1fr!important}
+html[data-skin="contrast"] .warm-summary-grid,
+html[data-skin="contrast"] .warm-metric-grid,
+html[data-skin="contrast"] .warm-feed,
+html[data-skin="contrast"] .warm-day,
+html[data-skin="contrast"] .warm-tabs,
+html[data-skin="contrast"] .warm-info-card,
+html[data-skin="contrast"] .warm-profile-card,
+html[data-skin="contrast"] .warm-history-card,
+html[data-skin="contrast"] .warm-related-card{max-width:760px!important}
+
+/* Crisp cards and controls. Important is used only where earlier layout layers force the same properties. */
+html[data-skin="contrast"] .warm-person-row,
+html[data-skin="contrast"] .warm-activity-row,
+html[data-skin="contrast"] .warm-source-row,
+html[data-skin="contrast"] .warm-match-row,
+html[data-skin="contrast"] .warm-search,
+html[data-skin="contrast"] .warm-filter,
+html[data-skin="contrast"] .warm-circle,
+html[data-skin="contrast"] .warm-info-card,
+html[data-skin="contrast"] .warm-profile-card,
+html[data-skin="contrast"] .warm-history-card,
+html[data-skin="contrast"] .warm-related-card,
+html[data-skin="contrast"] .next-card,
+html[data-skin="contrast"] .waiting-summary,
+html[data-skin="contrast"] .all-clear{
+  background:var(--hc-surface)!important;
+  color:var(--hc-ink)!important;
+  border:2px solid var(--hc-card-edge)!important;
+  border-radius:14px!important;
+  box-shadow:inset 0 1px 0 var(--hc-card-hi)!important;
+}
+html[data-skin="contrast"] .warm-person-row:hover,
+html[data-skin="contrast"] .warm-activity-row:hover,
+html[data-skin="contrast"] .warm-source-row:hover,
+html[data-skin="contrast"] .warm-match-row:hover{
+  transform:none!important;
+  background:var(--hc-hover)!important;
+  border-color:var(--hc-accent)!important;
+}
+html[data-skin="contrast"] .warm-person-row.selected{
+  background:var(--hc-hover)!important;
+  border-color:var(--hc-accent)!important;
+  box-shadow:inset 4px 0 0 var(--hc-accent),var(--hc-select-glow)!important;
+}
+
+/* Titles and text hierarchy. */
+html[data-skin="contrast"] .warm-title-copy h1,
+html[data-skin="contrast"] .warm-detail-name h1,
+html[data-skin="contrast"] .warm-person-top strong,
+html[data-skin="contrast"] .warm-activity-top strong,
+html[data-skin="contrast"] .warm-source-main strong,
+html[data-skin="contrast"] .warm-match-main strong,
+html[data-skin="contrast"] .warm-info-card strong,
+html[data-skin="contrast"] .warm-profile-card h3{color:var(--hc-ink)!important}
+html[data-skin="contrast"] .warm-title-copy p,
+html[data-skin="contrast"] .warm-detail-name>div,
+html[data-skin="contrast"] .warm-person-line,
+html[data-skin="contrast"] .warm-person-status,
+html[data-skin="contrast"] .warm-activity-text,
+html[data-skin="contrast"] .warm-activity-about,
+html[data-skin="contrast"] .warm-source-main p,
+html[data-skin="contrast"] .warm-match-main p,
+html[data-skin="contrast"] time{color:var(--hc-ink2)!important}
+html[data-skin="contrast"] .warm-title-copy h1,
+html[data-skin="contrast"] .warm-detail-name h1{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.02em!important}
+html[data-skin="contrast"] .warm-detail-name h1{font-size:clamp(26px,5vw,34px)!important;overflow-wrap:anywhere}
+
+/* Detail hero signature. */
+html[data-skin="contrast"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,var(--hc-top-glow),transparent 72%)!important}
+html[data-skin="contrast"] .warm-person-hero,
+html[data-skin="contrast"] .warm-profile-card,
+html[data-skin="contrast"] .warm-info-card{
+  border:3px solid transparent!important;
+  background:linear-gradient(var(--hc-surface),var(--hc-surface)) padding-box,conic-gradient(from 200deg,var(--hc-accent),var(--hc-accent2),var(--hc-accent)) border-box!important;
+  box-shadow:inset 0 1px 0 var(--hc-card-hi),0 0 24px color-mix(in srgb,var(--hc-accent) 15%,transparent)!important;
+}
+html[data-skin="contrast"] .warm-person-hero{padding:14px;border-radius:14px!important}
+html[data-skin="contrast"] .warm-person-big,
+html[data-skin="contrast"] .warm-avatar{
+  background:linear-gradient(var(--hc-raise),var(--hc-raise)) padding-box,conic-gradient(from 210deg,var(--hc-accent),var(--hc-accent2),var(--hc-accent)) border-box!important;
+  border:3px solid transparent!important;
+  color:var(--hc-accent)!important;
+  font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
+  box-shadow:none!important;
+}
+html[data-skin="contrast"] .warm-detail-name>span,
+html[data-skin="contrast"] .warm-pill{
+  background:var(--hc-raise)!important;
+  color:var(--hc-ink)!important;
+  border:2px solid var(--hc-edge)!important;
+  border-radius:6px!important;
+  font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
+}
+
+/* Summary and metric cards preserve semantic meaning. */
+html[data-skin="contrast"] .warm-summary,
+html[data-skin="contrast"] .warm-metric{
+  border:2px solid var(--hc-blue-edge)!important;
+  border-radius:14px!important;
+  box-shadow:none!important;
+  color:var(--hc-ink)!important;
+}
+html[data-skin="contrast"] .warm-summary.blue,
+html[data-skin="contrast"] .warm-metric.blue{background:var(--hc-blue-bg)!important;border-color:var(--hc-blue-edge)!important}
+html[data-skin="contrast"] .warm-summary.amber,
+html[data-skin="contrast"] .warm-metric.amber{background:var(--hc-amber-bg)!important;border-color:var(--hc-amber-edge)!important}
+html[data-skin="contrast"] .warm-summary.sage,
+html[data-skin="contrast"] .warm-metric.sage{background:var(--hc-green-bg)!important;border-color:var(--hc-green-edge)!important}
+html[data-skin="contrast"] .warm-summary-icon,
+html[data-skin="contrast"] .warm-metric-icon{
+  border:2px solid currentColor!important;
+  border-radius:10px!important;
+  background:var(--hc-surface)!important;
+}
+html[data-skin="contrast"] .warm-summary.blue .warm-summary-icon,
+html[data-skin="contrast"] .warm-metric.blue .warm-metric-icon{color:var(--hc-blue)!important}
+html[data-skin="contrast"] .warm-summary.amber .warm-summary-icon,
+html[data-skin="contrast"] .warm-metric.amber .warm-metric-icon{color:var(--hc-amber)!important}
+html[data-skin="contrast"] .warm-summary.sage .warm-summary-icon,
+html[data-skin="contrast"] .warm-metric.sage .warm-metric-icon{color:var(--hc-green)!important}
+html[data-skin="contrast"] .warm-summary-copy strong,
+html[data-skin="contrast"] .warm-metric strong{
+  font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
+}
+html[data-skin="contrast"] .warm-summary.blue .warm-summary-copy strong,
+html[data-skin="contrast"] .warm-metric.blue strong{color:var(--hc-blue)!important}
+html[data-skin="contrast"] .warm-summary.amber .warm-summary-copy strong,
+html[data-skin="contrast"] .warm-metric.amber strong{color:var(--hc-amber)!important}
+html[data-skin="contrast"] .warm-summary.sage .warm-summary-copy strong,
+html[data-skin="contrast"] .warm-metric.sage strong{color:var(--hc-green)!important}
+
+/* Search, filter, header controls, segments and tabs. */
+html[data-skin="contrast"] button,
+html[data-skin="contrast"] input,
+html[data-skin="contrast"] textarea,
+html[data-skin="contrast"] select{font-weight:700;color:var(--hc-ink)}
+html[data-skin="contrast"] .warm-search input{color:var(--hc-ink)!important}
+html[data-skin="contrast"] .warm-search input::placeholder{color:var(--hc-ink2)!important;opacity:1}
+html[data-skin="contrast"] .warm-add,
+html[data-skin="contrast"] .warm-back,
+html[data-skin="contrast"] .warm-more,
+html[data-skin="contrast"] .warm-circle,
+html[data-skin="contrast"] .warm-filter,
+html[data-skin="contrast"] .warm-section-title button{
+  min-width:44px;min-height:44px;
+  border:2px solid var(--hc-edge)!important;
+  background:var(--hc-surface)!important;
+  color:var(--hc-ink)!important;
+  box-shadow:none!important;
+}
+html[data-skin="contrast"] .warm-add{background:var(--hc-accent)!important;color:var(--hc-on-accent)!important;border-color:var(--hc-accent)!important}
+html[data-skin="contrast"] .warm-segment,
+html[data-skin="contrast"] .warm-tabs{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  gap:6px!important;
+}
+html[data-skin="contrast"] .warm-seg,
+html[data-skin="contrast"] .warm-tabs button{
+  min-height:44px!important;
+  background:var(--hc-surface)!important;
+  color:var(--hc-ink)!important;
+  border:2px solid var(--hc-edge)!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+html[data-skin="contrast"] .warm-seg.active,
+html[data-skin="contrast"] .warm-tabs button.active{
+  background:var(--hc-accent)!important;
+  color:var(--hc-on-accent)!important;
+  border-color:var(--hc-accent)!important;
+  box-shadow:var(--hc-select-glow)!important;
+}
+
+/* Contact actions. */
+html[data-skin="contrast"] .warm-contact{
+  min-height:78px!important;
+  color:var(--hc-ink)!important;
+  font-size:max(11px,.78rem)!important;
+  font-weight:800!important;
+}
+html[data-skin="contrast"] .warm-contact>span{
+  width:44px!important;height:44px!important;
+  background:var(--hc-surface)!important;
+  color:var(--hc-accent)!important;
+  border:2px solid var(--hc-edge)!important;
+  box-shadow:none!important;
+}
+html[data-skin="contrast"] .warm-contact.wait>span{
+  background:var(--hc-amber-bg)!important;
+  color:var(--hc-amber)!important;
+  border-color:var(--hc-amber-edge)!important;
+}
+
+/* Detail rows. */
+html[data-skin="contrast"] .warm-info-card>div,
+html[data-skin="contrast"] .warm-history-card>div{
+  min-height:60px;
+  border-color:var(--hc-rule)!important;
+  border-width:2px!important;
+}
+html[data-skin="contrast"] .warm-info-card span{font-size:max(15px,.9rem)!important;color:var(--hc-ink2)!important}
+html[data-skin="contrast"] .warm-info-card strong{font-size:max(18px,1rem)!important}
+html[data-skin="contrast"] .warm-info-card button{min-width:44px;min-height:44px;color:var(--hc-accent)!important;font-weight:800}
+
+/* Navigation: bordered strip on phone, individually bordered rail items on desktop. */
+html[data-skin="contrast"] .warm-bottom-nav{
+  background:var(--hc-surface)!important;
+  border-top:2px solid var(--hc-edge)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+html[data-skin="contrast"] .warm-nav{
+  min-height:62px!important;
+  color:var(--hc-ink)!important;
+  border-right:2px solid var(--hc-rule)!important;
+  border-radius:0!important;
+  background:var(--hc-surface)!important;
+  font-weight:800!important;
+}
+html[data-skin="contrast"] .warm-nav:last-child{border-right:0!important}
+html[data-skin="contrast"] .warm-nav-icon{background:transparent!important;color:currentColor!important;box-shadow:none!important}
+html[data-skin="contrast"] .warm-nav.active{
+  background:var(--hc-accent)!important;
+  color:var(--hc-on-accent)!important;
+  border-color:var(--hc-accent)!important;
+  box-shadow:var(--hc-select-glow)!important;
+}
+html[data-skin="contrast"] .warm-nav.active .warm-nav-icon{background:transparent!important;color:currentColor!important;box-shadow:none!important}
+
+@media (min-width:900px){
+  html[data-skin="contrast"]:not([data-layout="phone"]) .warm-bottom-nav{
+    background:var(--hc-surface)!important;
+    border-top:0!important;
+    border-right:2px solid var(--hc-edge)!important;
+    box-shadow:none!important;
+  }
+  html[data-skin="contrast"]:not([data-layout="phone"]) .warm-nav{
+    min-height:54px!important;
+    margin:4px 0!important;
+    padding:0 14px!important;
+    border:2px solid var(--hc-edge)!important;
+    border-radius:10px!important;
+  }
+  html[data-skin="contrast"]:not([data-layout="phone"]) .warm-nav.active{border-color:var(--hc-accent)!important}
+  html[data-skin="contrast"]:not([data-layout="phone"]) .warm-bottom-nav::before{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;color:var(--hc-ink)!important;font-weight:800}
+  html[data-skin="contrast"]:not([data-layout="phone"]) .warm-bottom-nav::after{color:var(--hc-ink2)!important}
+}
+
+/* Forced Phone view must keep the same High Contrast language instead of the neutral preview colors. */
+@media (min-width:900px){
+  html[data-skin="contrast"][data-layout="phone"] body{background:var(--hc-bg)!important}
+  html[data-skin="contrast"][data-layout="phone"] .app-shell{background:var(--hc-bg)!important;box-shadow:none!important}
+  html[data-skin="contrast"][data-layout="phone"] .warm-bottom-nav{background:var(--hc-surface)!important;border-top:2px solid var(--hc-edge)!important;box-shadow:none!important}
+  html[data-skin="contrast"][data-layout="phone"] .warm-nav{color:var(--hc-ink)!important;background:var(--hc-surface)!important;border-right:2px solid var(--hc-rule)!important}
+  html[data-skin="contrast"][data-layout="phone"] .warm-nav.active{color:var(--hc-on-accent)!important;background:var(--hc-accent)!important}
+  html[data-skin="contrast"][data-layout="phone"] .warm-nav.active .warm-nav-icon{background:transparent!important;box-shadow:none!important}
+}
+
+/* Focus, pressed and disabled states. */
+html[data-skin="contrast"] button:focus-visible,
+html[data-skin="contrast"] input:focus-visible,
+html[data-skin="contrast"] textarea:focus-visible,
+html[data-skin="contrast"] select:focus-visible{
+  outline:3px solid transparent!important;
+  outline-offset:2px!important;
+  box-shadow:0 0 0 2px var(--hc-focus-gap),0 0 0 5px var(--hc-focus-ring)!important;
+}
+html[data-skin="contrast"] button:active{filter:none;transform:none!important}
+html[data-skin="contrast"] button:disabled{
+  background:var(--hc-disabled)!important;
+  color:var(--hc-disabled-ink)!important;
+  border:2px dashed var(--hc-disabled-edge)!important;
+  box-shadow:none!important;
+}
+
+/* Narrow phone safeguards. */
+@media (max-width:380px){
+  html[data-skin="contrast"] .warm-summary-grid,
+  html[data-skin="contrast"] .warm-metric-grid{grid-template-columns:1fr!important}
+  html[data-skin="contrast"] .warm-contact-row{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px!important}
+  html[data-skin="contrast"] .warm-contact{grid-column:span 2!important;font-size:11px!important}
+  html[data-skin="contrast"] .warm-contact:nth-child(4){grid-column:2 / span 2!important}
+  html[data-skin="contrast"] .warm-contact:nth-child(5){grid-column:4 / span 2!important}
+  html[data-skin="contrast"] .warm-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html[data-skin="contrast"] .warm-tabs button{font-size:15px!important}
+  html[data-skin="contrast"] .warm-nav{font-size:10px!important;padding-left:1px!important;padding-right:1px!important}
+}
+
+@media (forced-colors:active){
+  html[data-skin="contrast"] .warm-nav.active,
+  html[data-skin="contrast"] .warm-seg.active,
+  html[data-skin="contrast"] .warm-tabs button.active{
+    forced-color-adjust:none;
+    background:Highlight!important;
+    color:HighlightText!important;
+    border-color:Highlight!important;
+  }
+  html[data-skin="contrast"] .warm-person-hero,
+  html[data-skin="contrast"] .warm-profile-card,
+  html[data-skin="contrast"] .warm-info-card{border-color:CanvasText!important;background:Canvas!important}
+}
+
+@media (prefers-reduced-motion:reduce){html[data-skin="contrast"] *{transition:none!important;animation:none!important}}
+
+.skin-swatch.contrast{
+  background:linear-gradient(135deg,#0B1735,#18305F)!important;
+  color:#3FE0F5!important;
+  border:2px solid #A8BEE8!important;
+  box-shadow:inset 0 0 0 1px #5E78B0!important;
+}
