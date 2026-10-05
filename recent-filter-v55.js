@@ -24,7 +24,7 @@ filtersSheet=function(){
 };
 
 // Keep the current calm Recent layout, but make its History honor the filter/sort sheet.
-recentScreen=function(){
+function recentScreen(){
   const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
   const them=data.openItems.filter(x=>x.status==='open'&&x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
   let entries=[...data.entries];
@@ -48,7 +48,7 @@ recentScreen=function(){
     ${zmHearBackSummary(them)}
     <div class="warm-section-title earlier-title"><h2>History</h2><button data-act="add-activity">Add note</button></div>
     ${activityFeed(entries)}`;
-};
+}
 
 // Handle the Recent sheet before the older generic click handler sees these buttons.
 document.addEventListener('click',function(e){

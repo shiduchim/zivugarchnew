@@ -32,30 +32,6 @@ contrast:'#0B1735',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
 document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||colors.classic);
 };
 
-// Cartoon changes only the visual treatment of navigation. The tabs and labels stay the same as every other theme.
-const navBeforeFinalSkins=nav;
-nav=function(){
-if((data?.settings?.skin||'classic')!=='kids') return navBeforeFinalSkins();
-const items=[
-['recent','🏠','Recent'],
-['guys','👦','Guys'],
-['shadchanim','🤝','Shadchanim'],
-['girls','👧','Girls'],
-['shidduchim','💚','Shidduchim']
-];
-return `<nav class="warm-bottom-nav cartoon-nav">${items.map(([screen,emoji,label])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon cartoon-emoji">${emoji}</span><span>${label}</span></button>`).join('')}</nav>`;
-};
-
-// Plain-language status labels: short enough for a child to understand at a glance.
-ICONS.bell='<path d="M18 8a6 6 0 0 0-12 0c0 6-3 7-3 9h18c0-2-3-3-3-9"/><path d="M10 21h4"/>';
-function finalOverviewCard(cls,val,label,act,ic){
-return `<button class="warm-summary ${cls}" data-act="${act}"><span class="warm-summary-icon">${icon(ic)}</span><span class="warm-summary-copy"><small>${esc(label)}</small><strong>${esc(val)}</strong></span></button>`;
-}
-function topOverviewHtml(){
-const c=counts();
-return `<div class="warm-summary-grid top-overview">${finalOverviewCard('blue',c.me,'My turn','show-wait-me','bell')}${finalOverviewCard('amber',c.them,'Their turn','show-wait-them','hourglass')}${finalOverviewCard('sage',c.active,'Current shidduchim','show-active','heart')}</div>`;
-}
-
 // Use the same simple turn language in filters wherever the old waiting labels appear.
 const segmentBeforePlainWords=segment;
 segment=function(items,active,scope){
@@ -67,19 +43,6 @@ return segmentBeforePlainWords(mapped,active,scope);
 const shadchanScreenBeforePlainWords=shadchanScreen;
 shadchanScreen=function(){
 return shadchanScreenBeforePlainWords().replace('<h2>Active now</h2>','<h2>Working with</h2>');
-};
-
-// Every skin uses exactly the same Recent fields and layout.
-// Themes may change colors, shapes and icons only; they do not change the content structure.
-recentScreen=function(){
-const overview=topOverviewHtml();
-const c=counts();
-let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
-if(ui.search){
-const q=ui.search.toLowerCase();
-entries=entries.filter(e=>(e.text+' '+linkedAbout(e)+' '+(e.personIds||[]).map(pid=>person(pid)?.name).join(' ')).toLowerCase().includes(q));
-}
-return `${header('Recent',c.me?`${c.me} thing${c.me===1?'':'s'} need you`:'You are caught up',{add:true})}${overview}${searchBox('Find anyone or anything…')}<div class="warm-section-title earlier-title"><h2>History</h2><button data-act="add-activity">Add note</button></div>${activityFeed(entries)}`;
 };
 
 // Neon section identity. The DOM marker wins; otherwise resolve the actual detail record,

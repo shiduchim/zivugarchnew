@@ -81,56 +81,20 @@ settingsSheet=function(){
   `);
 };
 
-function statusSentenceForPerson(p){
-  const mine=openForPerson(p.id,'me'),them=openForPerson(p.id,'them');
-  if(mine.length)return `${mine[0].label} · Needs you`;
-  if(them.length)return `${them[0].label} · Waiting on ${p.name.split(' ')[0]}`;
-  const active=shidduchimForPerson(p.id).find(s=>s.status==='active');
-  if(active){const r=getCurrentRound(active);return r?.stage||'Active shidduch';}
-  if(needsContactPerson(p))return 'Ready for a quick hello';
-  const lc=lastContact(p.id);return lc?`Last contact ${fmtDay(lc).toLowerCase()}`:'No contact yet';
-}
-
-personRow=function(p,{selected=false,context=''}={}){
+function personRow(p,{selected=false,context=''}={}){
   const lc=lastContact(p.id),line=context||ageText(p)||p.city||p.types?.join(', ')||'';
   return `<button class="warm-person-row ${selected?'selected':''}" data-person="${p.id}"><div class="warm-avatar ${avatarTone(p)}">${esc(initials(p.name))}</div><div class="warm-person-main"><div class="warm-person-top"><strong>${esc(p.name)}</strong><time>${esc(fmtDay(lc))}</time></div><div class="warm-person-line">${esc(line)}</div><div class="warm-person-status human-status">${esc(statusSentenceForPerson(p))}</div></div><div class="warm-chevron">›</div></button>`;
-};
+}
 
 function nextTargetAttrs(x){
   if(x.aboutType==='shidduch'&&shidduch(x.aboutId))return `data-shidduch="${x.aboutId}"`;
   return `data-person="${x.personId}"`;
-}
-function nextCard(x){
-  const p=person(x.personId),age=Math.max(0,Math.floor((Date.now()-new Date(x.createdAt).getTime())/86400000));
-  return `<button class="next-card" ${nextTargetAttrs(x)}><div class="next-avatar ${avatarTone(p||{name:'?'})}">${esc(initials(p?.name||'?'))}</div><div class="next-copy"><strong>${esc(p?.name||'Someone')}</strong><span>${esc(x.label||'Follow up')}</span><small>${age===0?'Today':`${age} day${age===1?'':'s'} waiting`}</small></div><div class="next-action">Open</div></button>`;
 }
 
 function activityFeed(entries){
   const groups={};for(const e of entries){const k=dayKey(e.at);(groups[k]??=[]).push(e);}
   return Object.entries(groups).map(([day,arr])=>`<section class="warm-day"><div class="warm-day-label">${esc(day)}</div><div class="warm-feed">${arr.map(activityRow).join('')}</div></section>`).join('')||empty('Nothing here yet','Calls, messages, notes and profiles will appear here automatically.','add-activity');
 }
-
-function improvedRecent(){
-  const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  const them=data.openItems.filter(x=>x.status==='open'&&x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
-  if(ui.search){const q=ui.search.toLowerCase();entries=entries.filter(e=>(e.text+' '+linkedAbout(e)+' '+(e.personIds||[]).map(pid=>person(pid)?.name).join(' ')).toLowerCase().includes(q));}
-  const top=mine.slice(0,3),more=Math.max(0,mine.length-top.length);
-  const needs=top.length?`<div class="next-list">${top.map(nextCard).join('')}</div>${more?`<button class="see-all-next" data-act="show-wait-me">See all ${mine.length}</button>`:''}`:`<div class="all-clear">${icon('check')}<div><strong>Nothing needs you right now</strong><span>You are caught up.</span></div></div>`;
-  const waiting=them.length?`<button class="waiting-summary" data-act="show-wait-them"><span class="waiting-icon">${icon('hourglass')}</span><span><strong>${them.length} waiting on others</strong><small>Oldest has been waiting ${Math.max(0,Math.floor((Date.now()-new Date(them[0].createdAt).getTime())/86400000))} days</small></span><b>View</b></button>`:`<div class="waiting-summary quiet"><span class="waiting-icon">${icon('check')}</span><span><strong>Nothing waiting on others</strong><small>No open replies right now</small></span></div>`;
-  return `${header('Recent',mine.length?`${mine.length} thing${mine.length===1?'':'s'} need you`:'You are caught up',{add:true})}${searchBox('Find anyone or anything…')}<div class="focus-title"><h2>Needs you</h2><span>${mine.length}</span></div>${needs}<div class="focus-title"><h2>Waiting on others</h2><span>${them.length}</span></div>${waiting}<div class="warm-section-title earlier-title"><h2>Earlier</h2><button data-act="add-activity">Add note</button></div>${activityFeed(entries)}`;
-}
-
-function easyRecent(){
-  const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  const reply=mine.filter(x=>/reply|feedback|answer/i.test(x.label||'')).length;
-  const profile=mine.filter(x=>/profile/i.test(x.label||'')).length;
-  const call=Math.max(0,mine.length-reply-profile);
-  const tasks=mine.slice(0,4);
-  return `${header('Today','Your simple shidduch mission',{add:true})}<div class="kid-mission"><div><strong>Today’s mission</strong><span>${mine.length?'Finish the important things first':'You are all caught up'}</span></div><b>${mine.length} to do</b><i><em style="width:${mine.length?Math.max(18,100-(mine.length*16)):100}%"></em></i></div><div class="kid-action-grid"><button data-act="show-wait-me"><span>💬</span><strong>Reply</strong><small>${reply||'None waiting'}</small></button><button data-screen="shadchanim"><span>☎️</span><strong>Call</strong><small>${call?`${call} to do`:'Quick contact'}</small></button><button data-screen="recent"><span>📄</span><strong>Profile</strong><small>${profile?`${profile} to do`:'Profiles'}</small></button></div><div class="focus-title kid-next-title"><h2>Next steps</h2><span>${mine.length}</span></div>${tasks.length?`<div class="next-list kid-next">${tasks.map(nextCard).join('')}</div>`:`<div class="all-clear">${icon('check')}<div><strong>Nothing needs you today</strong><span>Enjoy the clear list.</span></div></div>`}`;
-}
-
-recentScreen=function(){return (data.settings.skin==='easy')?easyRecent():improvedRecent();};
 
 const previousShadchanScreenNext=shadchanScreen;
 shadchanScreen=function(){

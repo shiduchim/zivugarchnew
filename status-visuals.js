@@ -52,31 +52,6 @@ function zmStageBar(s,detail=false){
   return `<div class="zm-stage ${detail?'detail':''}" aria-label="Stage: ${esc(st.label)}${turn?`. ${esc(turn)}`:''}"><div class="zm-stage-meta"><strong>${esc(st.label)}</strong>${turn?`<span>${esc(turn)}</span>`:''}</div><div class="zm-stage-track">${segs}</div></div>`;
 }
 
-shidduchimScreen=function(){
-  const v=ui.screenView.shidduchim;
-  const current=data.shidduchim.filter(s=>s.status==='active');
-  const ended=data.shidduchim.filter(s=>s.status==='ended');
-  const ideas=data.ideas.filter(i=>i.status==='open');
-  const tabs=[{value:'active',label:'Current',count:current.length},{value:'ideas',label:'Ideas',count:ideas.length},{value:'ended',label:'Ended',count:ended.length}];
-  let rows='';
-
-  if(v==='ideas'){
-    rows=ideas.map(i=>{
-      const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-      return `<button class="warm-match-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>${esc(g?.name)} ↔ ${esc(gl?.name)}</strong><time>${esc(fmtDay(i.createdAt))}</time></div><p>Suggested by ${esc(sug?.name||'you')}</p><div class="zm-idea-note">My turn</div></div><div class="warm-chevron">›</div></button>`;
-    }).join('');
-  }else{
-    rows=(v==='active'?current:ended).map(s=>{
-      const r=getCurrentRound(s);
-      return `<button class="warm-match-row zm-stage-card" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong><time>Round ${r?.number||1}</time></div>${zmStageBar(s)}</div><div class="warm-chevron">›</div></button>`;
-    }).join('');
-  }
-
-  const emptyTitle=v==='ideas'?'No open ideas':v==='active'?'No current shidduchim':'No ended shidduchim';
-  const emptyText=v==='ideas'?'An idea is a suggested pair that has not started yet.':v==='active'?'When an idea becomes a shidduch, it will appear here.':'Ended shidduchim keep their full history.';
-  return `${header('Shidduchim','Matches and ideas',{add:true})}${searchBox('Search a pair…')}${segment(tabs,v,'shidduchim')}<div class="warm-stack">${rows||empty(emptyTitle,emptyText,'add-idea')}</div>`;
-};
-
 const shidduchDetailBeforeStageBar=shidduchDetail;
 shidduchDetail=function(sid){
   const html=shidduchDetailBeforeStageBar(sid);

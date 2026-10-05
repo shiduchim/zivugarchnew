@@ -12,8 +12,9 @@ for (const k of keys) {
   const a = ma[k], b = mb[k];
   if (!a || !b) { out.missing.push(k); continue; }
   if (k.endsWith('__storage_unchanged')) { if (!a.ok || !b.ok) out.storage.push(k); continue; }
-  // Compare the saved DOM with <script> tags removed (cache-busting ?v= changes are not UI changes).
-  const norm = run => { const f = path.join(run, 'html', k + '.html'); return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').replace(/\n?<script[^>]*>\n?<\/script>/g, '') : null; };
+  // Compare the saved DOM with <script> tags and whitespace-only lines removed (adding, removing or
+  // cache-busting a script is not a UI change; screenshots still catch any visible spacing change).
+  const norm = run => { const f = path.join(run, 'html', k + '.html'); return fs.existsSync(f) ? fs.readFileSync(f, 'utf8').replace(/\n?<script[^>]*>\n?<\/script>/g, '').split('\n').filter(l => l.trim() !== '').join('\n') : null; };
   const ha = norm(A), hb = norm(B);
   if (ha === null || hb === null ? a.html !== b.html : ha !== hb) out.html.push(k);
   if (a.png && b.png && a.png !== b.png) out.png.push(k);

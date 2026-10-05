@@ -59,13 +59,8 @@ zmStageBar=function(s,detail=false){
   return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${esc(left)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-meta"><strong>${esc(left)}</strong></div><div class="zm-stage-track">${segs}</div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
 };
 
-function zmOfferRow(i){
-  const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-  return `<button class="warm-match-row zm-offer-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>${esc(g?.name)} ↔ ${esc(gl?.name)}</strong><time>${esc(fmtDay(i.createdAt))}</time></div><p>${sug?`Offered by ${esc(sug.name)}`:'New offer'}</p></div><div class="warm-chevron">›</div></button>`;
-}
-
 // Tabs are deliberately lifecycle order: Offers -> In Progress -> Ended.
-shidduchimScreen=function(){
+function shidduchimScreen(){
   const v=ui.screenView.shidduchim;
   const inProgress=data.shidduchim.filter(s=>s.status==='active');
   const ended=data.shidduchim.filter(s=>s.status==='ended');
@@ -85,7 +80,7 @@ shidduchimScreen=function(){
   const emptyTitle=v==='ideas'?'No offers':v==='active'?'No shidduchim in progress':'No ended shidduchim';
   const emptyText=v==='ideas'?'New suggested matches will appear here before they become shidduchim.':v==='active'?'When you accept an offer, the shidduch will appear here.':'Ended shidduchim keep the stage where they stopped and their history.';
   return `${header('Shidduchim','Offers and shidduchim',{add:true})}${searchBox('Search a pair…')}${segment(tabs,v,'shidduchim')}<div class="warm-stack">${rows||empty(emptyTitle,emptyText,'add-idea')}</div>`;
-};
+}
 
 // Replace visible Idea wording with Offer while preserving the existing data model.
 ideaSheet=function(iid){

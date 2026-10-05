@@ -9,7 +9,7 @@
 ICONS.whatsapp='<path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.2c.3 2.6 2.2 4.7 4.8 5.5l1.4-1.5 2.2.6v1.8c0 .6-.5 1.1-1.1 1.1-5.1-.2-9.2-4.3-9.4-9.4 0-.6.5-1.1 1.1-1.1h1.8l.6 2.2L9 8.2Z"/>';
 ICONS.sms='<path d="M4 5h16v12H9l-5 4V5Z"/><path d="M8 9h8M8 13h6"/>';
 
-warmContactButtons=function(p){
+function warmContactButtons(p){
   return `<div class="warm-contact-row">
     <button class="warm-contact phone" data-contact="call" data-person-id="${p.id}"><span>${icon('phone')}</span><small>Call</small></button>
     <button class="warm-contact email" data-contact="email" data-person-id="${p.id}"><span>${icon('mail')}</span><small>Email</small></button>
@@ -17,7 +17,7 @@ warmContactButtons=function(p){
     <button class="warm-contact sms" data-contact="sms" data-person-id="${p.id}"><span>${icon('sms')}</span><small>SMS</small></button>
     <button class="warm-contact wait zm-whats-next" data-contact="wait" data-person-id="${p.id}"><span>${icon('check')}</span><small>What's next?</small></button>
   </div>`;
-};
+}
 
 // Keep the new workflow language everywhere, including Shadchanim filters.
 const zmSegmentBeforeV53=segment;
@@ -32,7 +32,7 @@ segment=function(items,active,scope){
 
 // Bottom navigation in Single mode:
 // Guys becomes My profile and opens the user's profile directly.
-nav=function(){
+function nav(){
   const single=data?.settings?.mode==='single';
   const items=[
     ['recent','recent','Recent','🏠'],
@@ -45,7 +45,7 @@ nav=function(){
     return `<nav class="warm-bottom-nav cartoon-nav">${items.map(([screen,ic,label,emoji])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon cartoon-emoji">${emoji}</span><span>${label}</span></button>`).join('')}</nav>`;
   }
   return `<nav class="warm-bottom-nav">${items.map(([screen,ic,label])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon">${icon(ic)}</span><span>${label}</span></button>`).join('')}</nav>`;
-};
+}
 
 // Intercept My profile before the older general navigation handler.
 document.addEventListener('click',function(e){

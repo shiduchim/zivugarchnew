@@ -60,31 +60,8 @@ function zmHearBackSummary(items){
   return `<div class="zm-hear-section"><div class="warm-section-title zm-home-section-title"><h2>To hear back</h2></div><button class="zm-hear-back-row" data-act="show-wait-them"><span>${esc(line)}</span><b>›</b></button></div>`;
 }
 
-recentScreen=function(){
-  const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  const them=data.openItems.filter(x=>x.status==='open'&&x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  let entries=[...data.entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
-  if(ui.search){
-    const q=ui.search.toLowerCase();
-    entries=entries.filter(e=>(e.text+' '+linkedAbout(e)+' '+(e.personIds||[]).map(pid=>person(pid)?.name).join(' ')).toLowerCase().includes(q));
-  }
-
-  const todoTop=mine.slice(0,3),todoMore=Math.max(0,mine.length-todoTop.length);
-  const todo=todoTop.length
-    ?`<div class="next-list">${todoTop.map(zmTodoCard).join('')}</div>${todoMore?`<button class="see-all-next" data-act="show-wait-me">See all ${mine.length}</button>`:''}`
-    :`<div class="all-clear zm-home-clear">${icon('check')}<div><strong>${them.length?'Nothing to do right now':'All caught up'}</strong></div></div>`;
-
-  return `${header('Recent','',{add:true})}
-    ${searchBox('Find anyone or anything…')}
-    <div class="warm-section-title zm-home-section-title"><h2>My to-do list</h2></div>
-    ${todo}
-    ${zmHearBackSummary(them)}
-    <div class="warm-section-title earlier-title"><h2>History</h2><button data-act="add-activity">Add note</button></div>
-    ${activityFeed(entries)}`;
-};
-
 // Use the same mental model in people lists.
-statusSentenceForPerson=function(p){
+function statusSentenceForPerson(p){
   const mine=openForPerson(p.id,'me'),them=openForPerson(p.id,'them');
   if(mine.length)return `${mine[0].label} · My to-do`;
   if(them.length)return `${them[0].label} · To hear back`;
@@ -92,7 +69,7 @@ statusSentenceForPerson=function(p){
   if(current){const r=getCurrentRound(current);return r?.stage||'Current shidduch';}
   if(needsContactPerson(p))return 'Time to contact';
   const lc=lastContact(p.id);return lc?`Last contact ${fmtDay(lc).toLowerCase()}`:'No contact yet';
-};
+}
 
 function zmPersonOpenStatus(p){
   const mine=openForPerson(p.id,'me'),them=openForPerson(p.id,'them');
