@@ -11,7 +11,7 @@ const toastEl=document.getElementById('toast');
 const ICONS={
   recent:'<path d="M4 13a8 8 0 1 0 2-5.3L4 10"/><path d="M4 5v5h5"/><path d="M12 8v5l3 2"/>',
   guy:'<circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/>',
-  girl:'<circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/><path d="M19 4v4m-2-2h4"/>',
+  girl:'<circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/><path d="M8.7 5.8c1.1-2.2 5.5-2.2 6.6 0"/>',
   shad:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M15 15c3 0 5 1.7 6 5"/>',
   heart:'<path d="M8 6c-2 0-4 1.5-4 4 0 4 8 9 8 9s8-5 8-9c0-2.5-2-4-4-4-1.7 0-3 1-4 2.4C11 7 9.7 6 8 6z"/>',
   search:'<circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/>',
@@ -21,13 +21,16 @@ const ICONS={
   phone:'<path d="M6 3h4l1 5-2 2c1.2 2.4 2.9 4.1 5.4 5.3l1.9-2 4.7 1.1v4c0 1-.8 1.8-1.8 1.8C10.4 20.2 3.8 13.6 3.8 4.8 3.8 3.8 4.6 3 5.6 3z"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
   message:'<path d="M4 5h16v11H9l-5 4z"/>',
+  // SMS and WhatsApp: the approved v58 contact icons (SMS = option 2 from the icon sheet).
+  sms:'<path d="M4 5h16v12H9l-5 4V5Z"/><path d="M8 9h8M8 13h6"/>',
+  whatsapp:'<path d="M12 3.15a8.85 8.85 0 0 0-7.58 13.42L3.2 20.8l4.35-1.16A8.85 8.85 0 1 0 12 3.15Z"/><path d="M8.45 7.35c-.42.18-.98.85-.95 1.55.13 2.95 2.83 6.18 5.82 7.1.72.22 1.45.08 1.88-.43l1.02-1.2c.22-.27.16-.62-.14-.78l-2.02-1.02c-.29-.15-.62-.08-.82.17l-.7.84a7.25 7.25 0 0 1-3.1-3.12l.82-.68c.25-.21.32-.54.17-.83L9.4 7.5c-.17-.29-.61-.31-.95-.15Z"/>',
   hourglass:'<path d="M6 3h12M6 21h12M7 3c0 5 2 6.5 5 9-3 2.5-5 4-5 9M17 3c0 5-2 6.5-5 9 3 2.5 5 4 5 9"/>',
   note:'<path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
   profile:'<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v5h4M10 13h6M10 17h5"/>',
   calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/>',
   link:'<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>',
   list:'<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
-  plus:'<path d="M12 5v14M5 12h14"/>',
+  plus:'<path d="m4 20 4.5-1 10-10-3.5-3.5-10 10zM13.5 6.5l3.5 3.5"/>',
   upload:'<path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 14v6h14v-6"/>',
   download:'<path d="M12 4v12m0 0-5-5m5 5 5-5"/><path d="M5 20h14"/>',
   edit:'<path d="m4 20 4.5-1 10-10-3.5-3.5-10 10zM13.5 6.5l3.5 3.5"/>',
@@ -47,7 +50,7 @@ const phoneDigits=v=>String(v||'').replace(/\D/g,'');
 let data=null;
 const ui={screen:'recent',screenView:{shadchanim:'all',shidduchim:'active',girls:'for-me',guys:'all'},detail:null,detailTab:'details',search:'',recentFilter:'all'};
 
-function defaultSettings(){return {mode:'single',theme:'warm',density:'comfortable',iconSize:'medium',dashboard:'summary-first',summaryCards:true,seededDemo:true};}
+function defaultSettings(){return {mode:'single',theme:'warm',density:'comfortable',iconSize:'medium',dashboard:'summary-first',summaryCards:true,seededDemo:true,appearance:'1',layout:'auto',skin:'classic'};}
 
 function demoData(){
   const me='p_me',miriam='p_miriam',rivka='p_rivka',batya='p_batya',dina='p_dina',leah='p_leah',tamar='p_tamar',noa='p_noa',rina='p_rina',david='p_david',moshe='p_moshe',ari='p_ari';
@@ -115,6 +118,20 @@ function emptyData(){return {version:1,settings:{...defaultSettings(),seededDemo
 function openDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 async function dbGet(key){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function dbPut(key,val){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(val,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}
-async function save(){data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
+let storageBlocked=false;
+async function save(){if(storageBlocked){showToast('Not saved: local storage is unavailable');return;}data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
+
+// Older or partial data (e.g. a backup without some lists) gets empty lists so screens never break.
+// Nothing else is changed and no record is invented.
+const DATA_LISTS=['people','entries','sources','ideas','shidduchim','rounds','dates','openItems','profileVersions','files','folders'];
+function normalizeData(d){for(const k of DATA_LISTS)if(!Array.isArray(d[k]))d[k]=[];if(!d.meta||typeof d.meta!=='object')d.meta={demo:false};if(!d.settings||typeof d.settings!=='object')d.settings={};return d;}
+
+// Safety copies: before data is replaced as a whole (demo, restore), the current data is kept
+// under its own key so it can be brought back with Undo or from Settings. Newest first.
+const SAFETY_KEY='safetyCopies',SAFETY_MAX=5;
+let safetyCopies=[];
+async function loadSafetyCopies(){try{safetyCopies=((await dbGet(SAFETY_KEY))||[]).map(({id,at,reason})=>({id,at,reason}));}catch(e){safetyCopies=[];}}
+async function keepSafetyCopy(reason){if(storageBlocked)return null;const list=(await dbGet(SAFETY_KEY))||[];const copy={id:id('safe'),at:iso(),reason,data:JSON.parse(JSON.stringify(data))};list.unshift(copy);list.splice(SAFETY_MAX);await dbPut(SAFETY_KEY,list);safetyCopies=list.map(({id,at,reason})=>({id,at,reason}));return copy.id;}
+async function restoreSafetyCopy(copyId){const list=(await dbGet(SAFETY_KEY))||[];const c=list.find(x=>x.id===copyId)||list[0];if(!c){showToast('Nothing to restore');return;}const back=await keepSafetyCopy('restoring earlier data');data=normalizeData(c.data);await save();closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast('Earlier data restored',back);}
 
 function person(pid){return data.people.find(p=>p.id===pid)}

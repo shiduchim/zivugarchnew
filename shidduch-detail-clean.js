@@ -13,11 +13,6 @@ function zmCleanStatusWord(value){
   return v.charAt(0).toUpperCase()+v.slice(1);
 }
 
-function zmCleanTurn(s){
-  const turn=zmTurnForShidduch(s);
-  return turn||'No one';
-}
-
 function zmRoundDates(r){
   return data.dates
     .filter(d=>d.roundId===r?.id&&!/cancel/i.test(String(d.state||'')))
@@ -56,9 +51,28 @@ function zmCleanNextStep(s){
   return 'No next step';
 }
 
+// A name label in the overview opens that person's profile (Back returns to this shidduch).
+function zmPersonLabel(p,label){return p?`<button type="button" class="zm-person-text-link" data-zm-person="${esc(p.id)}" aria-label="Open ${esc(p.name)} profile">${esc(label)}</button>`:`<span>${esc(label)}</span>`;}
+
+// Header: each person on a centred row of their own, each name opening that profile.
+function zmPairHeader(s,r,g,gl){return `<div class="detail-head zm-pair-head">
+    <div class="zm-pair-appmark"><span class="wordmark">ZivugMatch</span><span class="bh">ב״ה</span></div>
+    <div class="zm-pair-head-row">
+      <button class="back-btn" data-act="back" aria-label="Back">${icon('back')}</button>
+      <div class="zm-pair-title-wrap">
+        <div class="zm-pair-title" aria-label="${esc(g.name)} and ${esc(gl.name)}">
+          <button type="button" class="zm-pair-name guy" data-zm-person="${esc(g.id)}" aria-label="Open ${esc(g.name)} profile">${esc(g.name)}</button>
+          <button type="button" class="zm-pair-name girl" data-zm-person="${esc(gl.id)}" aria-label="Open ${esc(gl.name)} profile">${esc(gl.name)}</button>
+        </div>
+        <div class="detail-meta">Round ${esc(r?.number||1)}</div>
+      </div>
+      ${shidduchMenuActions(s).length?'<button class="more-btn" data-act="detail-menu" aria-label="More">⋯</button>':'<button class="more-btn" aria-hidden="true" tabindex="-1" style="visibility:hidden">⋯</button>'}
+    </div>
+  </div>`;}
+
 function zmOverviewBeforeDating(s){
   const r=getCurrentRound(s),g=person(s.guyId),gl=person(s.girlId);
-  return `<div class="zm-clean-card"><div class="zm-clean-heading">Answers</div><div class="zm-clean-row"><span>${esc(g?.isMe?'My answer':`${g?.name||'Guy'}'s answer`)}</span><strong>${esc(zmCleanStatusWord(r?.guyStatus))}</strong></div><div class="zm-clean-row"><span>${esc(`${gl?.name||'Girl'}'s answer`)}</span><strong>${esc(zmCleanStatusWord(r?.girlStatus))}</strong></div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
+  return `<div class="zm-clean-card"><div class="zm-clean-heading">Answers</div><div class="zm-clean-row">${zmPersonLabel(g,g?.isMe?'My answer':`${g?.name||'Guy'}'s answer`)}<strong>${esc(zmCleanStatusWord(r?.guyStatus))}</strong></div><div class="zm-clean-row">${zmPersonLabel(gl,`${gl?.name||'Girl'}'s answer`)}<strong>${esc(zmCleanStatusWord(r?.girlStatus))}</strong></div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
 }
 
 function zmOverviewDating(s){
@@ -66,7 +80,7 @@ function zmOverviewDating(s){
   if(!last){
     return `<div class="zm-clean-card"><div class="zm-clean-heading">Dating</div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
   }
-  return `<div class="zm-clean-card"><div class="zm-clean-heading">Latest date</div><div class="zm-clean-row"><span>Date ${esc(last.number||'')}</span><strong>${esc(fmtDate(last.when))}</strong></div><div class="zm-clean-row"><span>${esc(g?.isMe?'My feedback':`${g?.name||'Guy'}'s feedback`)}</span><strong>${esc(zmCleanStatusWord(last.guyFeedback))}</strong></div><div class="zm-clean-row"><span>${esc(`${gl?.name||'Girl'}'s feedback`)}</span><strong>${esc(zmCleanStatusWord(last.girlFeedback))}</strong></div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
+  return `<div class="zm-clean-card"><div class="zm-clean-heading">Latest date</div><div class="zm-clean-row"><span>Date ${esc(last.number||'')}</span><strong>${esc(fmtDate(last.when))}</strong></div><div class="zm-clean-row">${zmPersonLabel(g,g?.isMe?'My feedback':`${g?.name||'Guy'}'s feedback`)}<strong>${esc(zmCleanStatusWord(last.guyFeedback))}</strong></div><div class="zm-clean-row">${zmPersonLabel(gl,`${gl?.name||'Girl'}'s feedback`)}<strong>${esc(zmCleanStatusWord(last.girlFeedback))}</strong></div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
 }
 
 function zmOverviewEnded(s){
@@ -98,7 +112,7 @@ function zmCleanPeople(s){
 
 // This is the final shidduch-detail renderer. It intentionally removes the old repeated
 // answer cards and repeated pair title inside the hero.
-shidduchDetail=function(sid){
+function shidduchDetail(sid){
   const s=shidduch(sid);if(!s)return shidduchimScreen();
   const r=getCurrentRound(s),g=person(s.guyId),gl=person(s.girlId);
   if(!['overview','dates','history','people'].includes(ui.detailTab))ui.detailTab='overview';
@@ -112,7 +126,36 @@ shidduchDetail=function(sid){
   const tabs=[['overview','Overview'],['dates','Dates'],['history','History'],['people','People']];
   const endAction=(ui.detailTab==='overview'&&s.status!=='ended'&&zmStageForShidduch(s).index!==10)?`<div class="zm-end-action"><button class="ghost-btn" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End shidduch</button></div>`:'';
 
-  return `${detailHeader(shidduchTitle(s),`Round ${r?.number||1}`)}<div class="zm-clean-hero"><div class="pair-people"><div class="person-avatar">${esc(initials(g?.name))}</div><div class="person-avatar">${esc(initials(gl?.name))}</div></div>${zmStageBar(s,true)}</div><div class="tabbar">${tabs.map(([v,l])=>`<button class="tab-btn ${ui.detailTab===v?'active':''}" data-detail-tab="${v}">${l}</button>`).join('')}</div>${content}${endAction}</div>`;
-};
+  const top=g&&gl?`<div class="detail-shell">${zmPairHeader(s,r,g,gl)}<div class="zm-clean-hero">${zmStageBar(s,true)}</div>`:`${detailHeader(shidduchTitle(s),`Round ${r?.number||1}`)}<div class="zm-clean-hero"><div class="pair-people"><div class="person-avatar">${esc(initials(g?.name))}</div><div class="person-avatar">${esc(initials(gl?.name))}</div></div>${zmStageBar(s,true)}</div>`;
+  return `${top}<div class="tabbar">${tabs.map(([v,l])=>`<button class="tab-btn ${ui.detailTab===v?'active':''}" data-detail-tab="${v}">${l}</button>`).join('')}</div>${content}${endAction}</div>`;
+}
 
-if(data)render();
+// Names on a shidduch page open that person's profile; Back from that profile returns to the shidduch.
+// Back returns to the shidduch only from the very person opened from it; any other navigation forgets it.
+let zmReturnToShidduch=null;
+
+function openPersonFromShidduch(pid){
+  const p=person(pid);
+  if(!p)return;
+  zmReturnToShidduch=ui.detail?.type==='shidduch'?{detail:{...ui.detail},detailTab:ui.detailTab,personId:pid}:null;
+  ui.detail={type:'person',id:pid};
+  ui.detailTab=p.types?.includes('Shadchan')?'details':'profile';
+  render();
+  window.scrollTo(0,0);
+}
+
+// Runs first for every click. Returns true when the click was Back to the shidduch.
+function followShidduchReturn(e){
+  if(!zmReturnToShidduch)return false;
+  const back=e.target.closest('button[data-act="back"]');
+  if(back&&ui.detail?.type==='person'&&ui.detail.id===zmReturnToShidduch.personId){
+    ui.detail=zmReturnToShidduch.detail;
+    ui.detailTab=zmReturnToShidduch.detailTab;
+    zmReturnToShidduch=null;
+    render();
+    window.scrollTo(0,0);
+    return true;
+  }
+  if(e.target.closest('[data-screen],[data-person],[data-shidduch],[data-source],[data-entry],[data-act="back"]'))zmReturnToShidduch=null;
+  return false;
+}

@@ -3,13 +3,7 @@
 // v53 final UX polish: clearer single mode, distinct contact icons,
 // current workflow wording, and compact sticky Shadchanim header.
 
-// Contact icons selected from the approved icon sheet:
-// WhatsApp = circular chat bubble + handset (option 6)
-// SMS = rectangular message bubble + two lines (option 2)
-ICONS.whatsapp='<path d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"/><path d="M9 8.2c.3 2.6 2.2 4.7 4.8 5.5l1.4-1.5 2.2.6v1.8c0 .6-.5 1.1-1.1 1.1-5.1-.2-9.2-4.3-9.4-9.4 0-.6.5-1.1 1.1-1.1h1.8l.6 2.2L9 8.2Z"/>';
-ICONS.sms='<path d="M4 5h16v12H9l-5 4V5Z"/><path d="M8 9h8M8 13h6"/>';
-
-warmContactButtons=function(p){
+function warmContactButtons(p){
   return `<div class="warm-contact-row">
     <button class="warm-contact phone" data-contact="call" data-person-id="${p.id}"><span>${icon('phone')}</span><small>Call</small></button>
     <button class="warm-contact email" data-contact="email" data-person-id="${p.id}"><span>${icon('mail')}</span><small>Email</small></button>
@@ -17,22 +11,11 @@ warmContactButtons=function(p){
     <button class="warm-contact sms" data-contact="sms" data-person-id="${p.id}"><span>${icon('sms')}</span><small>SMS</small></button>
     <button class="warm-contact wait zm-whats-next" data-contact="wait" data-person-id="${p.id}"><span>${icon('check')}</span><small>What's next?</small></button>
   </div>`;
-};
-
-// Keep the new workflow language everywhere, including Shadchanim filters.
-const zmSegmentBeforeV53=segment;
-segment=function(items,active,scope){
-  const mapped=items.map(x=>({...x,label:
-    (x.label==='My turn'||x.label==='Waiting on me')?'My to-do':
-    (x.label==='Their turn'||x.label==='Waiting on them')?'To hear back':
-    x.label==='Needs contact'?'Time to contact':x.label
-  }));
-  return zmSegmentBeforeV53(mapped,active,scope);
-};
+}
 
 // Bottom navigation in Single mode:
 // Guys becomes My profile and opens the user's profile directly.
-nav=function(){
+function nav(){
   const single=data?.settings?.mode==='single';
   const items=[
     ['recent','recent','Recent','🏠'],
@@ -45,23 +28,21 @@ nav=function(){
     return `<nav class="warm-bottom-nav cartoon-nav">${items.map(([screen,ic,label,emoji])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon cartoon-emoji">${emoji}</span><span>${label}</span></button>`).join('')}</nav>`;
   }
   return `<nav class="warm-bottom-nav">${items.map(([screen,ic,label])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon">${icon(ic)}</span><span>${label}</span></button>`).join('')}</nav>`;
-};
+}
 
-// Intercept My profile before the older general navigation handler.
-document.addEventListener('click',function(e){
-  const b=e.target.closest('button[data-screen="guys"]');
-  if(!b||data?.settings?.mode!=='single')return;
+// Single mode: the Guys tab is My profile.
+function openMyProfileInSingleMode(){
+  if(data?.settings?.mode!=='single')return false;
   const self=me();
-  if(!self)return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
+  if(!self)return false;
   ui.screen='guys';
   ui.detail={type:'person',id:self.id};
   ui.detailTab='profile';
   ui.search='';
   render();
   window.scrollTo({top:0,behavior:'smooth'});
-},true);
+  return true;
+}
 
 function zmGirlAppliesToMe(p){
   const self=me();
@@ -71,20 +52,9 @@ function zmGirlAppliesToMe(p){
   return pairIdea||activeMatch;
 }
 
-// In Single mode, Girls is deliberately one focused list: only profiles applicable to me.
-const zmPeopleScreenBeforeV53=peopleScreen;
-peopleScreen=function(type){
-  if(type!=='Girl'||data?.settings?.mode!=='single')return zmPeopleScreenBeforeV53(type);
-  let arr=byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
-  const q=ui.search.trim().toLowerCase();
-  if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
-  arr=arr.sort((a,b)=>(lastContact(b.id)||b.createdAt).localeCompare(lastContact(a.id)||a.createdAt));
-  return `${header('Girls','Profiles applicable to you',{add:true})}${searchBox('Search girls…')}<div class="warm-stack">${arr.map(p=>personRow(p)).join('')||empty('No applicable profiles yet','Profiles connected to an open offer or current shidduch with you will appear here.','add-current')}</div>`;
-};
-
 // Compact profile identity for Guy, Girl and Shadchan profiles.
 // Avoid duplicate city/type text: one concise line, then occupation only if present.
-zmProfileIdentity=function(p){
+function zmProfileIdentity(p){
   const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
   const meta=[type,p.age,p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
   return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
@@ -98,27 +68,4 @@ zmProfileIdentity=function(p){
       </div>
       <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
     </div>`;
-};
-
-// Freeze the Shadchanim page title/actions while the long directory scrolls.
-// It collapses after it reaches the top so it does not consume unnecessary space.
-const zmShadchanScreenBeforeV53=shadchanScreen;
-shadchanScreen=function(){
-  let html=zmShadchanScreenBeforeV53();
-  if(!html.includes('zm-shadchan-sticky-head')){
-    html=html.replace(/(<header class="warm-header">[\s\S]*?<\/header>)/,
-      '<div class="zm-shadchan-sticky-sentinel" aria-hidden="true"></div><div class="zm-shadchan-sticky-head">$1</div>');
-  }
-  return html;
-};
-
-// Extend the existing sticky sync so Shadchanim main header and all person profiles behave consistently.
-const zmSyncProfileStickyBeforeV53=zmSyncProfileSticky;
-zmSyncProfileSticky=function(){
-  zmSyncProfileStickyBeforeV53();
-  const head=document.querySelector('.zm-shadchan-sticky-head');
-  const marker=document.querySelector('.zm-shadchan-sticky-sentinel');
-  if(head&&marker)head.classList.toggle('is-stuck',marker.getBoundingClientRect().top<0);
-};
-
-if(data)render();
+}

@@ -116,15 +116,11 @@ html[data-skin="contrast"] body{
 html[data-skin="contrast"] .page>*{max-width:760px!important}
 html[data-skin="contrast"] .warm-detail-page{max-width:760px!important;margin-left:auto!important;margin-right:auto!important}
 html[data-skin="contrast"] .warm-stack{grid-template-columns:1fr!important}
-html[data-skin="contrast"] .warm-summary-grid,
-html[data-skin="contrast"] .warm-metric-grid,
 html[data-skin="contrast"] .warm-feed,
 html[data-skin="contrast"] .warm-day,
 html[data-skin="contrast"] .warm-tabs,
 html[data-skin="contrast"] .warm-info-card,
-html[data-skin="contrast"] .warm-profile-card,
-html[data-skin="contrast"] .warm-history-card,
-html[data-skin="contrast"] .warm-related-card{max-width:760px!important}
+html[data-skin="contrast"] .warm-profile-card{max-width:760px!important}
 
 /* Crisp cards and controls. Important is used only where earlier layout layers force the same properties. */
 html[data-skin="contrast"] .warm-person-row,
@@ -136,10 +132,7 @@ html[data-skin="contrast"] .warm-filter,
 html[data-skin="contrast"] .warm-circle,
 html[data-skin="contrast"] .warm-info-card,
 html[data-skin="contrast"] .warm-profile-card,
-html[data-skin="contrast"] .warm-history-card,
-html[data-skin="contrast"] .warm-related-card,
 html[data-skin="contrast"] .next-card,
-html[data-skin="contrast"] .waiting-summary,
 html[data-skin="contrast"] .all-clear{
   background:var(--hc-surface)!important;
   color:var(--hc-ink)!important;
@@ -163,7 +156,6 @@ html[data-skin="contrast"] .warm-person-row.selected{
 
 /* Titles and text hierarchy. */
 html[data-skin="contrast"] .warm-title-copy h1,
-html[data-skin="contrast"] .warm-detail-name h1,
 html[data-skin="contrast"] .warm-person-top strong,
 html[data-skin="contrast"] .warm-activity-top strong,
 html[data-skin="contrast"] .warm-source-main strong,
@@ -171,7 +163,6 @@ html[data-skin="contrast"] .warm-match-main strong,
 html[data-skin="contrast"] .warm-info-card strong,
 html[data-skin="contrast"] .warm-profile-card h3{color:var(--hc-ink)!important}
 html[data-skin="contrast"] .warm-title-copy p,
-html[data-skin="contrast"] .warm-detail-name>div,
 html[data-skin="contrast"] .warm-person-line,
 html[data-skin="contrast"] .warm-person-status,
 html[data-skin="contrast"] .warm-activity-text,
@@ -179,20 +170,16 @@ html[data-skin="contrast"] .warm-activity-about,
 html[data-skin="contrast"] .warm-source-main p,
 html[data-skin="contrast"] .warm-match-main p,
 html[data-skin="contrast"] time{color:var(--hc-ink2)!important}
-html[data-skin="contrast"] .warm-title-copy h1,
-html[data-skin="contrast"] .warm-detail-name h1{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.02em!important}
-html[data-skin="contrast"] .warm-detail-name h1{font-size:clamp(26px,5vw,34px)!important;overflow-wrap:anywhere}
+html[data-skin="contrast"] .warm-title-copy h1{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif!important;font-weight:800!important;letter-spacing:-.02em!important}
 
 /* Detail hero signature. */
 html[data-skin="contrast"] .warm-detail-glow{background:radial-gradient(ellipse at 50% 40%,var(--hc-top-glow),transparent 72%)!important}
-html[data-skin="contrast"] .warm-person-hero,
 html[data-skin="contrast"] .warm-profile-card,
 html[data-skin="contrast"] .warm-info-card{
   border:3px solid transparent!important;
   background:linear-gradient(var(--hc-surface),var(--hc-surface)) padding-box,conic-gradient(from 200deg,var(--hc-accent),var(--hc-accent2),var(--hc-accent)) border-box!important;
   box-shadow:inset 0 1px 0 var(--hc-card-hi),0 0 24px color-mix(in srgb,var(--hc-accent) 15%,transparent)!important;
 }
-html[data-skin="contrast"] .warm-person-hero{padding:14px;border-radius:14px!important}
 html[data-skin="contrast"] .warm-person-big,
 html[data-skin="contrast"] .warm-avatar{
   background:linear-gradient(var(--hc-raise),var(--hc-raise)) padding-box,conic-gradient(from 210deg,var(--hc-accent),var(--hc-accent2),var(--hc-accent)) border-box!important;
@@ -201,51 +188,31 @@ html[data-skin="contrast"] .warm-avatar{
   font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
   box-shadow:none!important;
 }
-html[data-skin="contrast"] .warm-detail-name>span,
-html[data-skin="contrast"] .warm-pill{
-  background:var(--hc-raise)!important;
-  color:var(--hc-ink)!important;
-  border:2px solid var(--hc-edge)!important;
-  border-radius:6px!important;
-  font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
-}
 
 /* Summary and metric cards preserve semantic meaning. */
-html[data-skin="contrast"] .warm-summary,
-html[data-skin="contrast"] .warm-metric{
+html[data-skin="contrast"] .warm-summary{
   border:2px solid var(--hc-blue-edge)!important;
   border-radius:14px!important;
   box-shadow:none!important;
   color:var(--hc-ink)!important;
 }
-html[data-skin="contrast"] .warm-summary.blue,
-html[data-skin="contrast"] .warm-metric.blue{background:var(--hc-blue-bg)!important;border-color:var(--hc-blue-edge)!important}
-html[data-skin="contrast"] .warm-summary.amber,
-html[data-skin="contrast"] .warm-metric.amber{background:var(--hc-amber-bg)!important;border-color:var(--hc-amber-edge)!important}
-html[data-skin="contrast"] .warm-summary.sage,
-html[data-skin="contrast"] .warm-metric.sage{background:var(--hc-green-bg)!important;border-color:var(--hc-green-edge)!important}
-html[data-skin="contrast"] .warm-summary-icon,
-html[data-skin="contrast"] .warm-metric-icon{
+html[data-skin="contrast"] .warm-summary.blue{background:var(--hc-blue-bg)!important;border-color:var(--hc-blue-edge)!important}
+html[data-skin="contrast"] .warm-summary.amber{background:var(--hc-amber-bg)!important;border-color:var(--hc-amber-edge)!important}
+html[data-skin="contrast"] .warm-summary.sage{background:var(--hc-green-bg)!important;border-color:var(--hc-green-edge)!important}
+html[data-skin="contrast"] .warm-summary-icon{
   border:2px solid currentColor!important;
   border-radius:10px!important;
   background:var(--hc-surface)!important;
 }
-html[data-skin="contrast"] .warm-summary.blue .warm-summary-icon,
-html[data-skin="contrast"] .warm-metric.blue .warm-metric-icon{color:var(--hc-blue)!important}
-html[data-skin="contrast"] .warm-summary.amber .warm-summary-icon,
-html[data-skin="contrast"] .warm-metric.amber .warm-metric-icon{color:var(--hc-amber)!important}
-html[data-skin="contrast"] .warm-summary.sage .warm-summary-icon,
-html[data-skin="contrast"] .warm-metric.sage .warm-metric-icon{color:var(--hc-green)!important}
-html[data-skin="contrast"] .warm-summary-copy strong,
-html[data-skin="contrast"] .warm-metric strong{
+html[data-skin="contrast"] .warm-summary.blue .warm-summary-icon{color:var(--hc-blue)!important}
+html[data-skin="contrast"] .warm-summary.amber .warm-summary-icon{color:var(--hc-amber)!important}
+html[data-skin="contrast"] .warm-summary.sage .warm-summary-icon{color:var(--hc-green)!important}
+html[data-skin="contrast"] .warm-summary-copy strong{
   font-family:ui-monospace,"Cascadia Mono","SF Mono",Consolas,Menlo,monospace!important;
 }
-html[data-skin="contrast"] .warm-summary.blue .warm-summary-copy strong,
-html[data-skin="contrast"] .warm-metric.blue strong{color:var(--hc-blue)!important}
-html[data-skin="contrast"] .warm-summary.amber .warm-summary-copy strong,
-html[data-skin="contrast"] .warm-metric.amber strong{color:var(--hc-amber)!important}
-html[data-skin="contrast"] .warm-summary.sage .warm-summary-copy strong,
-html[data-skin="contrast"] .warm-metric.sage strong{color:var(--hc-green)!important}
+html[data-skin="contrast"] .warm-summary.blue .warm-summary-copy strong{color:var(--hc-blue)!important}
+html[data-skin="contrast"] .warm-summary.amber .warm-summary-copy strong{color:var(--hc-amber)!important}
+html[data-skin="contrast"] .warm-summary.sage .warm-summary-copy strong{color:var(--hc-green)!important}
 
 /* Search, filter, header controls, segments and tabs. */
 html[data-skin="contrast"] button,
@@ -312,8 +279,7 @@ html[data-skin="contrast"] .warm-contact.wait>span{
 }
 
 /* Detail rows. */
-html[data-skin="contrast"] .warm-info-card>div,
-html[data-skin="contrast"] .warm-history-card>div{
+html[data-skin="contrast"] .warm-info-card>div{
   min-height:60px;
   border-color:var(--hc-rule)!important;
   border-width:2px!important;
@@ -381,8 +347,8 @@ html[data-skin="contrast"] button:focus-visible,
 html[data-skin="contrast"] input:focus-visible,
 html[data-skin="contrast"] textarea:focus-visible,
 html[data-skin="contrast"] select:focus-visible{
-  outline:3px solid transparent!important;
-  outline-offset:2px!important;
+  outline:3px solid transparent;
+  outline-offset:2px;
   box-shadow:0 0 0 2px var(--hc-focus-gap),0 0 0 5px var(--hc-focus-ring)!important;
 }
 html[data-skin="contrast"] button:active{filter:none;transform:none!important}
@@ -395,10 +361,8 @@ html[data-skin="contrast"] button:disabled{
 
 /* Narrow phone safeguards. */
 @media (max-width:380px){
-  html[data-skin="contrast"] .warm-summary-grid,
-  html[data-skin="contrast"] .warm-metric-grid{grid-template-columns:1fr!important}
   html[data-skin="contrast"] .warm-contact-row{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px!important}
-  html[data-skin="contrast"] .warm-contact{grid-column:span 2!important;font-size:11px!important}
+  html[data-skin="contrast"] .warm-contact{grid-column:span 2;font-size:11px!important}
   html[data-skin="contrast"] .warm-contact:nth-child(4){grid-column:2 / span 2!important}
   html[data-skin="contrast"] .warm-contact:nth-child(5){grid-column:4 / span 2!important}
   html[data-skin="contrast"] .warm-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -415,12 +379,11 @@ html[data-skin="contrast"] button:disabled{
     color:HighlightText!important;
     border-color:Highlight!important;
   }
-  html[data-skin="contrast"] .warm-person-hero,
   html[data-skin="contrast"] .warm-profile-card,
   html[data-skin="contrast"] .warm-info-card{border-color:CanvasText!important;background:Canvas!important}
 }
 
-@media (prefers-reduced-motion:reduce){html[data-skin="contrast"] *{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){html[data-skin="contrast"] *{transition:none!important;animation:none}}
 
 .skin-swatch.contrast{
   background:linear-gradient(135deg,#0B1735,#18305F)!important;

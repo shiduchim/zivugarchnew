@@ -16,12 +16,8 @@
 .zm-stage.ended .zm-stage-seg.done,
 .zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
 
-/* Remove the old text row above the track. The floating stage label now owns that job. */
-.zm-stage-meta{display:none!important}
-
 /* In Progress uses a pink heart; Offers stay blue and Ended stays grey. */
-.zm-stage-card:not(.zm-ended-card) .warm-match-avatar.filled{color:#d93b88!important;background:color-mix(in srgb,#f43f9e 14%,var(--surface,#fff))!important}
-.zm-stage-card:not(.zm-ended-card) .warm-match-avatar.filled svg{color:#d93b88!important;stroke:#d93b88!important;fill:#d93b88!important}
+.zm-stage-card:not(.zm-ended-card) .warm-match-avatar.filled svg{color:#d93b88!important;stroke:#d93b88!important;fill:#d93b88}
 .zm-ended-card .warm-match-avatar.filled{color:#8f97a2!important;background:color-mix(in srgb,#8f97a2 11%,var(--surface,#fff))!important}
 
 @media(max-width:520px){

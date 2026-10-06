@@ -30,9 +30,6 @@ html[data-skin="kids"] .warm-detail-page{
   margin:0 auto!important;
   padding:22px 24px 36px!important;
   overflow:visible!important;
-  display:grid!important;
-  grid-template-columns:84px minmax(0,1fr) 44px;
-  column-gap:14px;
   row-gap:16px;
   align-content:start;
   container-type:inline-size;
@@ -40,10 +37,6 @@ html[data-skin="kids"] .warm-detail-page{
 }
 html[data-skin="kids"] .warm-detail-glow,
 html[data-skin="kids"] .warm-detail-page>.warm-wordmark{display:none!important}
-
-/* Flatten the two existing identity wrappers into the page grid. No fields change. */
-html[data-skin="kids"] .warm-detail-title,
-html[data-skin="kids"] .warm-person-hero{display:contents!important}
 
 /* Top bar */
 html[data-skin="kids"] .warm-back,
@@ -86,7 +79,6 @@ html[data-skin="kids"] .warm-more{
 
 /* Hero background sits behind the existing avatar/name/facts nodes. */
 html[data-skin="kids"] .warm-detail-page::before{
-  content:"";
   grid-column:1 / -1;
   grid-row:2 / 4;
   background:var(--cartoon-lav);
@@ -96,46 +88,6 @@ html[data-skin="kids"] .warm-detail-page::before{
   min-height:118px;
   z-index:0;
 }
-html[data-skin="kids"] .warm-detail-name{
-  grid-column:2 / 4;
-  grid-row:2;
-  align-self:end;
-  z-index:1;
-  min-width:0;
-  display:grid;
-  grid-template-columns:max-content minmax(0,1fr);
-  column-gap:8px;
-  align-items:center;
-  padding:16px 16px 0 0;
-}
-html[data-skin="kids"] .warm-detail-name h1{
-  grid-column:1 / -1;
-  margin:0!important;
-  color:var(--cartoon-navy)!important;
-  font:800 clamp(24px,7cqi,34px)/1.08 var(--cartoon-display)!important;
-  letter-spacing:-.025em!important;
-  text-shadow:none!important;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-detail-name>div{
-  margin:6px 0 0!important;
-  color:var(--cartoon-navy)!important;
-  font-size:15px!important;
-  font-weight:750;
-  min-width:0;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-detail-name>span{
-  justify-self:start;
-  margin:6px 0 0!important;
-  padding:3px 11px!important;
-  border:2.5px solid var(--cartoon-navy)!important;
-  border-radius:999px!important;
-  background:var(--cartoon-butter-strong)!important;
-  color:var(--cartoon-navy)!important;
-  font-size:12px!important;
-  font-weight:850!important;
-}
 html[data-skin="kids"] .warm-person-big{
   grid-column:1;
   grid-row:2 / 4;
@@ -143,11 +95,8 @@ html[data-skin="kids"] .warm-person-big{
   justify-self:center;
   position:relative;
   z-index:1;
-  width:84px!important;
-  height:84px!important;
   margin:0!important;
   border:var(--cartoon-outline)!important;
-  border-radius:26px!important;
   background:linear-gradient(145deg,var(--cartoon-mint),var(--cartoon-sky-strong))!important;
   color:var(--cartoon-navy)!important;
   box-shadow:var(--cartoon-lift)!important;
@@ -157,77 +106,6 @@ html[data-skin="kids"] .warm-person-big{
 /* Initials only. Explicitly neutralizes the old star sticker. */
 html[data-skin="kids"] .warm-person-big::after,
 html[data-skin="kids"] .person-avatar::after{content:none!important;display:none!important}
-
-html[data-skin="kids"] .warm-person-hero-copy{
-  grid-column:2 / 4;
-  grid-row:3;
-  z-index:1;
-  align-self:start;
-  padding:0 16px 16px 0;
-  min-width:0;
-}
-html[data-skin="kids"] .warm-person-hero-copy strong{
-  display:block;
-  color:var(--cartoon-navy)!important;
-  font-size:15px!important;
-  font-weight:850!important;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-person-hero-copy small{
-  display:block;
-  margin-top:3px!important;
-  color:var(--cartoon-muted)!important;
-  font-size:13px!important;
-}
-
-/* Summary tiles */
-html[data-skin="kids"] .warm-metric-grid{
-  grid-column:1 / -1;
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:10px!important;
-  margin:0!important;
-  max-width:none!important;
-}
-html[data-skin="kids"] .warm-metric{
-  min-height:94px!important;
-  padding:12px 8px!important;
-  border:var(--cartoon-outline)!important;
-  border-radius:22px!important;
-  box-shadow:var(--cartoon-lift)!important;
-  display:grid!important;
-  justify-items:center;
-  align-content:center;
-  gap:6px!important;
-  text-align:center;
-  color:var(--cartoon-navy)!important;
-}
-html[data-skin="kids"] .warm-metric.sage{background:var(--cartoon-sky)!important}
-html[data-skin="kids"] .warm-metric.amber{background:var(--cartoon-butter-strong)!important}
-html[data-skin="kids"] .warm-metric.blue{background:var(--cartoon-mint)!important}
-html[data-skin="kids"] .warm-metric-icon{
-  width:44px!important;
-  height:44px!important;
-  border:2.5px solid var(--cartoon-navy)!important;
-  border-radius:50%!important;
-  background:var(--cartoon-paper)!important;
-  color:var(--cartoon-navy)!important;
-  display:grid!important;
-  place-items:center!important;
-  overflow:hidden;
-}
-html[data-skin="kids"] .warm-metric-icon svg{width:58%!important;height:58%!important;stroke:var(--cartoon-navy)!important;stroke-width:2!important}
-html[data-skin="kids"] .warm-metric small{font-size:12.5px!important;line-height:1.15!important;color:var(--cartoon-muted)!important;font-weight:750!important}
-html[data-skin="kids"] .warm-metric strong{margin:0!important;font:800 22px/1.05 var(--cartoon-display)!important;color:var(--cartoon-navy)!important;overflow:visible!important}
-/* Active shidduchim uses the same drawn heart language as the preview. */
-html[data-skin="kids"] .warm-metric.blue .warm-metric-icon svg{display:none!important}
-html[data-skin="kids"] .warm-metric.blue .warm-metric-icon{
-  background-color:var(--cartoon-paper)!important;
-  background-repeat:no-repeat!important;
-  background-position:center!important;
-  background-size:58%!important;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237ed9a8' stroke='%231b2a49' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20.5S3.5 15.4 3.5 9.6A4.4 4.4 0 0 1 12 7.9a4.4 4.4 0 0 1 8.5 1.7c0 5.8-8.5 10.9-8.5 10.9z'/%3E%3C/svg%3E")!important;
-}
 
 /* Contact actions: five equal cartoon tiles across the same column. */
 html[data-skin="kids"] .warm-contact-row{
@@ -249,7 +127,7 @@ html[data-skin="kids"] .warm-contact{
   color:var(--cartoon-navy)!important;
   display:grid!important;
   justify-items:center!important;
-  align-content:center!important;
+  align-content:center;
   gap:6px!important;
   font-size:clamp(11px,3.4cqi,14px)!important;
   font-weight:850!important;
@@ -268,7 +146,7 @@ html[data-skin="kids"] .warm-contact>span{
   overflow:hidden!important;
 }
 html[data-skin="kids"] .warm-contact.wait>span{background:var(--cartoon-butter-strong)!important}
-html[data-skin="kids"] .warm-contact svg{display:block!important;width:58%!important;height:58%!important;stroke:var(--cartoon-navy)!important;stroke-width:2!important}
+html[data-skin="kids"] .warm-contact svg{display:block!important;width:58%!important;height:58%!important;stroke:var(--cartoon-navy);stroke-width:2!important}
 html[data-skin="kids"] .warm-contact small{font-size:inherit!important;color:var(--cartoon-navy)!important;font-weight:850!important;line-height:1.05!important}
 /* SMS is a drawn basic feature phone, deliberately different from Call. */
 html[data-skin="kids"] .warm-contact.sms span svg{display:none!important}
@@ -297,14 +175,11 @@ html[data-skin="kids"] .warm-tabs{
 }
 html[data-skin="kids"] .warm-tabs button{
   min-width:0;
-  min-height:46px!important;
   padding:0 2px!important;
   border:3px solid transparent!important;
-  border-radius:16px!important;
   background:transparent!important;
   color:var(--cartoon-muted)!important;
   box-shadow:none!important;
-  font-size:clamp(11.5px,3.6cqi,15px)!important;
   font-weight:850!important;
   white-space:nowrap;
 }
@@ -312,8 +187,6 @@ html[data-skin="kids"] .warm-tabs button.active{
   background:var(--cartoon-sky-strong)!important;
   border-color:var(--cartoon-navy)!important;
   color:var(--cartoon-navy)!important;
-  box-shadow:0 3px 0 var(--cartoon-navy)!important;
-  transform:translateY(-1px);
 }
 
 /* Profile notebook and other detail content. */
@@ -340,7 +213,6 @@ html[data-skin="kids"] .warm-profile-card + .warm-info-card{
 }
 html[data-skin="kids"] .warm-info-card,
 html[data-skin="kids"] .warm-history,
-html[data-skin="kids"] .warm-related-card,
 html[data-skin="kids"] .warm-empty{
   background:var(--cartoon-paper)!important;
   border:var(--cartoon-outline)!important;
@@ -449,31 +321,13 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
 }
 
 @container (min-width:600px){
-  html[data-skin="kids"] .warm-metric{
-    grid-template-columns:auto minmax(0,1fr)!important;
-    grid-template-rows:auto auto;
-    justify-items:start;
-    text-align:left;
-    align-items:center;
-    column-gap:12px!important;
-  }
-  html[data-skin="kids"] .warm-metric-icon{grid-row:1 / 3}
 }
 
 @container (max-width:380px){
   html[data-skin="kids"] .warm-detail-page{
-    grid-template-columns:68px minmax(0,1fr) 44px;
-    column-gap:12px;
     row-gap:12px;
     padding:14px 12px 28px!important;
   }
-  html[data-skin="kids"] .warm-person-big{width:68px!important;height:68px!important;border-radius:22px!important;font-size:23px!important}
-  html[data-skin="kids"] .warm-detail-name{padding:12px 10px 0 0}
-  html[data-skin="kids"] .warm-person-hero-copy{padding:0 10px 12px 0}
-  html[data-skin="kids"] .warm-detail-name>div{font-size:13px!important}
-  html[data-skin="kids"] .warm-person-hero-copy strong{font-size:14px!important}
-  html[data-skin="kids"] .warm-metric{padding:10px 4px!important;min-height:90px!important}
-  html[data-skin="kids"] .warm-metric small{font-size:11.5px!important}
   html[data-skin="kids"] .warm-contact-row{gap:5px!important}
   html[data-skin="kids"] .warm-contact{padding:7px 1px!important;min-height:72px!important}
   html[data-skin="kids"] .warm-contact>span{width:38px!important;height:38px!important}
@@ -487,6 +341,83 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
 }
 
 html[data-skin="kids"] button:focus-visible{
-  outline:3px solid #7c5cff!important;
-  outline-offset:3px!important;
+  outline:3px solid #7c5cff;
+  outline-offset:3px;
+}
+
+/* Current profile structure (since v50): one column with the compact identity bar
+   (back · avatar · name · ⋯), the open-item boxes, the contact tiles, the tabs and the content.
+   The hero grid above was written for the older page; it squeezed these blocks into its columns and
+   left its backdrop as an empty block. Cartoon keeps its outlines, paper and colours, and the bar
+   keeps the same compact size as every other skin (it never grows or shrinks while scrolling). */
+html[data-skin="kids"] .warm-detail-page{display:block!important}
+html[data-skin="kids"] .warm-detail-page::before{content:none!important;display:none!important}
+html[data-skin="kids"] .warm-detail-page>.zm-person-status-area,
+html[data-skin="kids"] .warm-detail-page>.warm-contact-row,
+html[data-skin="kids"] .warm-detail-page>.warm-tabs,
+html[data-skin="kids"] .warm-detail-page>.warm-detail-content{margin-top:14px!important}
+html[data-skin="kids"] .zm-profile-identity{border:var(--cartoon-outline)!important;border-radius:22px!important;background:var(--cartoon-paper)!important;box-shadow:var(--cartoon-lift)!important;color:var(--cartoon-navy)!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-back,
+html[data-skin="kids"] .zm-profile-identity>.warm-more,
+html[data-skin="kids"] .zm-profile-identity>.warm-person-big{grid-column:auto;grid-row:auto}
+html[data-skin="kids"] .zm-profile-identity>.warm-back,
+html[data-skin="kids"] .zm-profile-identity>.warm-more{width:44px!important;height:44px!important;min-height:44px!important;padding:0!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-back::after{content:none!important}
+html[data-skin="kids"] body .zm-profile-identity .warm-person-big.zm-profile-avatar{border:2.5px solid var(--cartoon-navy)!important;border-radius:13px!important;background:linear-gradient(145deg,var(--cartoon-mint),var(--cartoon-sky-strong))!important;color:var(--cartoon-navy)!important;box-shadow:none!important;font-family:var(--cartoon-display)!important}
+html[data-skin="kids"] .zm-profile-copy h1{font-family:var(--cartoon-display)!important;color:var(--cartoon-navy)!important}
+html[data-skin="kids"] .zm-profile-meta{color:var(--cartoon-muted)!important}
+@media(max-width:520px){
+  html[data-skin="kids"] .zm-profile-identity>.warm-back,
+  html[data-skin="kids"] .zm-profile-identity>.warm-more{width:40px!important;height:40px!important;min-height:40px!important}
+}
+
+/* Cartoon fit refinement: smaller avatar and a tighter selected tab.
+   Visual-only; no fields, navigation, data or behavior change. */
+
+html[data-skin="kids"] .warm-person-big{
+  width:70px!important;
+  height:70px!important;
+  border-radius:22px!important;
+  font-size:24px!important;
+}
+
+html[data-skin="kids"] .warm-detail-page{
+  grid-template-columns:74px minmax(0,1fr) 44px!important;
+  column-gap:12px!important;
+}
+
+html[data-skin="kids"] .warm-tabs button{
+  min-height:40px!important;
+  border-radius:13px!important;
+  font-size:13px!important;
+}
+
+html[data-skin="kids"] .warm-tabs button.active{
+  width:84%!important;
+  max-width:138px!important;
+  justify-self:center!important;
+  min-height:38px!important;
+  transform:none!important;
+  box-shadow:0 2px 0 var(--cartoon-navy)!important;
+}
+
+@media (max-width:430px){
+  html[data-skin="kids"] .warm-person-big{
+    width:62px!important;
+    height:62px!important;
+    border-radius:20px!important;
+    font-size:21px!important;
+  }
+  html[data-skin="kids"] .warm-detail-page{
+    grid-template-columns:64px minmax(0,1fr) 44px!important;
+    column-gap:10px!important;
+  }
+  html[data-skin="kids"] .warm-tabs button{
+    min-height:38px!important;
+    font-size:11.5px!important;
+  }
+  html[data-skin="kids"] .warm-tabs button.active{
+    width:90%!important;
+    min-height:36px!important;
+  }
 }

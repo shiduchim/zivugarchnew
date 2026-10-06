@@ -1,3 +1,27 @@
+/* Shidduch stage bar: Profile sent → References → Date 1–8 → Marriage. */
+.zm-stage-track{height:8px}
+.zm-stage-seg{display:block;height:4px;border-radius:999px;background:color-mix(in srgb,var(--border,#d9dce6) 72%,transparent)}
+.zm-stage-seg.done,.zm-stage-seg.now{opacity:1}
+.zm-stage-seg.now{height:7px;box-shadow:0 0 0 2px color-mix(in srgb,currentColor 18%,transparent)}
+.zm-stage-seg.s0.done,.zm-stage-seg.s0.now{background:#4e8df7;color:#4e8df7}
+.zm-stage-seg.s1.done,.zm-stage-seg.s1.now{background:#2fb8b0;color:#2fb8b0}
+.zm-stage-seg.s2.done,.zm-stage-seg.s2.now{background:#6f79eb;color:#6f79eb}
+.zm-stage-seg.s3.done,.zm-stage-seg.s3.now{background:#7f6deb;color:#7f6deb}
+.zm-stage-seg.s4.done,.zm-stage-seg.s4.now{background:#9563e6;color:#9563e6}
+.zm-stage-seg.s5.done,.zm-stage-seg.s5.now{background:#ac59dc;color:#ac59dc}
+.zm-stage-seg.s6.done,.zm-stage-seg.s6.now{background:#c251ce;color:#c251ce}
+.zm-stage-seg.s7.done,.zm-stage-seg.s7.now{background:#d64db8;color:#d64db8}
+.zm-stage-seg.s8.done,.zm-stage-seg.s8.now{background:#e4579d;color:#e4579d}
+.zm-stage-seg.s9.done,.zm-stage-seg.s9.now{background:#ee6b7f;color:#ee6b7f}
+.zm-stage-seg.s10.done,.zm-stage-seg.s10.now{background:#39b86c;color:#39b86c}
+.zm-stage.detail{width:min(92%,420px);margin:10px auto 3px;padding:9px 11px;border-radius:12px;background:color-mix(in srgb,var(--surface,#fff) 70%,transparent);border:1px solid color-mix(in srgb,var(--border,#d9dce6) 78%,transparent)}
+.zm-stage.detail .zm-stage-track{height:10px}
+.zm-stage.detail .zm-stage-seg{height:5px}
+.zm-stage.detail .zm-stage-seg.now{height:8px}
+@media (max-width:520px){
+  .zm-stage.detail{width:calc(100% - 18px)}
+}
+
 /* Final shidduch workflow visuals. */
 
 /* Lifecycle tabs: Offers -> In Progress -> Ended. Colors echo the stage bar. */
@@ -14,22 +38,13 @@
 
 /* Ended cards are intentionally quieter/grey, while their bar length still shows where they stopped. */
 .zm-ended-card{border-color:color-mix(in srgb,#8f97a2 45%,var(--border,#d9dce6))!important}
-.zm-stage.ended .zm-stage-meta strong{color:#6f7781!important}
-.zm-stage.ended .zm-stage-meta span{color:#8a919a!important}
-.zm-stage.ended .zm-stage-seg.done,.zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
 
 .zm-end-action{display:flex;justify-content:center;margin:16px auto 28px;max-width:760px}
 .zm-end-action .ghost-btn{min-width:150px}
-.zm-ended-summary{display:grid;gap:8px;max-width:760px;margin:14px auto 28px;padding:14px 16px;border:1px solid color-mix(in srgb,#8f97a2 35%,var(--border,#d9dce6));border-radius:14px;background:color-mix(in srgb,#8f97a2 7%,var(--surface,#fff))}
-.zm-ended-summary>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:start}
-.zm-ended-summary span{font-size:10px;color:var(--text-2);font-weight:700}
-.zm-ended-summary strong{font-size:12px;color:var(--text-1);font-weight:800;overflow-wrap:anywhere}
 
 /* High Contrast owns its selected-state treatment. */
 html[data-skin="contrast"] .warm-seg[data-seg-scope="shidduchim"].active{box-shadow:none!important}
 
 @media(max-width:520px){
-  .zm-ended-summary{margin:12px 9px 24px}
-  .zm-ended-summary>div{grid-template-columns:92px minmax(0,1fr)}
   .warm-seg[data-seg-scope="shidduchim"]{font-size:11px!important}
 }

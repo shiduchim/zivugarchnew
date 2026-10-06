@@ -48,7 +48,6 @@ html[data-skin="glass"] body:before{
 }
 
 html[data-skin="glass"] .app-shell,
-html[data-skin="glass"] .warm-detail-shell,
 html[data-skin="glass"] .detail-shell{
   background:transparent!important;
 }
@@ -58,16 +57,12 @@ html[data-skin="glass"] .warm-activity-row,
 html[data-skin="glass"] .warm-source-row,
 html[data-skin="glass"] .warm-match-row,
 html[data-skin="glass"] .warm-summary,
-html[data-skin="glass"] .warm-metric,
 html[data-skin="glass"] .warm-search,
 html[data-skin="glass"] .warm-filter,
 html[data-skin="glass"] .warm-circle,
 html[data-skin="glass"] .warm-info-card,
-html[data-skin="glass"] .warm-history-card,
 html[data-skin="glass"] .warm-profile-card,
-html[data-skin="glass"] .warm-related-card,
 html[data-skin="glass"] .next-card,
-html[data-skin="glass"] .waiting-summary,
 html[data-skin="glass"] .all-clear,
 html[data-skin="glass"] .sheet,
 html[data-skin="glass"] .warm-bottom-nav,
@@ -75,8 +70,7 @@ html[data-skin="glass"] .warm-tabs,
 html[data-skin="glass"] .tabbar,
 html[data-skin="glass"] .info-card,
 html[data-skin="glass"] .profile-card,
-html[data-skin="glass"] .list-card,
-html[data-skin="glass"] .timeline{
+html[data-skin="glass"] .list-card{
   background:rgba(255,255,255,.44)!important;
   border:1.5px solid rgba(255,255,255,.94)!important;
   box-shadow:
@@ -87,26 +81,19 @@ html[data-skin="glass"] .timeline{
   backdrop-filter:blur(30px) saturate(145%);
 }
 
-html[data-skin="glass"] .warm-summary,
-html[data-skin="glass"] .warm-metric{
+html[data-skin="glass"] .warm-summary{
   background:rgba(255,255,255,.50)!important;
   border-color:rgba(255,255,255,.98)!important;
 }
-html[data-skin="glass"] .warm-summary.blue,
-html[data-skin="glass"] .warm-metric.sky,
-html[data-skin="glass"] .warm-metric.blue{background:rgba(221,241,251,.58)!important}
-html[data-skin="glass"] .warm-summary.amber,
-html[data-skin="glass"] .warm-metric.amber{background:rgba(255,239,199,.58)!important}
-html[data-skin="glass"] .warm-summary.sage,
-html[data-skin="glass"] .warm-metric.sage{background:rgba(218,242,231,.58)!important}
+html[data-skin="glass"] .warm-summary.blue{background:rgba(221,241,251,.58)!important}
+html[data-skin="glass"] .warm-summary.amber{background:rgba(255,239,199,.58)!important}
+html[data-skin="glass"] .warm-summary.sage{background:rgba(218,242,231,.58)!important}
 
 /* Keep the compact circular contact actions from the earlier version. */
-html[data-skin="glass"] .warm-contact-row,
-html[data-skin="glass"] .contact-row{
+html[data-skin="glass"] .warm-contact-row{
   gap:10px!important;
 }
-html[data-skin="glass"] .warm-contact,
-html[data-skin="glass"] .contact-btn{
+html[data-skin="glass"] .warm-contact{
   background:transparent!important;
   border:0!important;
   box-shadow:none!important;
@@ -116,8 +103,7 @@ html[data-skin="glass"] .contact-btn{
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
-html[data-skin="glass"] .warm-contact span,
-html[data-skin="glass"] .contact-icon{
+html[data-skin="glass"] .warm-contact span{
   width:44px!important;
   height:44px!important;
   margin:0 auto 5px!important;
@@ -130,8 +116,7 @@ html[data-skin="glass"] .contact-icon{
   -webkit-backdrop-filter:blur(20px) saturate(140%);
   backdrop-filter:blur(20px) saturate(140%);
 }
-html[data-skin="glass"] .warm-contact small,
-html[data-skin="glass"] .contact-btn span:last-child{
+html[data-skin="glass"] .warm-contact small{
   color:#31576d!important;
   font-weight:700!important;
 }
@@ -154,7 +139,6 @@ html[data-skin="glass"] .tab-btn.active{
   box-shadow:0 5px 14px rgba(42,71,93,.12),inset 0 0 0 1px rgba(80,116,140,.12)!important;
 }
 
-html[data-skin="glass"] .warm-detail-name h1,
 html[data-skin="glass"] .warm-title-copy h1,
 html[data-skin="glass"] .warm-person-top strong,
 html[data-skin="glass"] .warm-activity-top strong,
@@ -164,7 +148,6 @@ html[data-skin="glass"] .info-card strong,
 html[data-skin="glass"] .profile-card strong{
   color:#102f43!important;
 }
-html[data-skin="glass"] .warm-detail-name p,
 html[data-skin="glass"] .warm-title-copy p,
 html[data-skin="glass"] .warm-info-card small,
 html[data-skin="glass"] .warm-profile-card small,
@@ -175,10 +158,7 @@ html[data-skin="glass"] .warm-activity-text{
   color:#456779!important;
 }
 
-html[data-skin="glass"] .warm-info-row,
-html[data-skin="glass"] .warm-profile-row,
-html[data-skin="glass"] .info-row,
-html[data-skin="glass"] .profile-row{
+html[data-skin="glass"] .info-row{
   border-color:rgba(72,108,131,.16)!important;
 }
 

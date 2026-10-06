@@ -1,9 +1,0 @@
-/* v58: WhatsApp glyph gets a little more visual area and softer line weight. */
-.warm-contact.message svg{
-  width:23px!important;
-  height:23px!important;
-  stroke-width:1.75!important;
-  stroke-linecap:round!important;
-  stroke-linejoin:round!important;
-  overflow:visible!important;
-}

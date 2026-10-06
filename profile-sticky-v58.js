@@ -1,35 +1,31 @@
 'use strict';
 
-// v58: reliable pinning for the compact person header.
-// CSS sticky was being defeated by older overflow/preview layers in some layouts.
-// This fallback watches the header's original marker and switches the bar to fixed
-// positioning only when that marker reaches the viewport top.
-let zm58Frame=0;
+// Pinned headers, one owner for both:
+// - Person pages: the compact identity bar pins with fixed positioning once its marker reaches the
+//   top of the screen (CSS sticky was defeated by older overflow/preview layers). It keeps its exact
+//   size, and the marker holds its place so nothing below jumps.
+// - Shadchanim: the header pins with CSS sticky; .is-stuck gives it the compact pinned look.
+// Synced on scroll (in any scroller, so the listener captures), on resize, and after every render().
+let stickyFrame=0;
 
-function zm58AlignFixed(bar){
+function alignPinnedBar(bar){
   const page=document.querySelector('.warm-detail-page');
   if(!page)return;
   const pr=page.getBoundingClientRect();
   const pcs=getComputedStyle(page);
   const padLeft=parseFloat(pcs.paddingLeft)||0;
   const padRight=parseFloat(pcs.paddingRight)||0;
-  const left=pr.left+padLeft-2;
-  const width=pr.width-padLeft-padRight+4;
-  bar.style.setProperty('--zm-fixed-left',`${left}px`);
-  bar.style.setProperty('--zm-fixed-width',`${width}px`);
+  bar.style.setProperty('--zm-fixed-left',`${pr.left+padLeft-2}px`);
+  bar.style.setProperty('--zm-fixed-width',`${pr.width-padLeft-padRight+4}px`);
 }
 
-function zm58Sync(){
-  zm58Frame=0;
+function syncProfileBar(){
   const bar=document.querySelector('.zm-profile-identity');
   const marker=document.querySelector('.zm-profile-sticky-sentinel');
   if(!bar||!marker)return;
-
   // getBoundingClientRect tracks the real viewport even if a nested element is scrolling,
   // so this works in normal phone view, desktop phone-preview and regular web layout.
-  const shouldFix=marker.getBoundingClientRect().top<=0;
-
-  if(shouldFix){
+  if(marker.getBoundingClientRect().top<=0){
     if(!bar.classList.contains('zm-fixed')){
       const r=bar.getBoundingClientRect();
       const mb=parseFloat(getComputedStyle(bar).marginBottom)||0;
@@ -39,7 +35,7 @@ function zm58Sync(){
       bar.style.setProperty('--zm-fixed-width',`${r.width}px`);
       bar.classList.add('zm-fixed');
     }
-    zm58AlignFixed(bar);
+    alignPinnedBar(bar);
   }else if(bar.classList.contains('zm-fixed')){
     bar.classList.remove('zm-fixed');
     marker.classList.remove('zm-hold-space');
@@ -49,17 +45,21 @@ function zm58Sync(){
   }
 }
 
-function zm58Queue(){
-  if(zm58Frame)return;
-  zm58Frame=requestAnimationFrame(zm58Sync);
+function syncShadchanHead(){
+  const head=document.querySelector('.zm-shadchan-sticky-head');
+  const marker=document.querySelector('.zm-shadchan-sticky-sentinel');
+  if(head&&marker)head.classList.toggle('is-stuck',marker.getBoundingClientRect().top<0);
 }
 
-document.addEventListener('scroll',zm58Queue,true);
-window.addEventListener('scroll',zm58Queue,{passive:true});
-window.addEventListener('resize',zm58Queue);
+function syncStickyHeaders(){
+  stickyFrame=0;
+  syncProfileBar();
+  syncShadchanHead();
+}
 
-// The app swaps screens by re-rendering #app. Re-check whenever that happens.
-const zm58Observer=new MutationObserver(zm58Queue);
-zm58Observer.observe(document.getElementById('app'),{childList:true,subtree:true});
+function queueStickyHeaders(){
+  if(!stickyFrame)stickyFrame=requestAnimationFrame(syncStickyHeaders);
+}
 
-zm58Queue();
+document.addEventListener('scroll',queueStickyHeaders,true);
+window.addEventListener('resize',queueStickyHeaders);

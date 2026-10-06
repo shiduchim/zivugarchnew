@@ -56,10 +56,7 @@ html[data-skin="neon"] .warm-search,
 html[data-skin="neon"] .warm-filter,
 html[data-skin="neon"] .warm-info-card,
 html[data-skin="neon"] .warm-profile-card,
-html[data-skin="neon"] .warm-history-card,
-html[data-skin="neon"] .warm-related-card,
 html[data-skin="neon"] .next-card,
-html[data-skin="neon"] .waiting-summary,
 html[data-skin="neon"] .all-clear{
   background:rgba(255,255,255,.88)!important;
   border:1.5px solid rgba(96,71,255,.24)!important;
@@ -81,29 +78,24 @@ html[data-skin="neon"] .warm-seg.active{
 }
 
 /* Make the overview and person metrics visibly neon instead of white cards. */
-html[data-skin="neon"] .warm-summary,
-html[data-skin="neon"] .warm-metric{
+html[data-skin="neon"] .warm-summary{
   border:1.5px solid rgba(80,58,180,.18)!important;
   color:#21163f!important;
   box-shadow:0 9px 24px rgba(91,61,201,.11)!important;
 }
-html[data-skin="neon"] .warm-summary.blue,
-html[data-skin="neon"] .warm-metric.blue{
+html[data-skin="neon"] .warm-summary.blue{
   background:linear-gradient(145deg,#daf8ff,#dfe6ff)!important;
   border-color:rgba(0,174,220,.30)!important;
 }
-html[data-skin="neon"] .warm-summary.amber,
-html[data-skin="neon"] .warm-metric.amber{
+html[data-skin="neon"] .warm-summary.amber{
   background:linear-gradient(145deg,#fff2bd,#ffe0f2)!important;
   border-color:rgba(236,86,153,.25)!important;
 }
-html[data-skin="neon"] .warm-summary.sage,
-html[data-skin="neon"] .warm-metric.sage{
+html[data-skin="neon"] .warm-summary.sage{
   background:linear-gradient(145deg,#d8fff2,#e7e1ff)!important;
   border-color:rgba(18,167,124,.26)!important;
 }
-html[data-skin="neon"] .warm-summary-icon,
-html[data-skin="neon"] .warm-metric-icon{
+html[data-skin="neon"] .warm-summary-icon{
   background:#fff!important;
   box-shadow:0 0 0 1px rgba(96,71,255,.15),0 0 16px rgba(0,196,228,.10)!important;
 }
@@ -153,16 +145,11 @@ html[data-skin="neon"] .warm-nav.active .warm-nav-icon{
 }
 
 /* Profile hero and cards carry the same electric language. */
-html[data-skin="neon"] .warm-detail-name h1,
 html[data-skin="neon"] .warm-title-copy h1,
 html[data-skin="neon"] .warm-person-top strong,
 html[data-skin="neon"] .warm-activity-top strong,
 html[data-skin="neon"] .warm-info-card strong,
 html[data-skin="neon"] .warm-profile-card strong{color:#21163f!important}
-html[data-skin="neon"] .warm-detail-name>span{
-  background:linear-gradient(135deg,#dff9ff,#eadfff)!important;
-  color:#5238cb!important;
-}
 html[data-skin="neon"] .warm-person-big,
 html[data-skin="neon"] .warm-avatar{
   background:linear-gradient(135deg,#79e6ff,#8d76ff 55%,#f178c9)!important;

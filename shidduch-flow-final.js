@@ -19,53 +19,8 @@ function zmFlowStageIndexFromLabel(label){
   return null;
 }
 
-// Preserve exactly where an ended shidduch stopped.
-zmStageForShidduch=function(s){
-  if(!s)return {index:0,label:ZM_FLOW_STAGE_LABELS[0]};
-  if(s.status==='ended'){
-    const savedIndex=Number.isInteger(s.endedStageIndex)?s.endedStageIndex:zmFlowStageIndexFromLabel(s.endedStage);
-    if(savedIndex!=null)return {index:savedIndex,label:ZM_FLOW_STAGE_LABELS[savedIndex]||s.endedStage||'Profile sent'};
-    const r=getCurrentRound(s);
-    const roundIndex=Number.isInteger(r?.endedStageIndex)?r.endedStageIndex:zmFlowStageIndexFromLabel(r?.endedStage);
-    if(roundIndex!=null)return {index:roundIndex,label:ZM_FLOW_STAGE_LABELS[roundIndex]||r?.endedStage||'Profile sent'};
-  }
-
-  const r=getCurrentRound(s);
-  const raw=String(r?.stage||'').toLowerCase();
-  if(/married|marriage/.test(raw))return {index:10,label:'Marriage'};
-
-  const ds=data.dates
-    .filter(d=>d.roundId===r?.id&&!/cancel/i.test(String(d.state||'')))
-    .sort((a,b)=>(a.number||0)-(b.number||0));
-  if(ds.length){
-    const n=Math.min(8,Math.max(1,Math.max(...ds.map(d=>Number(d.number)||0))||ds.length));
-    return {index:n+1,label:`Date ${n}`};
-  }
-
-  const explicit=zmFlowStageIndexFromLabel(raw);
-  if(explicit!=null)return {index:explicit,label:ZM_FLOW_STAGE_LABELS[explicit]};
-  if(/dating/.test(raw))return {index:2,label:'Date 1'};
-  return {index:0,label:'Profile sent'};
-};
-
-// List cards show only the stage. On the detail page, whose turn it is is shown separately.
-// All completed segments use the CURRENT stage color, so one glance gives one clear color meaning.
-zmStageBar=function(s,detail=false){
-  const st=zmStageForShidduch(s),turn=zmTurnForShidduch(s),ended=s?.status==='ended';
-  const segs=ZM_FLOW_STAGE_LABELS.map((label,i)=>`<i class="zm-stage-seg s${i} ${i<st.index?'done':''} ${i===st.index?'now':''}" title="${esc(label)}"></i>`).join('');
-  const left=ended?`Ended at ${st.label}`:st.label;
-  const stageColor=ended?'#8f97a2':zmFlowStageColor(st.index);
-  const detailNote=detail?(ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn):'';
-  return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${esc(left)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-meta"><strong>${esc(left)}</strong></div><div class="zm-stage-track">${segs}</div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
-};
-
-function zmOfferRow(i){
-  const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-  return `<button class="warm-match-row zm-offer-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>${esc(g?.name)} ↔ ${esc(gl?.name)}</strong><time>${esc(fmtDay(i.createdAt))}</time></div><p>${sug?`Offered by ${esc(sug.name)}`:'New offer'}</p></div><div class="warm-chevron">›</div></button>`;
-}
-
 // Tabs are deliberately lifecycle order: Offers -> In Progress -> Ended.
-shidduchimScreen=function(){
+function shidduchimScreen(){
   const v=ui.screenView.shidduchim;
   const inProgress=data.shidduchim.filter(s=>s.status==='active');
   const ended=data.shidduchim.filter(s=>s.status==='ended');
@@ -85,38 +40,24 @@ shidduchimScreen=function(){
   const emptyTitle=v==='ideas'?'No offers':v==='active'?'No shidduchim in progress':'No ended shidduchim';
   const emptyText=v==='ideas'?'New suggested matches will appear here before they become shidduchim.':v==='active'?'When you accept an offer, the shidduch will appear here.':'Ended shidduchim keep the stage where they stopped and their history.';
   return `${header('Shidduchim','Offers and shidduchim',{add:true})}${searchBox('Search a pair…')}${segment(tabs,v,'shidduchim')}<div class="warm-stack">${rows||empty(emptyTitle,emptyText,'add-idea')}</div>`;
-};
+}
 
-// Replace visible Idea wording with Offer while preserving the existing data model.
-ideaSheet=function(iid){
-  const i=idea(iid);if(!i)return;
-  const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-  openSheet(`<h2>${esc(g?.name)} ↔ ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(gl?.profileText||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
-};
-
-addIdeaSheet=function(){
+function addIdeaSheet(){
   const guys=byType('Guy'),girls=byType('Girl'),shads=byType('Shadchan');
   openSheet(`<h2>New offer</h2><p class="lead">An offer is a suggested pair. It becomes a shidduch only when you choose Interested.</p><div class="form-grid"><div class="field"><label>Guy</label><select id="iGuy">${guys.map(p=>`<option value="${p.id}">${esc(p.isMe?'Me':p.name)}</option>`).join('')}</select></div><div class="field"><label>Girl</label><select id="iGirl">${girls.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Offered by</label><select id="iBy"><option value="">Me / unknown</option>${shads.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-idea">Save offer</button></div>`);
-};
+}
 
-universalAddSheet=function(){
-  openSheet(`<h2>Add</h2><p class="lead">What do you want to add?</p><div class="quick-add-grid"><button id="qaIdea"><span>♡</span><b>Offer</b><small>Someone suggested a match</small></button><button id="qaGuy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote"><span>✎</span><b>Note or call</b><small>Add something that happened</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
-  const go=(sel,fn)=>document.querySelector(sel)?.addEventListener('click',()=>{closeSheet();fn();});
-  go('#qaIdea',()=>addIdeaSheet());go('#qaGuy',()=>addPersonSheet('Guy'));go('#qaShad',()=>addPersonSheet('Shadchan'));go('#qaGirl',()=>addPersonSheet('Girl'));go('#qaNote',()=>addActivitySheet());
-};
+function universalAddSheet(){
+  openSheet(`<h2>Add</h2><p class="lead">What do you want to add?</p><div class="quick-add-grid"><button id="qaIdea" data-act="quick-add" data-add="offer"><span>♡</span><b>Offer</b><small>Someone suggested a match</small></button><button id="qaGuy" data-act="quick-add" data-add="Guy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad" data-act="quick-add" data-add="Shadchan"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl" data-act="quick-add" data-add="Girl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote" data-act="quick-add" data-add="note"><span>✎</span><b>Note or call</b><small>Add something that happened</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
+}
 
-const showToastBeforeOffers=showToast;
-showToast=function(msg){
-  const mapped=msg==='Idea saved'?'Offer saved':msg==='Idea closed'?'Offer closed':msg;
-  return showToastBeforeOffers(mapped);
-};
-
-const personDetailBeforeOffers=personDetail;
-personDetail=function(pid){
-  return personDetailBeforeOffers(pid)
-    .replaceAll('Ideas and shidduchim','Offers and shidduchim')
-    .replaceAll('Idea ·','Offer ·');
-};
+// A choice in the Add sheet closes it and opens that form.
+function quickAdd(kind){
+  closeSheet();
+  if(kind==='offer')addIdeaSheet();
+  else if(kind==='note')addActivitySheet();
+  else addPersonSheet(kind);
+}
 
 function openEndShidduchSheet(sid){
   const s=shidduch(sid);if(!s||s.status==='ended')return;
@@ -150,23 +91,20 @@ async function confirmEndShidduch(){
   showToast('Moved to Ended');
 }
 
-const shidduchDetailBeforeEndFlow=shidduchDetail;
-shidduchDetail=function(sid){
-  let html=shidduchDetailBeforeEndFlow(sid);
-  const s=shidduch(sid);if(!s)return html;
-  if(s.status==='ended'){
-    const st=zmStageForShidduch(s);
-    const why=s.endReason?`<div><span>Why it ended</span><strong>${esc(s.endReason)}</strong></div>`:'';
-    const saved=`<div class="zm-ended-summary"><div><span>Ended at</span><strong>${esc(st.label)}</strong></div>${s.endedAt?`<div><span>Ended</span><strong>${esc(fmtDate(s.endedAt))}</strong></div>`:''}${why}</div>`;
-    return html+saved;
+// Pair names no longer use arrow symbols. Compact list/sheet titles use a simple dash.
+function shidduchTitle(s){
+  const g=person(s?.guyId),gl=person(s?.girlId);
+  return `${g?.name||'Guy'} – ${gl?.name||'Girl'}`;
+}
+
+function zmOfferRow(i){
+    const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
+    return `<button class="warm-match-row zm-offer-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>${esc(g?.name)} – ${esc(gl?.name)}</strong><time>${esc(fmtDay(i.createdAt))}</time></div><p>${sug?`Offered by ${esc(sug.name)}`:'New offer'}</p></div><div class="warm-chevron">›</div></button>`;
   }
-  return html+`<div class="zm-end-action"><button class="ghost-btn" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End shidduch</button></div>`;
-};
 
-document.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
-  if(b.dataset.act==='confirm-end-shidduch')confirmEndShidduch();
-});
-
-if(data)render();
+// Keep the offer sheet consistent too.
+function ideaSheet(iid){
+    const i=idea(iid);if(!i)return;
+    const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
+    openSheet(`<h2>${esc(g?.name)} – ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(gl?.profileText||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
+  }
