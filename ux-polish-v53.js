@@ -74,14 +74,3 @@ function zmProfileIdentity(p){
       <button class="warm-more zm-profile-more" data-act="detail-menu" aria-label="More">⋯</button>
     </div>`;
 }
-
-// Extend the existing sticky sync so Shadchanim main header and all person profiles behave consistently.
-const zmSyncProfileStickyBeforeV53=zmSyncProfileSticky;
-zmSyncProfileSticky=function(){
-  zmSyncProfileStickyBeforeV53();
-  const head=document.querySelector('.zm-shadchan-sticky-head');
-  const marker=document.querySelector('.zm-shadchan-sticky-sentinel');
-  if(head&&marker)head.classList.toggle('is-stuck',marker.getBoundingClientRect().top<0);
-};
-
-if(data)render();
