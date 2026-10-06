@@ -11,7 +11,7 @@ function settingsSheet(){
 
     <div class="settings-heading">View</div>
     <div class="sheet-section">
-      <div class="setting-copy" style="padding:2px 0 8px"><b>Screen layout</b><span>Best for this screen, or always phone-size.</span></div>
+      <div class="setting-copy" style="padding:12px 14px 4px"><b>Screen layout</b><span>Best for this screen, or always phone-size.</span></div>
       <div class="layout-choice-row">
         <button class="layout-choice ${layout==='auto'||layout==='web'?'active':''}" data-setting="layout" data-value="auto">Auto<small>Best for this screen</small></button>
         <button class="layout-choice ${layout==='phone'?'active':''}" data-setting="layout" data-value="phone">Phone<small>Phone-size layout</small></button>
