@@ -102,3 +102,13 @@ html[data-skin="contrast"] .zm-shadchan-sticky-head.is-stuck{
 @media(max-width:390px){
   .warm-nav{font-size:8.5px}
 }
+
+/* v58: WhatsApp glyph gets a little more visual area and softer line weight. */
+.warm-contact.message svg{
+  width:23px!important;
+  height:23px!important;
+  stroke-width:1.75;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  overflow:visible!important;
+}

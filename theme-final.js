@@ -14,6 +14,10 @@ const FINAL_SKINS=[
 ['sunset','Sunset','Coral, orange and violet','☀']
 ];
 const FINAL_SKIN_IDS=new Set(FINAL_SKINS.map(x=>x[0]));
+function skinChoice(value,label,desc,mark){
+  const active=(data.settings.skin||'classic')===value?'active':'';
+  return `<button class="skin-choice ${active}" data-setting="skin" data-value="${value}"><span class="skin-swatch ${value}">${mark}</span><span><b>${label}</b><small>${desc}</small></span></button>`;
+}
 function skinCards(){return FINAL_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).join('');}
 
 // Settings are applied in one place, as attributes on <html> that the CSS reads.

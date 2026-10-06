@@ -31,3 +31,74 @@
   .zm-clean-row span{font-size:10px}
   .zm-clean-row strong{font-size:11px}
 }
+
+/* Clickable person links inside shidduch detail. */
+.zm-person-text-link{
+  appearance:none;
+  border:0;
+  background:transparent;
+  padding:0;
+  margin:0;
+  text-align:left;
+  font:inherit;
+  font-size:10.5px;
+  font-weight:700;
+  color:#5879a8;
+  cursor:pointer;
+}
+.zm-person-text-link:hover,.zm-person-text-link:focus-visible{
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+@media(max-width:520px){
+  .zm-person-text-link{font-size:10px}
+}
+
+/* Shidduch header: always-stacked names for predictable mobile readability. */
+.zm-pair-head{display:block;margin-bottom:10px}
+.zm-pair-appmark{display:flex;align-items:center;margin-bottom:4px;padding:0 42px}
+.zm-pair-appmark .wordmark{font-size:13px}
+.zm-pair-appmark .bh{margin-left:auto}
+.zm-pair-head-row{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;gap:8px;align-items:start}
+.zm-pair-title-wrap{min-width:0;text-align:center}
+.zm-pair-title{display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-width:0;color:#14244a}
+.zm-pair-name{
+  appearance:none;
+  border:0;
+  background:transparent;
+  width:100%;
+  min-height:44px;
+  padding:2px 4px;
+  margin:0;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+  font-family:inherit;
+  font-size:20px;
+  font-weight:800;
+  line-height:24px;
+  letter-spacing:0;
+  color:#14244a;
+  text-align:center;
+  cursor:pointer;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:normal;
+  hyphens:none;
+}
+.zm-pair-name.guy,.zm-pair-name.girl{color:#14244a;text-align:center}
+.zm-pair-name:hover,.zm-pair-name:focus-visible{text-decoration:underline;text-underline-offset:3px}
+.zm-pair-title-wrap .detail-meta{margin-top:4px;font-size:10.5px;color:var(--text-2,#6f7881)}
+
+/* Once the names are in the header, the hero only needs the stage bar. */
+.zm-clean-hero{padding-top:14px!important}
+.zm-clean-hero .zm-stage{margin-top:0!important}
+
+@media(max-width:520px){
+  .zm-pair-appmark{padding:0 40px}
+  .zm-pair-name{font-size:20px;line-height:24px}
+}
+@media(max-width:370px){
+  .zm-pair-name{font-size:19px;line-height:23px}
+}

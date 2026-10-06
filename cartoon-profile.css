@@ -370,3 +370,54 @@ html[data-skin="kids"] .zm-profile-meta{color:var(--cartoon-muted)!important}
   html[data-skin="kids"] .zm-profile-identity>.warm-back,
   html[data-skin="kids"] .zm-profile-identity>.warm-more{width:40px!important;height:40px!important;min-height:40px!important}
 }
+
+/* Cartoon fit refinement: smaller avatar and a tighter selected tab.
+   Visual-only; no fields, navigation, data or behavior change. */
+
+html[data-skin="kids"] .warm-person-big{
+  width:70px!important;
+  height:70px!important;
+  border-radius:22px!important;
+  font-size:24px!important;
+}
+
+html[data-skin="kids"] .warm-detail-page{
+  grid-template-columns:74px minmax(0,1fr) 44px!important;
+  column-gap:12px!important;
+}
+
+html[data-skin="kids"] .warm-tabs button{
+  min-height:40px!important;
+  border-radius:13px!important;
+  font-size:13px!important;
+}
+
+html[data-skin="kids"] .warm-tabs button.active{
+  width:84%!important;
+  max-width:138px!important;
+  justify-self:center!important;
+  min-height:38px!important;
+  transform:none!important;
+  box-shadow:0 2px 0 var(--cartoon-navy)!important;
+}
+
+@media (max-width:430px){
+  html[data-skin="kids"] .warm-person-big{
+    width:62px!important;
+    height:62px!important;
+    border-radius:20px!important;
+    font-size:21px!important;
+  }
+  html[data-skin="kids"] .warm-detail-page{
+    grid-template-columns:64px minmax(0,1fr) 44px!important;
+    column-gap:10px!important;
+  }
+  html[data-skin="kids"] .warm-tabs button{
+    min-height:38px!important;
+    font-size:11.5px!important;
+  }
+  html[data-skin="kids"] .warm-tabs button.active{
+    width:90%!important;
+    min-height:36px!important;
+  }
+}
