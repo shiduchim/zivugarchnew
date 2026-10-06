@@ -90,5 +90,3 @@ document.addEventListener('click',e=>{
   if(b.dataset.act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
   if(b.dataset.act==='confirm-end-shidduch')runOnce('end-shidduch',confirmEndShidduch);
 });
-
-if(data)render();

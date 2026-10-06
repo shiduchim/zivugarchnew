@@ -59,6 +59,3 @@ function activityFeed(entries){
 }
 
 function currentAdd(){universalAddSheet();}
-
-// Repaint once this late-loaded UX layer has replaced the earlier rendering functions.
-if(data){applySettings();render();}

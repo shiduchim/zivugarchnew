@@ -58,5 +58,3 @@ function zmStageBar(s,detail=false){
   const detailNote=detail?(ended?(s.endReason?`Why: ${s.endReason}`:(s.endedAt?fmtDate(s.endedAt):'Ended')):turn):'';
   return `<div class="zm-stage ${detail?'detail':''} ${ended?'ended':''}" style="--zm-stage-color:${stageColor}" aria-label="${ended?'Ended at ':''}${esc(st.label)}${detailNote?`. ${esc(detailNote)}`:''}"><div class="zm-stage-track-wrap"><span class="zm-stage-floating${edge}" style="left:${pos}%">${esc(label)}</span><div class="zm-stage-track">${segs}</div></div>${detailNote?`<div class="zm-stage-note">${esc(detailNote)}</div>`:''}</div>`;
 }
-
-if(data)render();

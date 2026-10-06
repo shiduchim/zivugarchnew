@@ -16,5 +16,3 @@ function zmTurnForShidduch(s){
   if(String(r?.guyStatus||'').toLowerCase()==='thinking')return `Waiting for ${clarityFirstName(person(s.guyId))}`;
   return '';
 }
-
-if(data)render();

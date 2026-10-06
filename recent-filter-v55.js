@@ -39,5 +39,3 @@ document.addEventListener('click',function(e){
   render();
   filtersSheet();
 },true);
-
-if(data)render();

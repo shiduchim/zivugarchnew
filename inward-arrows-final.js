@@ -17,5 +17,3 @@ function ideaSheet(iid){
     const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
     openSheet(`<h2>${esc(g?.name)} – ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(gl?.profileText||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
   }
-
-if(data)render();

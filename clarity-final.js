@@ -61,5 +61,3 @@ async function logProfileSend(pid){
   const p=person(pid);data.entries.push({id:id('e'),at:iso(),type:'profile',channel:'WhatsApp',direction:'out',fromPersonId:me().id,toPersonId:pid,personIds:[me().id,pid],aboutType:'person',aboutId:me().id,text:`Sent my profile v${me().profileVersion||1} to ${p.name}.`,profileVersion:me().profileVersion||1,result:''});
   await save();render();showToast('Profile marked as sent');
 }
-
-if(data)render();

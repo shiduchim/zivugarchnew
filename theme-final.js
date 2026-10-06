@@ -79,5 +79,3 @@ function queue(){if(!queued){queued=true;requestAnimationFrame(sync);}}
 if(app) new MutationObserver(queue).observe(app,{childList:true,subtree:true});
 queue();
 })();
-
-if(data){applySettings();render();}

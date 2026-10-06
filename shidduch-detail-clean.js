@@ -129,5 +129,3 @@ function shidduchDetail(sid){
   const top=g&&gl?`<div class="detail-shell">${zmPairHeader(s,r,g,gl)}<div class="zm-clean-hero">${zmStageBar(s,true)}</div>`:`${detailHeader(shidduchTitle(s),`Round ${r?.number||1}`)}<div class="zm-clean-hero"><div class="pair-people"><div class="person-avatar">${esc(initials(g?.name))}</div><div class="person-avatar">${esc(initials(gl?.name))}</div></div>${zmStageBar(s,true)}</div>`;
   return `${top}<div class="tabbar">${tabs.map(([v,l])=>`<button class="tab-btn ${ui.detailTab===v?'active':''}" data-detail-tab="${v}">${l}</button>`).join('')}</div>${content}${endAction}</div>`;
 }
-
-if(data)render();
