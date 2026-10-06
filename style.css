@@ -103,8 +103,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .full{width:100%}
 .split-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 
-.scrim{position:fixed;inset:0;background:rgba(26,34,38,.34);z-index:80;display:flex;align-items:flex-end;justify-content:center;padding-top:60px}
-.sheet{width:min(620px,100%);max-height:92vh;overflow:auto;background:var(--bg-2);border-radius:26px 26px 0 0;padding:10px 17px calc(26px + env(safe-area-inset-bottom));box-shadow:0 -16px 50px rgba(26,34,38,.15)}
+.scrim{position:fixed;inset:0;box-sizing:border-box;background:rgba(26,34,38,.34);z-index:80;display:flex;align-items:flex-end;justify-content:center;padding:60px 12px 0}
+.sheet{box-sizing:border-box;width:min(620px,100%);max-width:100%;max-height:92vh;overflow:auto;background:var(--bg-2);border-radius:26px 26px 0 0;padding:10px 17px calc(26px + env(safe-area-inset-bottom));box-shadow:0 -16px 50px rgba(26,34,38,.15)}
 .sheet-handle{width:38px;height:4px;background:color-mix(in srgb,var(--text-3) 40%,transparent);border-radius:999px;margin:0 auto 14px}
 .sheet h2{font:700 24px/1.1 Georgia,"Times New Roman",serif;margin:0 0 5px}
 .sheet .lead{font-size:11.5px;color:var(--text-2);margin:0 0 16px;line-height:1.45}
