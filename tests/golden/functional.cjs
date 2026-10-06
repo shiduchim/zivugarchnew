@@ -594,7 +594,10 @@ const checks = {
     await L.tap(page, '[data-zm-person="p_david"]'); await L.tap(page, 'button[data-screen="recent"]');
     await L.tap(page, '.zm-todo-card'); await L.tap(page, '[data-act="back"]');
     const landedOn = await page.$eval('#app', a => a.querySelector('.zm-pair-title') ? 'shidduch page (stale)' : a.querySelector('h1')?.textContent);
-    record('K7', 'Visual/navigation quirks', 'KNOWN', { fakeProfileVersionRow: fake, profileHorizontalOverflowPx: overflow, shidduchMoreButtonOpensSomething: menuOpened, backAfterLeavingShidduch: landedOn });
+    // v58 had all four quirks; the result changes only when every one of them is fixed.
+    const quirks = { fakeProfileVersionRow: fake, profileHorizontalOverflowPx: overflow, shidduchMoreButtonOpensSomething: menuOpened, backAfterLeavingShidduch: landedOn };
+    const anyLeft = fake || overflow > 0 || !menuOpened || landedOn === 'shidduch page (stale)';
+    record('K7', 'Visual/navigation quirks', anyLeft ? 'KNOWN' : 'CHANGED', quirks);
     await ctx.close();
   },
 };
