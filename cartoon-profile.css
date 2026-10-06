@@ -127,7 +127,7 @@ html[data-skin="kids"] .warm-contact{
   color:var(--cartoon-navy)!important;
   display:grid!important;
   justify-items:center!important;
-  align-content:center!important;
+  align-content:center;
   gap:6px!important;
   font-size:clamp(11px,3.4cqi,14px)!important;
   font-weight:850!important;
@@ -146,7 +146,7 @@ html[data-skin="kids"] .warm-contact>span{
   overflow:hidden!important;
 }
 html[data-skin="kids"] .warm-contact.wait>span{background:var(--cartoon-butter-strong)!important}
-html[data-skin="kids"] .warm-contact svg{display:block!important;width:58%!important;height:58%!important;stroke:var(--cartoon-navy)!important;stroke-width:2!important}
+html[data-skin="kids"] .warm-contact svg{display:block!important;width:58%!important;height:58%!important;stroke:var(--cartoon-navy);stroke-width:2!important}
 html[data-skin="kids"] .warm-contact small{font-size:inherit!important;color:var(--cartoon-navy)!important;font-weight:850!important;line-height:1.05!important}
 /* SMS is a drawn basic feature phone, deliberately different from Call. */
 html[data-skin="kids"] .warm-contact.sms span svg{display:none!important}
@@ -341,8 +341,8 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
 }
 
 html[data-skin="kids"] button:focus-visible{
-  outline:3px solid #7c5cff!important;
-  outline-offset:3px!important;
+  outline:3px solid #7c5cff;
+  outline-offset:3px;
 }
 
 /* Current profile structure (since v50): one column with the compact identity bar
@@ -359,7 +359,7 @@ html[data-skin="kids"] .warm-detail-page>.warm-detail-content{margin-top:14px!im
 html[data-skin="kids"] .zm-profile-identity{border:var(--cartoon-outline)!important;border-radius:22px!important;background:var(--cartoon-paper)!important;box-shadow:var(--cartoon-lift)!important;color:var(--cartoon-navy)!important}
 html[data-skin="kids"] .zm-profile-identity>.warm-back,
 html[data-skin="kids"] .zm-profile-identity>.warm-more,
-html[data-skin="kids"] .zm-profile-identity>.warm-person-big{grid-column:auto!important;grid-row:auto!important}
+html[data-skin="kids"] .zm-profile-identity>.warm-person-big{grid-column:auto;grid-row:auto}
 html[data-skin="kids"] .zm-profile-identity>.warm-back,
 html[data-skin="kids"] .zm-profile-identity>.warm-more{width:44px!important;height:44px!important;min-height:44px!important;padding:0!important}
 html[data-skin="kids"] .zm-profile-identity>.warm-back::after{content:none!important}

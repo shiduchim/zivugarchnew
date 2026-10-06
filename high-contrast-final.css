@@ -347,8 +347,8 @@ html[data-skin="contrast"] button:focus-visible,
 html[data-skin="contrast"] input:focus-visible,
 html[data-skin="contrast"] textarea:focus-visible,
 html[data-skin="contrast"] select:focus-visible{
-  outline:3px solid transparent!important;
-  outline-offset:2px!important;
+  outline:3px solid transparent;
+  outline-offset:2px;
   box-shadow:0 0 0 2px var(--hc-focus-gap),0 0 0 5px var(--hc-focus-ring)!important;
 }
 html[data-skin="contrast"] button:active{filter:none;transform:none!important}
@@ -362,7 +362,7 @@ html[data-skin="contrast"] button:disabled{
 /* Narrow phone safeguards. */
 @media (max-width:380px){
   html[data-skin="contrast"] .warm-contact-row{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:6px!important}
-  html[data-skin="contrast"] .warm-contact{grid-column:span 2!important;font-size:11px!important}
+  html[data-skin="contrast"] .warm-contact{grid-column:span 2;font-size:11px!important}
   html[data-skin="contrast"] .warm-contact:nth-child(4){grid-column:2 / span 2!important}
   html[data-skin="contrast"] .warm-contact:nth-child(5){grid-column:4 / span 2!important}
   html[data-skin="contrast"] .warm-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -383,7 +383,7 @@ html[data-skin="contrast"] button:disabled{
   html[data-skin="contrast"] .warm-info-card{border-color:CanvasText!important;background:Canvas!important}
 }
 
-@media (prefers-reduced-motion:reduce){html[data-skin="contrast"] *{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:reduce){html[data-skin="contrast"] *{transition:none!important;animation:none}}
 
 .skin-swatch.contrast{
   background:linear-gradient(135deg,#0B1735,#18305F)!important;

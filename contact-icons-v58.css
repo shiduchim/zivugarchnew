@@ -2,8 +2,8 @@
 .warm-contact.message svg{
   width:23px!important;
   height:23px!important;
-  stroke-width:1.75!important;
-  stroke-linecap:round!important;
-  stroke-linejoin:round!important;
+  stroke-width:1.75;
+  stroke-linecap:round;
+  stroke-linejoin:round;
   overflow:visible!important;
 }

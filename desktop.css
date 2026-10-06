@@ -11,7 +11,7 @@
 
   /* Desktop navigation becomes a calm left rail instead of a phone bottom bar. */
   .warm-bottom-nav{
-    left:0!important;top:0!important;bottom:0!important;transform:none!important;
+    left:0!important;top:0!important;bottom:0;transform:none!important;
     width:var(--desktop-rail)!important;height:100vh!important;
     display:flex!important;flex-direction:column!important;grid-template-columns:none!important;
     padding:112px 14px 22px!important;

@@ -22,7 +22,7 @@
   min-height:64px!important;
   margin:4px -2px 12px!important;
   padding:6px 8px!important;
-  box-sizing:border-box!important;
+  box-sizing:border-box;
   border-radius:16px!important;
   border:1px solid color-mix(in srgb,var(--line,#dfe4e8) 52%,transparent)!important;
   background:color-mix(in srgb,var(--surface,#fff) 98%,transparent)!important;
@@ -30,7 +30,7 @@
   -webkit-backdrop-filter:blur(14px)!important;
   backdrop-filter:blur(14px)!important;
   transform:none!important;
-  transition:none!important;
+  transition:none;
 }
 
 /* When pinned, the bar keeps the exact same geometry; only its positioning changes. */
@@ -49,7 +49,7 @@ html body .zm-profile-identity .warm-person-big.zm-profile-avatar{
   min-width:42px!important;max-width:42px!important;
   min-height:42px!important;max-height:42px!important;
   margin:0!important;padding:0!important;border-radius:50%!important;
-  font-size:13px!important;line-height:42px!important;flex:0 0 42px!important;
+  font-size:13px!important;line-height:42px!important;flex:0 0 42px;
   align-self:center!important;justify-self:center!important;
   overflow:hidden!important;transform:none!important;transition:none!important;
 }
@@ -57,7 +57,7 @@ html body .zm-profile-identity .warm-person-big.zm-profile-avatar{
 .zm-profile-copy h1{
   margin:0!important;padding:0!important;
   font:800 18px/1.08 system-ui,-apple-system,"Segoe UI",sans-serif!important;
-  letter-spacing:-.015em!important;color:var(--text,#172536)!important;
+  letter-spacing:-.015em;color:var(--text,#172536)!important;
   white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
 }
 .zm-profile-meta{
