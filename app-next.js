@@ -36,7 +36,7 @@ function settingsSheet(){
     <div class="sheet-section">
       <div class="setting-row"><div class="setting-copy"><b>Backup</b><span>Export all local data</span></div><button class="option" data-act="export-backup">Export</button></div>
       <div class="setting-row"><div class="setting-copy"><b>Restore</b><span>Import a ZivugMatch backup</span></div><button class="option" data-act="import-backup">Import</button><input id="backupFile" type="file" accept="application/json" class="hidden" /></div>
-      <div class="setting-row"><div class="setting-copy"><b>${data.meta.demo?'Start fresh':'Load demo data'}</b><span>${data.meta.demo?'Remove the made-up examples':'Replace current data with made-up examples'}</span></div><button class="option" data-act="toggle-demo">${data.meta.demo?'Clear demo':'Load demo'}</button></div>${earlierDataRows()}
+      <div class="setting-row"><div class="setting-copy"><b>${data.meta.demo?'Start fresh':'Load demo data'}</b><span>${data.meta.demo?'Remove the made-up examples':'Replace current data with made-up examples'}</span></div><button class="option" data-act="toggle-demo">${data.meta.demo?'Clear demo':'Load demo'}</button></div>${earlierDataRows()}${openAttention().length?`<div class="setting-row"><div class="setting-copy"><b>Needs a look</b><span>${openAttention().length} thing${openAttention().length===1?'':'s'} the app would not decide by itself</span></div><button class="option" data-act="needs-look">Check</button></div>`:''}
     </div>
     <button class="primary-btn full" data-act="close-sheet">Done</button>
     <div style="text-align:center;color:var(--text-3);font-size:9px;margin-top:12px">ZivugMatch ${APP_VERSION_LABEL}</div>

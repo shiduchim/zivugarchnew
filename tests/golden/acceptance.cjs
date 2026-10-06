@@ -119,6 +119,109 @@ const tests = {
     await ctx.close();
   },
 
+  // ---- Identity ------------------------------------------------------------------------------------
+  async I01_one_person_from_several_ways_in() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    const addPerson = async (name, phone, extra = {}) => {
+      await L.tap(page, 'button[data-screen="recent"]');
+      await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#qaShad');
+      await page.fill('#fName', name); await page.fill('#fPhone', phone); if (extra.city) await page.fill('#fCity', extra.city);
+      await L.tap(page, '#overlay [data-act="save-person"]');
+    };
+    // The same phone, written another way, arrives twice more (an event, a list): "already here" each time.
+    await addPerson('Miriam Cohen', '+972 50-555-0101');
+    const asked1 = await page.$eval('#overlay h2', e => e.textContent).catch(() => '');
+    await L.tap(page, '#overlay [data-act="identity-same"]');
+    await addPerson('M. Cohen', '0505550101');
+    const asked2 = await page.$eval('#overlay h2', e => e.textContent).catch(() => '');
+    await L.tap(page, '#overlay [data-act="identity-same"]');
+    const s1 = await L.idbRead(page);
+    const miriams = s1.people.filter(p => /cohen/i.test(p.name || '') && !p.mergedIntoId && p.types.includes('Shadchan'));
+    const ok = /already here/.test(asked1) && /already here/.test(asked2) && s1.people.length === s0.people.length && miriams.length === 1 && miriams[0].id === 'p_miriam';
+    record('I01', 'The same human arriving again (other spelling, other phone format) stays one Person record', ok, { asked1, asked2, peopleBefore: s0.people.length, after: s1.people.length });
+    await ctx.close();
+  },
+
+  async I02_match_levels_including_hebrew() {
+    const { ctx, page } = await fresh({ fixture: 'v58-rich', mode: 'shadchan' });
+    const r = await inPage(page, () => {
+      const ids = m => ({ exact: m.exact.map(p => p.id), likely: m.likely.map(p => p.id), similar: m.similar.map(p => p.id) });
+      return {
+        phone: ids(findPersonMatches({ name: 'Somebody', phone: '+972-50-555-0101' })),
+        email: ids(findPersonMatches({ name: 'Somebody', email: ' MIRIAM@example.com ' })),
+        likelyCity: ids(findPersonMatches({ name: 'Cohen, Miriam', city: 'jerusalem' })),
+        nameOnly: ids(findPersonMatches({ name: 'Miriam Cohen' })),
+        hebrewTitle: ids(findPersonMatches({ name: 'ר׳ משה כהן', city: 'ירושלים' })),
+        crossScript: ids(findPersonMatches({ name: 'מרים כהן' })),
+        tokens: nameTokens('הרב  משֶׁה כֹּהֵן'),
+        unrelated: ids(findPersonMatches({ name: 'Rina Cohen', city: 'Haifa' })),
+      };
+    });
+    const ok = r.phone.exact.includes('p_miriam') && r.email.exact.includes('p_miriam') && r.likelyCity.likely.includes('p_miriam') && !r.nameOnly.likely.length && r.nameOnly.similar.includes('p_miriam')
+      && r.hebrewTitle.likely.includes('p_rich_heb1') && r.hebrewTitle.likely.includes('p_rich_heb2') && r.crossScript.similar.includes('p_miriam') && JSON.stringify(r.tokens) === JSON.stringify(['משה', 'כהנ']) && !r.unrelated.exact.length && !r.unrelated.likely.length;
+    record('I02', 'Duplicate check: exact (phone/email in any format), likely (same name and city), similar (name only, Hebrew titles and points ignored, across scripts)', ok, r);
+    await ctx.close();
+  },
+
+  async I03_not_the_same_is_remembered() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#qaShad');
+    await page.fill('#fName', 'Miriam Katz'); await page.fill('#fPhone', '050-555-0101');
+    await L.tap(page, '#overlay [data-act="save-person"]');
+    await L.tap(page, '#overlay [data-act="identity-different"]');
+    const st = await L.idbRead(page);
+    const katz = st.people.find(p => p.name === 'Miriam Katz');
+    const decided = st.identityDecisions.some(d => d.kind === 'not-same' && d.ids.includes(katz?.id) && d.ids.includes('p_miriam'));
+    await L.openApp(page);
+    await inPage(page, idv => { ui.detail = { type: 'person', id: idv }; ui.detailTab = 'details'; render(); }, katz.id);
+    const hint = await page.$('.identity-hint');
+    const again = await inPage(page, idv => findPersonMatches({ name: 'x', phone: '050-555-0101' }, { excludeId: idv }).exact.map(p => p.id), katz.id);
+    const ok = !!katz && decided && !hint && !again.includes('p_miriam');
+    record('I03', '"Not the same person" creates a separate record and is remembered: no hint, no question again', ok, { created: !!katz, decided, hintShown: !!hint, askedAgain: again });
+    await ctx.close();
+  },
+
+  async I04_safe_merge_and_undo() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // A duplicate Miriam with her own history, an open item, a place on a list and a shidduch role.
+    const dupId = await inPage(page, async () => {
+      const p = { id: 'p_dup_miriam', name: 'Miriam C.', types: ['Shadchan', 'Reference'], city: '', phone: '', email: '', occupation: 'Teacher', createdAt: iso(), folderIds: [] };
+      data.people.push(p); rememberNotSame('p_dup_miriam', 'p_none');
+      addEntry({ type: 'note', personIds: [p.id], about: [{ type: 'person', id: p.id }], text: 'Dup note before the merge.' });
+      addOpenItem({ direction: 'them', personId: p.id, about: { type: 'person', id: p.id }, label: 'Dup item' });
+      data.sources.find(s => s.id === 'src_event').lines.push({ id: 'line_dup', personId: p.id, text: 'Miriam C.' });
+      data.rounds.find(r => r.id === 'round_david_noa_1').shadchanIds.push(p.id);
+      await save(); return p.id;
+    });
+    const s0 = await L.idbRead(page);
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_miriam' }; render(); });
+    await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="merge-sheet"]');
+    await page.selectOption('#mergeOther', dupId); await L.tap(page, '#overlay [data-act="merge-chosen"]'); await L.tap(page, '#overlay [data-act="merge-confirm"]');
+    const s1 = await L.idbRead(page);
+    const view = await inPage(page, () => ({ history: entriesForPerson('p_miriam').map(e => e.text), items: openForPerson('p_miriam').map(x => x.label), listed: byType('Shadchan').some(p => p.id === 'p_dup_miriam'), source: sourcePeopleIds(source('src_event')), shidduchim: shidduchimForPerson('p_miriam').map(s => s.id), types: person('p_miriam').types, occupation: person('p_miriam').occupation }));
+    const untouched = ['entries', 'openItems', 'sources', 'rounds'].every(c => s0[c].every(r => { const n = s1[c].find(x => x.id === r.id); return n && JSON.stringify(n) === JSON.stringify(r); }));
+    const merged = s1.people.find(p => p.id === dupId)?.mergedIntoId === 'p_miriam' && s1.merges.length === 1;
+    const viewOk = view.history.includes('Dup note before the merge.') && view.items.includes('Dup item') && !view.listed && view.source.filter(x => x === 'p_miriam').length === 1 && view.shidduchim.includes('sh_david_noa') && view.types.includes('Reference') && view.occupation === 'Teacher';
+    // Work after the merge, then undo: the duplicate comes back whole, the new work stays with Miriam.
+    await inPage(page, async () => { addEntry({ type: 'note', personIds: ['p_miriam'], about: [{ type: 'person', id: 'p_miriam' }], text: 'Note after the merge.' }); await save(); });
+    const mergeId = s1.merges[0].id;
+    await inPage(page, async idv => { await confirmUndoMerge(idv); }, mergeId);
+    const s2 = await L.idbRead(page);
+    const after = await inPage(page, () => ({ miriam: entriesForPerson('p_miriam').map(e => e.text), dup: entriesForPerson('p_dup_miriam').map(e => e.text), dupListed: byType('Shadchan').some(p => p.id === 'p_dup_miriam'), types: person('p_miriam').types, occupation: person('p_miriam').occupation || '' }));
+    const undoOk = !s2.people.find(p => p.id === dupId).mergedIntoId && after.dup.includes('Dup note before the merge.') && after.miriam.includes('Note after the merge.') && !after.miriam.includes('Dup note before the merge.') && after.dupListed && !after.types.includes('Reference') && after.occupation === '' && s2.entries.length === s0.entries.length + 3;
+    record('I04', 'Safe merge: one record shows both histories, items, lists and shidduchim with no record rewritten; Undo separates them and keeps work done after the merge', untouched && merged && viewOk && undoOk, { untouched, merged, view, after, entries: [s0.entries.length, s2.entries.length] });
+    await ctx.close();
+  },
+
+  async I05_pair_sides_cannot_merge() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const r = await inPage(page, () => mergePeople('p_david', 'p_noa'));
+    const st = await L.idbRead(page);
+    record('I05', 'The guy and the girl of one shidduch can never be merged into one person', !!r.error && !st.people.some(p => p.mergedIntoId), { error: r.error });
+    await ctx.close();
+  },
+
   // ---- Backups -----------------------------------------------------------------------------------
   async B01_backup_round_trip() {
     const { ctx, page } = await fresh({ fixture: 'v58-rich' });

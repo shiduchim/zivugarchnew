@@ -1,0 +1,17 @@
+/* ZivugMatch v1.0 additions. Loaded last; every color comes from the skin's own tokens, so all 11 skins
+   restyle these pieces the same way they restyle the rest of the app. */
+
+/* "Same person?" */
+.identity-card{display:flex;align-items:center;gap:12px;margin:10px 0;padding:12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface)}
+.identity-card>div:last-child{display:flex;flex-direction:column;min-width:0}
+.identity-card strong{color:var(--text);font-size:15px}
+.identity-card span{color:var(--text-2);font-size:12px;overflow-wrap:anywhere}
+.identity-card small{color:var(--text-3);font-size:11px;margin-top:2px}
+.identity-actions{margin-top:14px}
+.identity-hint{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);color:var(--text-2);font-size:12.5px}
+.identity-hint b{color:var(--text)}
+.identity-hint button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:12px;padding:6px 12px;border-radius:999px}
+
+/* A list line with nobody added for it yet */
+.source-line-unlinked{cursor:default}
+.source-line-unlinked .warm-person-line{color:var(--text-3)}
