@@ -3,15 +3,6 @@
 // UX refinement layer: clearer next steps, simpler Recent, universal Add, and many skins.
 // Data architecture is unchanged.
 
-const previousApplySettingsNext=applySettings;
-applySettings=function(){
-  previousApplySettingsNext();
-  const skin=data?.settings?.skin||'classic';
-  document.documentElement.dataset.skin=skin;
-  const colors={classic:'#f6f0e7',game:'#f5f3ff',easy:'#fffaf0',dark:'#15191f',contrast:'#ffffff',boys:'#eef7fb',girls:'#fbf2f6',jerusalem:'#f3eadc',macaron:'#fbf7fb',notebook:'#fbf7ec',luxury:'#faf7f2',clean:'#f2f2f7',glass:'#f4f6fb',whitecity:'#f6f6f4',startup:'#f6f7f9',mono:'#f2f2f2',retro:'#008080',hearth:'#f1e6d8',ledger:'#faf6ea',sticker:'#fffaf0',shabbos:'#f7f0e4',kinneret:'#f3ead8',midnight:'#14201c',daynight:'#f7f3ea'};
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content',colors[skin]||'#f6f0e7');
-};
-
 function settingsSheet(){
   const s=data.settings,layout=s.layout||'auto';
   openSheet(`

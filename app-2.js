@@ -36,8 +36,6 @@ function sourceStats(src){
 function needsContactPerson(p){const es=entriesForPerson(p.id);if(!es.some(e=>e.direction==='out'))return true;for(const src of data.sources.filter(s=>s.peopleIds?.includes(p.id))){const es2=es.filter(e=>new Date(e.at)>=new Date(src.createdAt));const firstOut=[...es2].reverse().find(e=>e.direction==='out');if(firstOut&&!es2.find(e=>e.direction==='in'&&new Date(e.at)>new Date(firstOut.at))&&Date.now()>new Date(firstOut.at).getTime()+(src.followUpDays||7)*86400000)return true;}return false;}
 function dormantPerson(p){const lc=lastContact(p.id);return lc&&Date.now()-new Date(lc).getTime()>60*86400000;}
 
-function applySettings(){const s=data.settings||defaultSettings();document.documentElement.dataset.theme=s.theme||'warm';document.documentElement.dataset.density=s.density||'comfortable';document.documentElement.dataset.iconSize=s.iconSize||'medium';const themeColor=s.theme==='dark'?'#151917':s.theme==='blue'?'#f2f6fa':s.theme==='sage'?'#f1f4ef':'#f6f0e7';document.querySelector('meta[name="theme-color"]').setAttribute('content',themeColor);}
-
 function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe);const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
   return arr.sort(byRecentContact);
 }

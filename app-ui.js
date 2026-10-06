@@ -6,15 +6,6 @@
 ICONS.girl='<circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/><path d="M8.7 5.8c1.1-2.2 5.5-2.2 6.6 0"/>';
 ICONS.plus=ICONS.edit;
 
-const baseDefaultSettingsWarm=defaultSettings;
-defaultSettings=function(){return {...baseDefaultSettingsWarm(),appearance:'1'};};
-const baseApplySettingsWarm=applySettings;
-applySettings=function(){
-  baseApplySettingsWarm();
-  const s=data?.settings||defaultSettings();
-  document.documentElement.dataset.appearance=s.appearance||'1';
-};
-
 function warmWordmark(){return `<div class="warm-wordmark"><span>Zivug</span><b>Match</b><em>ב״ה</em></div>`;}
 
 function header(title,sub,{add=false,back=false,filter=false}={}){

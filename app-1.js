@@ -47,7 +47,7 @@ const phoneDigits=v=>String(v||'').replace(/\D/g,'');
 let data=null;
 const ui={screen:'recent',screenView:{shadchanim:'all',shidduchim:'active',girls:'for-me',guys:'all'},detail:null,detailTab:'details',search:'',recentFilter:'all'};
 
-function defaultSettings(){return {mode:'single',theme:'warm',density:'comfortable',iconSize:'medium',dashboard:'summary-first',summaryCards:true,seededDemo:true};}
+function defaultSettings(){return {mode:'single',theme:'warm',density:'comfortable',iconSize:'medium',dashboard:'summary-first',summaryCards:true,seededDemo:true,appearance:'1',layout:'auto',skin:'classic'};}
 
 function demoData(){
   const me='p_me',miriam='p_miriam',rivka='p_rivka',batya='p_batya',dina='p_dina',leah='p_leah',tamar='p_tamar',noa='p_noa',rina='p_rina',david='p_david',moshe='p_moshe',ari='p_ari';
