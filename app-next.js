@@ -35,6 +35,7 @@ function settingsSheet(){
     <div class="settings-heading">App version</div>
     <div class="sheet-section">
       <div class="setting-row"><div class="setting-copy"><b>${IS_TEST_BUILD?'Test version':'Stable version'}</b><span>${IS_TEST_BUILD?'Uses a separate test copy of your data':'Your everyday ZivugMatch data'}</span></div><button class="option" data-act="${IS_TEST_BUILD?'open-stable':'open-test'}">${IS_TEST_BUILD?'Return to stable':'Try test version'}</button></div>
+      ${IS_TEST_BUILD?`<div class="setting-row"><div class="setting-copy"><b>Build</b><span>TEST · ${esc(APP_BUILD)}</span></div><button class="option" data-act="check-test-build">Check now</button></div>`:''}
       ${IS_TEST_BUILD?'<div class="setting-row"><div class="setting-copy"><b>Refresh test data</b><span>Replace test data with a fresh copy of stable data</span></div><button class="option" data-act="refresh-test-data">Refresh</button></div>':''}
     </div>
 
@@ -45,7 +46,7 @@ function settingsSheet(){
       <div class="setting-row"><div class="setting-copy"><b>${data.meta.demo?'Start fresh':'Load demo data'}</b><span>${data.meta.demo?'Remove the made-up examples':'Replace current data with made-up examples'}</span></div><button class="option" data-act="toggle-demo">${data.meta.demo?'Clear demo':'Load demo'}</button></div>${earlierDataRows()}${openAttention().length?`<div class="setting-row"><div class="setting-copy"><b>Needs a look</b><span>${openAttention().length} thing${openAttention().length===1?'':'s'} the app would not decide by itself</span></div><button class="option" data-act="needs-look">Check</button></div>`:''}
     </div>
     <button class="primary-btn full" data-act="close-sheet">Done</button>
-    <div style="text-align:center;color:var(--text-3);font-size:9px;margin-top:12px">ZivugMatch ${APP_VERSION_LABEL}${IS_TEST_BUILD?' · TEST':''}</div>
+    <div style="text-align:center;color:var(--text-3);font-size:9px;margin-top:12px">ZivugMatch ${APP_VERSION_LABEL}${IS_TEST_BUILD?` · TEST · ${esc(APP_BUILD)}`:''}</div>
   `);
 }
 

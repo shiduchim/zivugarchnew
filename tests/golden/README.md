@@ -84,6 +84,9 @@ node acceptance.cjs http://127.0.0.1:8810/ runs/acc        # all
 node acceptance.cjs http://127.0.0.1:8810/ runs/acc O0     # only tests starting with O0
 ```
 
+`test-channel.cjs` checks the Stable / Test channels with real service workers, on a local copy of the site
+built like the deploy (`node tests/golden/test-channel.cjs`).
+
 `fixtures/v58-rich.json` is made by `make-v58-rich.cjs` and is never edited by hand or by a test.
 v1.0 differences from the v58 screens are listed in `docs/V1_DESIGN.md` ("What looks different").
 

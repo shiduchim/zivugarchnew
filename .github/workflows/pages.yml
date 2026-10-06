@@ -39,6 +39,11 @@ jobs:
           rsync -a --exclude='.git' stable/ public/
           rsync -a --exclude='.git' test-build/ public/test/
 
+      # Test only: its commit becomes the build ID (file addresses, its own service-worker cache, build.txt),
+      # so each Test deploy shows on the phone at the next open. Stable is not touched.
+      - name: Stamp Test with its build ID
+        run: node test-build/tools/stamp-build.cjs public/test "$(git -C test-build rev-parse --short=7 HEAD)"
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true

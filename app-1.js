@@ -11,6 +11,27 @@ const IS_TEST_BUILD=location.pathname.split('/').includes('test');
 const APP_CHANNEL=IS_TEST_BUILD?'test':'stable';
 function stableAppUrl(){return IS_TEST_BUILD?new URL('../',location.href).href:new URL('./',location.href).href;}
 function testAppUrl(){return IS_TEST_BUILD?new URL('./',location.href).href:new URL('./test/',location.href).href;}
+// The deployed build: the deploy workflow stamps the Test copy with its commit ("dev" anywhere else).
+const APP_BUILD=document.querySelector('meta[name="zm-build"]')?.content||'dev';
+
+// Test only: every deploy writes build.txt. When Test opens or comes back to the front it asks which build
+// is deployed. A newer one reloads at once, unless a sheet or a form is open; then a small
+// "New test version · Load" waits until tapped. Stable never checks.
+function testWorkOpen(){const a=document.activeElement;return !!overlay.firstElementChild||!!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));}
+async function checkForNewTestBuild({manual=false}={}){
+  if(!IS_TEST_BUILD||APP_BUILD==='dev'||document.visibilityState!=='visible')return;
+  let latest='';
+  try{const r=await fetch(new URL('build.txt',location.href).href,{cache:'no-store'});if(r.ok)latest=(await r.text()).trim();}catch(e){}
+  if(!/^[0-9a-f]{7,40}$/.test(latest)||latest===APP_BUILD){if(manual)showToast(latest?'This is the newest test version':'Could not check right now');return;}
+  navigator.serviceWorker?.getRegistration().then(reg=>reg&&reg.update()).catch(()=>{});
+  // Reload once per new build. If the site still answered with the older page (it can lag a few seconds
+  // after a deploy), wait 30 seconds before reloading for the same build again.
+  let tried=[];try{tried=(sessionStorage.getItem('zmTestReload')||'').split('|');}catch(e){}
+  const recent=tried[0]===latest&&Date.now()-Number(tried[1])<30000;
+  if(manual||(!testWorkOpen()&&!recent)){loadNewTestBuild(latest);return;}
+  if(!document.getElementById('testUpdate')){const b=document.createElement('button');b.id='testUpdate';b.className='test-update';b.dataset.act='load-test-build';b.dataset.build=latest;b.innerHTML='New test version · <b>Load</b>';document.body.appendChild(b);}
+}
+function loadNewTestBuild(build){try{sessionStorage.setItem('zmTestReload',`${build||''}|${Date.now()}`);}catch(e){}location.reload();}
 const app=document.getElementById('app');
 const overlay=document.getElementById('overlay');
 const toastEl=document.getElementById('toast');

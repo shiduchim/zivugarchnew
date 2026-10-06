@@ -33,6 +33,8 @@ function handleClick(e){
   else if(act==='settings')settingsSheet();
   else if(act==='open-test')location.assign(testAppUrl());
   else if(act==='open-stable')location.assign(stableAppUrl());
+  else if(act==='load-test-build')loadNewTestBuild(b.dataset.build);
+  else if(act==='check-test-build')checkForNewTestBuild({manual:true});
   else if(act==='refresh-test-data')runOnce(act,async()=>{if(!IS_TEST_BUILD)return;const ok=confirm('Replace all TEST data with a fresh copy of your stable data? Your stable data will not be changed.');if(!ok)return;const copied=await copyStableIntoTest();if(!copied){showToast('Stable data was not found on this device');return;}data=copied;await loadSafetyCopies();closeSheet();ui.detail=null;ui.screen='recent';render();showToast('Test data refreshed from stable');});
   else if(act==='filters')filtersSheet();
   else if(act==='add-current')currentAdd();
@@ -182,6 +184,10 @@ function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])impo
 document.addEventListener('click',handleClick);
 document.addEventListener('input',handleInput);
 document.addEventListener('change',handleChange);
+// Test only: coming back to the app (or back online) checks for a newer deployed build.
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkForNewTestBuild();});
+window.addEventListener('pageshow',e=>{if(e.persisted)checkForNewTestBuild();});
+window.addEventListener('online',()=>checkForNewTestBuild());
 
 // Start-up: open storage, load the data (upgrading v58 data once), then show it.
 async function init(){
@@ -190,7 +196,7 @@ async function init(){
   let res;
   try{res=await loadOrUpgrade();}
   catch(err){console.error(err);showUpgradeProblem();return;}
-  try{data=res.data;touchData();applySettings();render();loadSafetyCopies();if(res.migrated)showToast(`ZivugMatch is now ${APP_VERSION_LABEL}`);else if(res.copiedFromStable)showToast('Test version copied your stable data');if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  try{data=res.data;touchData();applySettings();render();loadSafetyCopies();if(res.migrated)showToast(`ZivugMatch is now ${APP_VERSION_LABEL}`);else if(res.copiedFromStable)showToast('Test version copied your stable data');if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js',IS_TEST_BUILD?{updateViaCache:'none'}:undefined).catch(()=>{});checkForNewTestBuild();
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}

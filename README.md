@@ -44,7 +44,21 @@ Plain scripts, loaded in order by `index.html`, with one click handler (`app-5.j
 | `sources.js`, `links.js`, `files.js`, `folders.js`, `intake.js` | Lists, references and family, files, folders, Paste and To file |
 | the other `app-*.js` and screen files | The screens and sheets |
 
-`node tools/set-version.cjs 1.0.0` sets the cache-busting version on every asset and in `sw.js`.
+`node tools/set-version.cjs 1.0.0` sets Stable's version on every asset and in `sw.js` (bump it for a
+Stable release).
+
+## Stable and Test
+
+- **Stable** (`main`) is served at `/zivugmatch/`, **Test** (`test`) at `/zivugmatch/test/`, from one
+  deploy (`.github/workflows/pages.yml`). Test keeps its own database.
+- **Test updates by itself.** The workflow stamps the Test copy with its commit
+  (`tools/stamp-build.cjs`): every file address gets `?v=<commit>`, the service worker gets its own
+  cache, and `build.txt` holds the build. Test loads network-first (past the browser's cache) and keeps
+  its last copy for offline. When Test opens or comes back to the front, it compares `build.txt` with
+  its own build and reloads into a newer one, or shows "New test version · Load" while a sheet or form
+  is open. Settings shows the build (TEST · a92916f) with "Check now".
+- **Stable** stays cache-first for offline use and never answers for `/test/`.
+- From a commit on `test` to the phone: about 30 seconds of deploy, then switch to Test.
 
 ## Storage and upgrade
 
