@@ -104,7 +104,7 @@
   html[data-layout="phone"] .warm-info-card,html[data-layout="phone"] .warm-profile-card{max-width:none!important}
 
   html[data-layout="phone"] .scrim{display:flex!important;align-items:flex-end!important;justify-content:center!important;padding:0!important}
-  html[data-layout="phone"] .sheet{width:430px!important;max-height:88vh!important;margin:0!important;border-radius:28px 28px 0 0!important}
+  html[data-layout="phone"] .sheet{box-sizing:border-box!important;width:430px!important;max-width:100%!important;max-height:88vh!important;margin:0!important;border-radius:28px 28px 0 0!important}
   html[data-layout="phone"] .sheet-handle{display:block!important}
 }
 
