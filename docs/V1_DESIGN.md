@@ -194,7 +194,7 @@ through that pointer, so nothing is copied or rewritten:
 ## What looks different from v58
 
 Checked by the golden harness against the cleaned v58: 2,871 states (11 skins, both modes, phone
-and desktop, layout variants). The DOM differs only in the 25 states below, and no screenshot
+and desktop, layout variants). The DOM differs only in the 37 states below, and no screenshot
 changed anywhere the DOM stayed the same. No state has a console error or writes anything while
 browsing.
 

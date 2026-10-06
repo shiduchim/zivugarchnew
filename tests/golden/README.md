@@ -99,3 +99,6 @@ Two full runs of v58 gave identical DOM in all 2,871 states. Screenshots matched
 were a 1 px wobble of the ♥ glyph in the Frosted Glass skin, which `recheck.cjs` reproduces identically
 on both builds. A screenshot only passes as wobble when the candidate yields a byte-identical image that
 the baseline also yields; there is no pixel tolerance.
+
+In v1.0 the shidduch overview (where the answers can be tapped) shows the same kind of wobble in a few
+skins: the same build yields two images. `recheck.cjs` reproduces an identical image on both builds.
