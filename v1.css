@@ -136,3 +136,107 @@ button.source-line-unlinked{cursor:pointer;width:100%;text-align:left}
 /* Test only: a newer build is deployed while something is open */
 .test-update{position:fixed;z-index:130;left:50%;bottom:calc(var(--nav-h) + 18px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:8px 14px;border:0;border-radius:999px;background:var(--text);color:var(--surface);font-size:12.5px;font-weight:600;box-shadow:var(--shadow-soft);white-space:nowrap}
 .test-update b{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+
+
+/* Settings: keep Standard / Roomy / Compact on one line. */
+.layout-feel-options{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:5px;
+  flex:1 1 205px;
+  max-width:245px;
+  min-width:0;
+}
+.layout-feel-options .option{
+  width:100%;
+  min-width:0;
+  padding:7px 5px;
+  font-size:9.5px;
+  white-space:nowrap;
+}
+@media(max-width:390px){
+  .setting-row:has(.layout-feel-options){gap:8px}
+  .setting-row:has(.layout-feel-options) .setting-copy{flex:0 1 116px}
+  .layout-feel-options{flex-basis:174px;max-width:none}
+  .layout-feel-options .option{padding:7px 3px;font-size:9px}
+}
+
+/* Layout feel is functional, not decorative:
+   1 = Standard (the existing baseline)
+   2 = Roomy (more breathing room)
+   3 = Compact (more information on screen). */
+html[data-appearance="2"]{
+  --page-pad:20px;
+  --density-row:84px;
+  --avatar:52px;
+}
+html[data-appearance="2"] .page{padding-top:18px;padding-bottom:36px}
+html[data-appearance="2"] .warm-stack,
+html[data-appearance="2"] .warm-feed{gap:12px}
+html[data-appearance="2"] .warm-person-row{
+  min-height:86px;
+  padding:15px 14px;
+  grid-template-columns:52px 1fr auto;
+  gap:13px;
+}
+html[data-appearance="2"] .warm-avatar{width:52px;height:52px}
+html[data-appearance="2"] .warm-activity-row,
+html[data-appearance="2"] .warm-source-row,
+html[data-appearance="2"] .warm-match-row{min-height:82px;padding:14px}
+html[data-appearance="2"] .warm-section-title{margin-top:22px;margin-bottom:10px}
+html[data-appearance="2"] .warm-summary{padding:15px;min-height:92px}
+html[data-appearance="2"] .warm-profile-card,
+html[data-appearance="2"] .warm-info-card{padding:18px}
+html[data-appearance="2"] .warm-info-card>div{min-height:60px}
+html[data-appearance="2"] .sheet{padding-left:21px;padding-right:21px}
+html[data-appearance="2"] .setting-row{min-height:60px;padding:13px 15px}
+html[data-appearance="2"] .sheet-section{margin-bottom:16px}
+
+html[data-appearance="3"]{
+  --page-pad:12px;
+  --density-row:62px;
+  --avatar:40px;
+}
+html[data-appearance="3"] .page{padding-top:10px;padding-bottom:22px}
+html[data-appearance="3"] .warm-stack,
+html[data-appearance="3"] .warm-feed{gap:5px}
+html[data-appearance="3"] .warm-person-row{
+  min-height:62px;
+  padding:7px 9px;
+  grid-template-columns:40px 1fr auto;
+  gap:8px;
+}
+html[data-appearance="3"] .warm-avatar{width:40px;height:40px;font-size:10.5px}
+html[data-appearance="3"] .warm-activity-row,
+html[data-appearance="3"] .warm-source-row,
+html[data-appearance="3"] .warm-match-row{min-height:60px;padding:7px 9px}
+html[data-appearance="3"] .warm-section-title{margin-top:11px;margin-bottom:5px}
+html[data-appearance="3"] .warm-summary{padding:8px;min-height:70px}
+html[data-appearance="3"] .warm-profile-card,
+html[data-appearance="3"] .warm-info-card{padding:9px 11px}
+html[data-appearance="3"] .warm-info-card>div{min-height:43px}
+html[data-appearance="3"] .sheet{padding-left:13px;padding-right:13px}
+html[data-appearance="3"] .setting-row{min-height:45px;padding:7px 10px}
+html[data-appearance="3"] .sheet-section{margin-bottom:8px}
+
+/* Desktop's manual Phone preview has fixed !important mobile dimensions.
+   These later rules make Layout feel visible there too. */
+@media(min-width:900px){
+  html[data-layout="phone"][data-appearance="2"] .page{padding:18px 20px 36px!important}
+  html[data-layout="phone"][data-appearance="2"] .warm-stack,
+  html[data-layout="phone"][data-appearance="2"] .warm-feed{gap:12px!important}
+  html[data-layout="phone"][data-appearance="2"] .warm-person-row{min-height:86px!important;padding:15px 14px!important;grid-template-columns:52px 1fr auto!important;gap:13px!important}
+  html[data-layout="phone"][data-appearance="2"] .warm-avatar{width:52px!important;height:52px!important}
+  html[data-layout="phone"][data-appearance="2"] .warm-activity-row{min-height:82px!important;padding:14px!important}
+  html[data-layout="phone"][data-appearance="2"] .warm-summary{min-height:92px!important;padding:15px!important}
+  html[data-layout="phone"][data-appearance="2"] .sheet{padding-left:21px!important;padding-right:21px!important}
+
+  html[data-layout="phone"][data-appearance="3"] .page{padding:10px 12px 22px!important}
+  html[data-layout="phone"][data-appearance="3"] .warm-stack,
+  html[data-layout="phone"][data-appearance="3"] .warm-feed{gap:5px!important}
+  html[data-layout="phone"][data-appearance="3"] .warm-person-row{min-height:62px!important;padding:7px 9px!important;grid-template-columns:40px 1fr auto!important;gap:8px!important}
+  html[data-layout="phone"][data-appearance="3"] .warm-avatar{width:40px!important;height:40px!important;font-size:10.5px!important}
+  html[data-layout="phone"][data-appearance="3"] .warm-activity-row{min-height:60px!important;padding:7px 9px!important}
+  html[data-layout="phone"][data-appearance="3"] .warm-summary{min-height:70px!important;padding:8px!important}
+  html[data-layout="phone"][data-appearance="3"] .sheet{padding-left:13px!important;padding-right:13px!important}
+}
