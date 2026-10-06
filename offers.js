@@ -25,7 +25,7 @@ function notApplicableSheet(iid){
   openSheet(`<h2>Not applicable</h2><p class="lead">The offer closes. No shidduch is made. A reason is optional and stays private.</p><div class="field"><label>Private reason <span style="font-weight:400">(optional)</span></label><textarea id="ideaReason" placeholder="Only for you"></textarea></div><input type="hidden" id="ideaNoId" value="${esc(i.id)}"><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="idea-no-save">Save</button></div>`);
 }
 
-async function chooseIdea(iid,yes,reason=''){
+async function chooseIdea(iid,yes,reason='',{made=false}={}){
   const i=idea(iid);if(!i||i.status!=='open')return;
   const suggester=i.suggestedByPersonId&&person(i.suggestedByPersonId);
   if(!yes){
@@ -50,7 +50,7 @@ async function chooseIdea(iid,yes,reason=''){
     data.rounds.push(r);e.changes.push({kind:'round-started',roundId:r.id,number});
   }else if(i.suggestedByPersonId&&!(r.shadchanIds||[]).some(x=>samePerson(x,i.suggestedByPersonId)))r.shadchanIds=[...(r.shadchanIds||[]),i.suggestedByPersonId];
   e.about.push({type:'shidduch',id:s.id},{type:'round',id:r.id},{type:'idea',id:i.id});
-  e.text=continuing?`Interested again. Round ${roundNumber(r)} continues.`:`Interested. Round ${roundNumber(r)} started.`;
+  e.text=continuing?`Interested again. Round ${roundNumber(r)} continues.`:`${made?'Match made':'Interested'}. Round ${roundNumber(r)} started.`;
   i.status='interested';i.closedAt=e.at;i.closedByEntryId=e.id;i.shidduchId=s.id;i.roundId=r.id;
   e.changes.push({kind:'idea-closed',ideaId:i.id,decision:'interested'});
   for(const x of openItems().filter(x=>x.about?.type==='idea'&&x.about.id===i.id))closeItemRecord(x,{entryId:e.id,kind:'done',at:e.at});
@@ -58,6 +58,16 @@ async function chooseIdea(iid,yes,reason=''){
   await save();closeSheet();ui.detail={type:'shidduch',id:s.id};ui.detailTab='overview';render();
   showToast(continuing?'Shidduch already in progress':'Shidduch started');
   if(!continuing)linkEarlierSheet(i,s,r);
+}
+
+// Make match (Shadchan mode): I pair them myself, so the shidduch starts at once. It goes through the
+// same path as Interested, so one pair still has one shidduch and a round in progress just continues.
+async function makeMatch(){
+  const guyId=document.getElementById('iGuy')?.value,girlId=document.getElementById('iGirl')?.value,by=document.getElementById('iBy')?.value||null;
+  if(!guyId||!girlId||samePerson(guyId,girlId)){showToast('Choose a guy and a girl');return;}
+  let i=data.ideas.find(x=>samePerson(x.guyId,guyId)&&samePerson(x.girlId,girlId)&&x.status==='open');
+  if(!i){i={id:id('idea'),guyId,girlId,suggestedByPersonId:by,createdAt:iso(),status:'open',privateReason:'',origin:'make-match'};data.ideas.push(i);}
+  await chooseIdea(i.id,true,'',{made:true});
 }
 
 // After Interested: offer earlier entries that belong to this pair, each with Yes / No. Only entries that

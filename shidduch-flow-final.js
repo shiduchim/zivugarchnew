@@ -42,9 +42,11 @@ function shidduchimScreen(){
   return `${header('Shidduchim','Offers and shidduchim',{add:true})}${searchBox('Search a pair…')}${segment(tabs,v,'shidduchim')}<div class="warm-stack">${rows||empty(emptyTitle,emptyText,'add-idea')}</div>`;
 }
 
-function addIdeaSheet(){
-  const guys=byType('Guy'),girls=byType('Girl'),shads=byType('Shadchan');
-  openSheet(`<h2>New offer</h2><p class="lead">An offer is a suggested pair. It becomes a shidduch only when you choose Interested.</p><div class="form-grid"><div class="field"><label>Guy</label><select id="iGuy">${guys.map(p=>`<option value="${p.id}">${esc(p.isMe?'Me':p.name)}</option>`).join('')}</select></div><div class="field"><label>Girl</label><select id="iGirl">${girls.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Offered by</label><select id="iBy"><option value="">Me / unknown</option>${shads.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-idea">Save offer</button></div>`);
+// In Shadchan mode the same sheet can also make the match at once (my own decision to pair them).
+function addIdeaSheet(preset=''){
+  const guys=byType('Guy'),girls=byType('Girl'),shads=byType('Shadchan'),sel=p=>p.id===preset?' selected':'';
+  const making=data.settings.mode!=='single';
+  openSheet(`<h2>New offer</h2><p class="lead">An offer is a suggested pair. It becomes a shidduch only when you choose Interested.</p><div class="form-grid"><div class="field"><label>Guy</label><select id="iGuy">${guys.map(p=>`<option value="${p.id}"${sel(p)}>${esc(p.isMe?'Me':p.name)}</option>`).join('')}</select></div><div class="field"><label>Girl</label><select id="iGirl">${girls.map(p=>`<option value="${p.id}"${sel(p)}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Offered by</label><select id="iBy"><option value="">Me / unknown</option>${shads.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div></div><div class="split-actions${making?' three':''}"><button class="ghost-btn" data-act="close-sheet">Cancel</button>${making?'<button class="ghost-btn" data-act="save-idea">Save offer</button><button class="primary-btn" data-act="make-match">Make match</button>':'<button class="primary-btn" data-act="save-idea">Save offer</button>'}</div>`);
 }
 
 function universalAddSheet(){

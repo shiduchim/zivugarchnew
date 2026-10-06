@@ -772,6 +772,27 @@ const tests = {
     await ctx.close();
   },
 
+  async A05_make_match_starts_the_shidduch() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_david' }; ui.detailTab = 'profile'; render(); });
+    await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="make-match-for"]');
+    const preset = await page.$eval('#iGuy', e => e.value);
+    await page.selectOption('#iGirl', 'p_tamar');
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-act="make-match"]'); b.click(); b.click(); });
+    await L.settle(page); await page.waitForTimeout(300); await L.closeSheets(page);
+    const s1 = await L.idbRead(page);
+    const sh = s1.shidduchim.filter(s => !s0.shidduchim.some(x => x.id === s.id)), rs = s1.rounds.filter(r => !s0.rounds.some(x => x.id === r.id));
+    const entry = s1.entries.find(e => (e.changes || []).some(c => c.kind === 'round-started' && c.roundId === rs[0]?.id));
+    // David – Noa is already in progress: Make match only opens it.
+    await inPage(page, () => addIdeaSheet('p_david')); await page.selectOption('#iGirl', 'p_noa'); await L.tap(page, '#overlay [data-act="make-match"]'); await L.closeSheets(page);
+    const s2 = await L.idbRead(page);
+    const ok = preset === 'p_david' && sh.length === 1 && sh[0].guyId === 'p_david' && sh[0].girlId === 'p_tamar' && rs.length === 1 && rs[0].status === 'active' && entry?.text === 'Match made. Round 1 started.'
+      && s2.shidduchim.length === s1.shidduchim.length && s2.rounds.length === s1.rounds.length;
+    record('A05', 'Make match (Shadchan mode, from a single\'s ⋯) starts the shidduch at once with Round 1, once even with a double tap; on a pair already in progress it adds nothing', ok, { preset, shidduchim: sh.length, rounds: rs.length, text: entry?.text, again: { shidduchim: s2.shidduchim.length - s1.shidduchim.length, rounds: s2.rounds.length - s1.rounds.length } });
+    await ctx.close();
+  },
+
   // ---- Backups -----------------------------------------------------------------------------------
   async B01_backup_round_trip() {
     const { ctx, page } = await fresh({ fixture: 'v58-rich' });

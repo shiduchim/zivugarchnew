@@ -103,7 +103,7 @@ Each flow lives in one file and writes one entry per real moment.
 |---|---|
 | `ledger.js` | Writing entries and open items, linking an entry to more records (kept as a correction), soft delete with Undo (only for entries that changed no record), the entry page |
 | `profiles.js` | ProfileVersions, "which version does this person have", the send sheet (To, Version, Files, What for, Your words, a preview of exactly what goes out) |
-| `offers.js` | Offer rows and sheet, Not applicable (private reason, no shidduch), Interested (one shidduch per pair; a new round only after the last one ended), Link earlier history |
+| `offers.js` | Offer rows and sheet, Not applicable (private reason, no shidduch), Interested and Make match (one shidduch per pair; a new round only after the last one ended), Link earlier history |
 | `rounds.js` | Answers (Yes / Thinking / No, who told me, which item it answers), Engaged, dates (add, move, cancelled, happened, feedback) and earlier rounds folded on the History tab |
 | `items.js` | What's next? (Done, Heard back, Check in now, Not needed, Undo), the "after talking to …" question, items settled from Add activity |
 | `sources.js` | Sources and lists: the original text, each line kept as written and pointing to one Person (or "not added yet"), adding people through the matching check, the list's one follow-up item |
@@ -178,7 +178,7 @@ through that pointer, so nothing is copied or rewritten:
 ## What looks different from v58
 
 Checked by the golden harness against the cleaned v58: 2,871 states (11 skins, both modes, phone
-and desktop, layout variants). The DOM differs only in the 24 states below, and no screenshot
+and desktop, layout variants). The DOM differs only in the 25 states below, and no screenshot
 changed anywhere the DOM stayed the same. No state has a console error or writes anything while
 browsing.
 
@@ -197,6 +197,7 @@ browsing.
 | Shidduch ⋯ | "Engaged" | Marriage stage |
 | Entry page | "What was sent", later links, "Delete this activity" for plain entries | Ledger |
 | Add sheet | A "Paste" tile | Intake |
+| New offer (Shadchan mode) | "Make match" next to "Save offer"; also from a single's ⋯ | Make match starts the shidduch at once |
 | Recent | "To file" row, only while something waits | Intake |
 | Add source | "Who gave it?" and the names as they came | Sources keep the original text |
 | Source page | "Add" for People; unlinked lines can be tapped to add that person; the list as it came; the one follow-up | Sources |
