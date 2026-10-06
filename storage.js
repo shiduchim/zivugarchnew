@@ -4,7 +4,9 @@
 // Schema 2 (v1.0) keeps each collection in its own store, keyed by the record's permanent id, so a save
 // writes only what changed and later versions can add stores without touching existing data.
 // The v58 value kv/state is never changed or deleted: it stays the original the upgrade started from.
-const DB_NAME='ZivugMatchDB';
+const STABLE_DB_NAME='ZivugMatchDB';
+const TEST_DB_NAME='ZivugMatchTestDB';
+const DB_NAME=IS_TEST_BUILD?TEST_DB_NAME:STABLE_DB_NAME;
 const DB_VERSION=2;
 const DATA_SCHEMA=2;
 const KV='kv';
@@ -135,11 +137,84 @@ function dataForCopy(d){const out={schema:DATA_SCHEMA,settings:d.settings,meta:d
 async function putBlob(fileId,blob){const db=await dbOpen();const tx=db.transaction('blobs','readwrite');tx.objectStore('blobs').put(blob,fileId);await txDone(tx);}
 async function getBlob(fileId){const db=await dbOpen();return reqValue(db.transaction('blobs','readonly').objectStore('blobs').get(fileId));}
 
+// Test builds use a separate IndexedDB database. On the first test launch, copy the
+// stable records and file blobs read-only so testing starts from realistic data while
+// all later test edits stay isolated from the stable app.
+async function openExistingDb(name){
+  if(indexedDB.databases){
+    try{const list=await indexedDB.databases();if(!list.some(x=>x.name===name))return null;}catch(e){}
+  }
+  return new Promise((resolve,reject)=>{
+    let created=false;
+    const req=indexedDB.open(name);
+    req.onupgradeneeded=()=>{created=true;try{req.transaction.abort();}catch(e){}};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>{if(created||req.error?.name==='AbortError')resolve(null);else reject(req.error);};
+  });
+}
+
+async function readStableSnapshot(){
+  if(!IS_TEST_BUILD)return null;
+  const stable=await openExistingDb(STABLE_DB_NAME);
+  if(!stable)return null;
+  try{
+    if(!stable.objectStoreNames.contains(KV))return null;
+    const hasV1=COLLECTIONS.every(name=>stable.objectStoreNames.contains(name));
+    if(hasV1){
+      const stores=[KV,...COLLECTIONS,...(stable.objectStoreNames.contains('blobs')?['blobs']:[])];
+      const tx=stable.transaction(stores,'readonly'),kv=tx.objectStore(KV);
+      const metaReq=kv.get('meta'),settingsReq=kv.get('settings');
+      const reqs=Object.fromEntries(COLLECTIONS.map(name=>[name,tx.objectStore(name).getAll()]));
+      const orderReqs=Object.fromEntries(COLLECTIONS.map(name=>[name,kv.get('order:'+name)]));
+      let blobKeysReq=null,blobValsReq=null;
+      if(stores.includes('blobs')){const bs=tx.objectStore('blobs');blobKeysReq=bs.getAllKeys();blobValsReq=bs.getAll();}
+      await txDone(tx);
+      const meta=metaReq.result;
+      if(meta&&Number(meta.schema)>=DATA_SCHEMA){
+        const d={schema:Number(meta.schema),meta:{...meta},settings:settingsReq.result||{}};
+        delete d.meta.schema;
+        for(const name of COLLECTIONS){
+          const rows=reqs[name].result||[],order=orderReqs[name].result||[],pos=new Map(order.map((idv,i)=>[idv,i]));
+          d[name]=rows.map((r,i)=>[pos.has(r.id)?pos.get(r.id):order.length+i,r]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+        }
+        const blobs={};
+        if(blobKeysReq&&blobValsReq)(blobKeysReq.result||[]).forEach((k,i)=>{blobs[k]=blobValsReq.result[i];});
+        return {data:d,blobs};
+      }
+    }
+    const tx=stable.transaction(KV,'readonly'),oldReq=tx.objectStore(KV).get('state');
+    await txDone(tx);
+    if(oldReq.result)return {data:migrateV58(oldReq.result).data,blobs:{}};
+    return null;
+  }finally{try{stable.close();}catch(e){}}
+}
+
+async function replaceAllBlobs(blobs){
+  const db=await dbOpen(),tx=db.transaction('blobs','readwrite'),store=tx.objectStore('blobs');
+  store.clear();
+  for(const [fileId,blob] of Object.entries(blobs||{}))store.put(blob,fileId);
+  await txDone(tx);
+}
+
+async function copyStableIntoTest(){
+  if(!IS_TEST_BUILD)return null;
+  const snap=await readStableSnapshot();
+  if(!snap)return null;
+  const cloned=normalizeV1(JSON.parse(JSON.stringify(snap.data)));
+  await persist(cloned,{fresh:true});
+  await replaceAllBlobs(snap.blobs);
+  return cloned;
+}
+
 // Start-up: load v1.0 data, or upgrade v58 data once, or start with the demo on a fresh install.
 // Returns {data, migrated, report}. Throws only when the v58 upgrade itself fails; nothing is written then.
 async function loadOrUpgrade(){
   const loaded=await dbLoadAll();
   if(loaded)return {data:normalizeV1(loaded),migrated:false};
+  if(IS_TEST_BUILD){
+    const copied=await copyStableIntoTest();
+    if(copied)return {data:copied,migrated:false,copiedFromStable:true};
+  }
   const old=await kvGet('state');
   if(old){
     const at=iso();

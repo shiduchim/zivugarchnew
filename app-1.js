@@ -3,6 +3,14 @@
 // ZivugMatch v1.0. Earlier builds were numbered v53…v58 during development.
 const APP_VERSION='1.0.0';
 const APP_VERSION_LABEL='v1.0';
+
+// Stable and test are served from the same GitHub Pages origin.
+// /test/ is deliberately treated as a separate app channel so experimental code
+// can never write to the stable IndexedDB database.
+const IS_TEST_BUILD=location.pathname.split('/').includes('test');
+const APP_CHANNEL=IS_TEST_BUILD?'test':'stable';
+function stableAppUrl(){return IS_TEST_BUILD?new URL('../',location.href).href:new URL('./',location.href).href;}
+function testAppUrl(){return IS_TEST_BUILD?new URL('./',location.href).href:new URL('./test/',location.href).href;}
 const app=document.getElementById('app');
 const overlay=document.getElementById('overlay');
 const toastEl=document.getElementById('toast');

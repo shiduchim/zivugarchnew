@@ -31,6 +31,9 @@ function handleClick(e){
   const act=b.dataset.act;
   if(act==='back'){ui.detail=null;ui.detailTab='';render();window.scrollTo(0,0);}
   else if(act==='settings')settingsSheet();
+  else if(act==='open-test')location.assign(testAppUrl());
+  else if(act==='open-stable')location.assign(stableAppUrl());
+  else if(act==='refresh-test-data')runOnce(act,async()=>{if(!IS_TEST_BUILD)return;const ok=confirm('Replace all TEST data with a fresh copy of your stable data? Your stable data will not be changed.');if(!ok)return;const copied=await copyStableIntoTest();if(!copied){showToast('Stable data was not found on this device');return;}data=copied;await loadSafetyCopies();closeSheet();ui.detail=null;ui.screen='recent';render();showToast('Test data refreshed from stable');});
   else if(act==='filters')filtersSheet();
   else if(act==='add-current')currentAdd();
   else if(act==='add-activity')addActivitySheet(ui.detail?.type==='person'?ui.detail.id:'');
@@ -187,7 +190,7 @@ async function init(){
   let res;
   try{res=await loadOrUpgrade();}
   catch(err){console.error(err);showUpgradeProblem();return;}
-  try{data=res.data;touchData();applySettings();render();loadSafetyCopies();if(res.migrated)showToast(`ZivugMatch is now ${APP_VERSION_LABEL}`);if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  try{data=res.data;touchData();applySettings();render();loadSafetyCopies();if(res.migrated)showToast(`ZivugMatch is now ${APP_VERSION_LABEL}`);else if(res.copiedFromStable)showToast('Test version copied your stable data');if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}

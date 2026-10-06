@@ -2,7 +2,7 @@ name: Deploy ZivugMatch
 
 on:
   push:
-    branches: [main]
+    branches: [main, test]
   workflow_dispatch:
 
 permissions:
@@ -21,13 +21,32 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out stable
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: stable
+
+      - name: Check out test
+        uses: actions/checkout@v4
+        with:
+          ref: test
+          path: test-build
+
+      - name: Build Stable + Test site
+        run: |
+          mkdir -p public/test
+          rsync -a --exclude='.git' stable/ public/
+          rsync -a --exclude='.git' test-build/ public/test/
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: public
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
