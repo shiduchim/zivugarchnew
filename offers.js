@@ -48,7 +48,10 @@ async function chooseIdea(iid,yes,reason='',{made=false}={}){
     const number=Math.max(0,...roundsOf(s).map(x=>Number(x.number)||0))+1;
     r={id:id('round'),shidduchId:s.id,number,ideaId:i.id,suggestedByPersonId:i.suggestedByPersonId||null,shadchanIds:i.suggestedByPersonId?[i.suggestedByPersonId]:[],startedAt:e.at,startedByEntryId:e.id,status:'active',stage:'Waiting for other side',base:{guy:isMe(i.guyId)?'yes':'unknown',girl:'unknown'}};
     data.rounds.push(r);e.changes.push({kind:'round-started',roundId:r.id,number});
-  }else if(i.suggestedByPersonId&&!(r.shadchanIds||[]).some(x=>samePerson(x,i.suggestedByPersonId)))r.shadchanIds=[...(r.shadchanIds||[]),i.suggestedByPersonId];
+  }else{
+    if(i.suggestedByPersonId&&!(r.shadchanIds||[]).some(x=>samePerson(x,i.suggestedByPersonId)))r.shadchanIds=[...(r.shadchanIds||[]),i.suggestedByPersonId];
+    if(pauseEntry(r))e.changes.push({kind:'round-resumed',roundId:r.id}); // interested again: a paused round goes on
+  }
   e.about.push({type:'shidduch',id:s.id},{type:'round',id:r.id},{type:'idea',id:i.id});
   e.text=continuing?`Interested again. Round ${roundNumber(r)} continues.`:`${made?'Match made':'Interested'}. Round ${roundNumber(r)} started.`;
   i.status='interested';i.closedAt=e.at;i.closedByEntryId=e.id;i.shidduchId=s.id;i.roundId=r.id;

@@ -793,6 +793,226 @@ const tests = {
     await ctx.close();
   },
 
+  // ---- Reconciliation with ARCHITECTURE.md (C) -------------------------------------------------------
+  async C01_needs_a_number() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // A shadchan added by name only is a light record marked "Needs a number"; a single never is.
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay #qaShad'); await page.fill('#fName', 'Tova Light'); await L.tap(page, '#overlay [data-act="save-person"]');
+    const tova = (await L.idbRead(page)).people.find(p => p.name === 'Tova Light');
+    const marked = !!(await page.$('#app .number-hint'));
+    const leahMarked = await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'profile'; render(); return !!document.querySelector('#app .number-hint'); });
+    // Adding a number that belongs to someone else runs the matching check again.
+    await inPage(page, idv => { ui.detail = { type: 'person', id: idv }; ui.detailTab = 'details'; render(); }, tova.id);
+    await L.tap(page, '#app [data-act="add-number"]');
+    const focused = await page.evaluate(() => document.activeElement?.id);
+    await page.fill('#epPhone', '+972 50-555-0101'); await L.tap(page, '#overlay [data-act="save-edit-person"]');
+    const asked = /Same person\?/.test(await page.$eval('#overlay', o => o.textContent));
+    await L.tap(page, '#overlay [data-act="edit-keep-separate"]');
+    const st = await L.idbRead(page);
+    const decided = st.identityDecisions.some(x => x.ids?.includes(tova.id) && x.ids?.includes('p_miriam'));
+    const afterMark = !!(await page.$('#app .number-hint'));
+    const ok = marked && !leahMarked && focused === 'epPhone' && asked && decided && byId(st.people, tova.id).phone === '+972 50-555-0101' && !afterMark;
+    record('C01', 'Needs a number: a shadchan saved by name only is marked (singles never are); adding the number runs the matching check again ("Same person?"), and the mark goes away', ok, { marked, leahMarked, focused, asked, decided, afterMark });
+    await ctx.close();
+  },
+
+  async C02_send_my_profile_to_a_list() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const s0 = await L.idbRead(page);
+    await inPage(page, () => { ui.detail = { type: 'source', id: 'src_rivka10' }; render(); });
+    const row = await page.$eval('#app [data-act="list-send"]', e => e.textContent);
+    await L.tap(page, '#app [data-act="list-send"]');
+    const offered = await page.$$eval('#overlay input[name="listSendTo"]', els => els.map(e => e.value));
+    await page.uncheck(`#overlay input[name="listSendTo"][value="${offered[3]}"]`);
+    await page.fill('#sendWords', 'Hello from the list.'); await page.dispatchEvent('#sendWords', 'input');
+    await L.tap(page, '#overlay [data-act="list-send-start"]');
+    // Copy for the first (tapped twice), skip the second, WhatsApp for the third.
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-list-send="copy"]'); b.click(); b.click(); }); await L.settle(page); await page.waitForTimeout(200);
+    await L.tap(page, '#overlay [data-list-send="skip"]');
+    await L.tap(page, '#overlay [data-list-send="whatsapp"]'); await L.settle(page); await page.waitForTimeout(200);
+    const st = await L.idbRead(page);
+    const sends = st.entries.filter(e => e.type === 'profile' && e.direction === 'out' && !s0.entries.some(x => x.id === e.id));
+    const v = await inPage(page, () => latestProfileVersion(me().id));
+    const after = await inPage(page, () => sourceStats(source('src_rivka10')));
+    const before = await inPage(page, d => { const was = data; data = d; const r = sourceStats(source('src_rivka10')); data = was; return r; }, s0);
+    const fu = st.openItems.filter(x => x.kind === 'list-follow-up' && x.about?.id === 'src_rivka10');
+    const ok = /4 not contacted/.test(row) && offered.length === 4 && sends.length === 2 && JSON.stringify(sends.map(e => e.toPersonId)) === JSON.stringify([offered[0], offered[2]]) && sends.every(e => e.profileVersionId === v.id && e.sentText === `Hello from the list.\n\n${v.text}`) && after.contacted === before.contacted + 2 && fu.length <= 1 && !(await page.$('#overlay [data-list-send]'));
+    record('C02', 'Send my profile to the people on a list not contacted yet: one version and message chosen once, then one person at a time; each send is its own entry with the exact version (a double tap sends once), Skip sends nothing, and the list counts update', ok, { row, offered: offered.length, sends: sends.map(e => e.toPersonId), contacted: [before.contacted, after.contacted], followUps: fu.length });
+    await ctx.close();
+  },
+
+  async C03_pause_resume_and_undo() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const itemIds = await inPage(page, async () => { const a = addOpenItem({ direction: 'them', personId: 'p_rivka', about: { type: 'shidduch', id: 'sh_david_noa' }, label: 'Noa side answer on dates' }); const b = addOpenItem({ direction: 'me', personId: 'p_rivka', about: { type: 'shidduch', id: 'sh_david_noa' }, label: 'Call Rivka' }); await save(); return [a.id, b.id]; });
+    const s0 = await L.idbRead(page);
+    await run(page, [...shidduchPath('sh_david_noa'), tab('overview')]);
+    await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="pause-shidduch"]'); await L.tap(page, '#overlay [data-act="confirm-pause"]');
+    const s1 = await L.idbRead(page);
+    const pauseE = s1.entries.find(e => e.changes?.some(c => c.kind === 'round-paused'));
+    const closed = itemIds.every(i => byId(s1.openItems, i).status === 'closed' && byId(s1.openItems, i).closedByEntryId === pauseE?.id);
+    const shown = await inPage(page, () => ({ note: !!document.querySelector('#app .zm-paused-note'), next: document.querySelector('#app .zm-clean-row.next strong')?.textContent, list: (ui.screen = 'shidduchim', ui.screenView.shidduchim = 'active', ui.detail = null, render(), [...document.querySelectorAll('#app [data-shidduch="sh_david_noa"] time')].map(t => t.textContent).join()) }));
+    await page.evaluate(() => document.querySelector('#toast [data-act="undo-pause"]').click()); await L.settle(page); await page.waitForTimeout(200);
+    const s2 = await L.idbRead(page);
+    const undone = itemIds.every(i => JSON.stringify(byId(s2.openItems, i)) === JSON.stringify(byId(s0.openItems, i))) && !s2.entries.some(e => e.id === pauseE?.id) && !(await inPage(page, () => shPaused(shidduch('sh_david_noa'))));
+    // Pause again, then an offer for the same pair: Interested continues the round and resumes it.
+    await inPage(page, () => { ui.detail = { type: 'shidduch', id: 'sh_david_noa' }; ui.detailTab = 'overview'; render(); pauseSheet('sh_david_noa'); }); await L.tap(page, '#overlay [data-act="confirm-pause"]');
+    await inPage(page, async () => { data.ideas.push({ id: 'idea_dn_again', guyId: 'p_david', girlId: 'p_noa', suggestedByPersonId: 'p_dina', createdAt: iso(), status: 'open' }); await save(); ideaSheet('idea_dn_again'); });
+    await L.tap(page, '#overlay [data-act="idea-yes"]'); await L.closeSheets(page);
+    const s3 = await L.idbRead(page);
+    const resumed = !(await inPage(page, () => shPaused(shidduch('sh_david_noa')))) && s3.rounds.length === s0.rounds.length;
+    const ok = !!pauseE && closed && shown.note && shown.next === 'Paused' && /Paused/.test(shown.list) && byId(s1.rounds, 'round_david_noa_1').status === 'active' && undone && resumed;
+    record('C03', 'Pause keeps the shidduch in progress (marked Paused) and closes its open items, each pointing to the pause; Undo reopens exactly those items; Interested on a paused pair resumes the same round', ok, { closed, shown, undone, resumed });
+    await ctx.close();
+  },
+
+  async C04_end_has_undo() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const itemId = await inPage(page, async () => { const a = addOpenItem({ direction: 'them', personId: 'p_rivka', about: { type: 'shidduch', id: 'sh_david_noa' }, label: 'Noa side answer' }); await save(); return a.id; });
+    const s0 = await L.idbRead(page);
+    await run(page, [...shidduchPath('sh_david_noa'), tab('overview')]);
+    await L.tap(page, '[data-act="end-shidduch"]'); await page.fill('#endReason', 'Made-up reason'); await L.tap(page, '#overlay [data-act="confirm-end-shidduch"]');
+    const s1 = await L.idbRead(page);
+    await page.evaluate(() => document.querySelector('#toast [data-act="undo-end"]').click()); await L.settle(page); await page.waitForTimeout(200);
+    const s2 = await L.idbRead(page);
+    const ok = byId(s1.rounds, 'round_david_noa_1').status === 'ended' && byId(s1.openItems, itemId).status === 'closed'
+      && JSON.stringify(byId(s2.rounds, 'round_david_noa_1')) === JSON.stringify(byId(s0.rounds, 'round_david_noa_1')) && JSON.stringify(byId(s2.openItems, itemId)) === JSON.stringify(byId(s0.openItems, itemId)) && s2.entries.length === s0.entries.length;
+    record('C04', 'Ending a shidduch closes its open items and has Undo: the round, the items and the history come back exactly as they were', ok, { ended: byId(s1.rounds, 'round_david_noa_1').status, restored: JSON.stringify(byId(s2.rounds, 'round_david_noa_1')) === JSON.stringify(byId(s0.rounds, 'round_david_noa_1')) });
+    await ctx.close();
+  },
+
+  async C05_tell_the_go_between_and_status_source() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    // I decide my own side: telling Miriam is now waiting on me.
+    await run(page, [...shidduchPath('sh_me_leah'), tab('overview')]);
+    await L.tap(page, '[data-act="set-answer"][data-side="guy"]'); await L.tap(page, '#overlay [data-answer-value="thinking"]'); await L.tap(page, '#overlay [data-act="save-answer"]');
+    await L.tap(page, '[data-act="set-answer"][data-side="guy"]'); await L.tap(page, '#overlay [data-answer-value="yes"]'); await L.tap(page, '#overlay [data-act="save-answer"]');
+    const st = await L.idbRead(page);
+    const tells = st.openItems.filter(x => x.kind === 'tell-decision');
+    const open = tells.filter(x => x.status === 'open');
+    // The answer shows where it came from: tap it, see the entry.
+    await L.tap(page, '[data-act="set-answer"][data-side="guy"]');
+    const source = await page.$eval('#overlay .answer-source', e => e.textContent);
+    await L.tap(page, '#overlay .answer-source [data-act="open-entry"]');
+    const opened = await inPage(page, () => ui.detail?.type === 'entry' && data.entries.find(e => e.id === ui.detail.id)?.changes?.some(c => c.kind === 'answer' && c.side === 'guy' && c.value === 'yes'));
+    // A call to Miriam: the app names the item, I tick it, it closes by the call.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_miriam' }; ui.detailTab = 'details'; render(); });
+    await L.tap(page, '[data-contact="call"]'); await L.settle(page);
+    await page.check(`#overlay input[name="afterItem"][value="${open[0]?.id}"]`); await L.tap(page, '#overlay [data-act="after-contact-save"]');
+    const s2 = await L.idbRead(page);
+    const call = s2.entries.filter(e => e.type === 'call').pop();
+    const ok = tells.length === 2 && open.length === 1 && open[0].personId === 'p_miriam' && /my answer is Yes/.test(open[0].label) && /Now: Yes/.test(source) && opened && byId(s2.openItems, open[0].id).closedByEntryId === call?.id;
+    record('C05', 'When I decide my own side, "Tell Miriam: my answer is Yes" waits on me (a newer decision replaces the older); the answer shows its source one tap away; a call to Miriam closes it', ok, { tells: tells.map(x => `${x.label}:${x.status}`), source, opened });
+    await ctx.close();
+  },
+
+  async C06_how_i_know_them() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await inPage(page, () => addActivitySheet('p_miriam')); await page.selectOption('#aType', 'referral'); await page.fill('#aText', 'Recommended by Batya.'); await L.tap(page, '#overlay [data-act="save-activity"]');
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_miriam' }; ui.detailTab = 'details'; render(); });
+    await L.tap(page, '#app [data-act="how-i-know"]');
+    const rows = await page.$$eval('#overlay .how-row strong', els => els.map(e => e.textContent));
+    const ways = await inPage(page, () => howIKnow('p_miriam').map(w => w.at));
+    const ordered = ways.every((t, i) => i === 0 || new Date(ways[i - 1] || 0) <= new Date(t || 0));
+    await L.tap(page, '#overlay .how-row[data-act="open-source"]');
+    const openedSource = await inPage(page, () => ui.detail?.type === 'source');
+    const ok = rows.length === 3 && rows.some(r => /^Met at /.test(r)) && rows.some(r => /^On /.test(r)) && rows.some(r => /Recommended by Batya/.test(r)) && ordered && openedSource;
+    record('C06', 'How I know her: every list, event and referral, oldest first, each opening its list or its entry', ok, { rows, ordered, openedSource });
+    await ctx.close();
+  },
+
+  async C07_same_name_in_another_script_asks() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const add = async (name, city) => { await inPage(page, () => { closeSheet(); ui.detail = null; ui.screen = 'recent'; render(); }); await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay #qaShad'); await page.fill('#fName', name); if (city) await page.fill('#fCity', city); await L.tap(page, '#overlay [data-act="save-person"]'); return page.$eval('#overlay', o => o.textContent).catch(() => ''); };
+    const withCity = await add('מרים כהן', 'Jerusalem');
+    const askedLikely = /Is this the Miriam Cohen you know\?/.test(withCity);
+    if (askedLikely) await L.tap(page, '#overlay [data-act="identity-different"]');
+    const noCity = await add('מרים כהן', '');
+    const st = await L.idbRead(page);
+    const ok = askedLikely && !/you know\?/.test(noCity) && st.people.filter(p => p.name === 'מרים כהן').length === 2;
+    record('C07', 'The same full name in another script asks "Is this the Miriam you know?" when the city matches; with nothing else in common it only adds the quiet hint', ok, { askedLikely, secondAsked: /you know\?/.test(noCity) });
+    await ctx.close();
+  },
+
+  async C08_search_everyone_and_mine_private() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // A parent (no role of her own) is found by search.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="add-link"]');
+    await page.selectOption('#kKind', 'mother'); await page.fill('#kName', 'Rachel Rosen'); await page.fill('#kPhone', '050-000-7004'); await L.tap(page, '#overlay [data-act="save-link"]');
+    const found = await inPage(page, () => { ui.detail = null; ui.screen = 'recent'; ui.search = 'rosen'; render(); const r = [...document.querySelectorAll('#app .warm-stack [data-person]')].map(e => e.querySelector('strong').textContent); ui.search = ''; render(); return r; });
+    const rows = await inPage(page, () => { ui.screen = 'shidduchim'; ui.screenView.shidduchim = 'active'; render(); return Object.fromEntries([...document.querySelectorAll('#app [data-shidduch]')].map(e => [e.dataset.shidduch, e.querySelector('time').textContent])); });
+    const ok = found.includes('Leah Rosen') && found.includes('Rachel Rosen') && /Private/.test(rows.sh_me_leah) && !/Private/.test(rows.sh_david_noa);
+    record('C08', 'Search finds everyone, including a parent with no role of her own; in Shadchan mode my own shidduch is marked Private in Shidduchim', ok, { found, rows });
+    await ctx.close();
+  },
+
+  async C09_single_mode_recent_folds_other_shidduchim() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // A note written on David – Noa's page is about that shidduch (the page decides "about").
+    await run(page, [...shidduchPath('sh_david_noa'), tab('history')]);
+    await L.tap(page, '#app [data-act="add-shidduch-note"]'); await page.fill('#aText', 'Note on David and Noa.'); await L.tap(page, '#overlay [data-act="save-activity"]');
+    const e = (await L.idbRead(page)).entries.find(x => x.text === 'Note on David and Noa.');
+    const about = (e?.about || []).map(a => a.type).join();
+    const view = async mode => inPage(page, async m => { data.settings.mode = m; ui.detail = null; ui.screen = 'recent'; ui.showOthers = false; render(); return { shown: [...document.querySelectorAll('#app [data-entry]')].map(x => x.dataset.entry), line: document.querySelector('#app .quiet-line')?.textContent || '' }; }, mode);
+    const shadchanView = await view('shadchan');
+    const singleView = await view('single');
+    await L.tap(page, '#app .quiet-line');
+    const opened = await inPage(page, () => [...document.querySelectorAll('#app [data-entry]')].map(x => x.dataset.entry));
+    const ok = /shidduch,round,person/.test(about) && shadchanView.shown.includes(e.id) && !shadchanView.line && !singleView.shown.includes(e.id) && /more in Shadchan mode/.test(singleView.line) && opened.includes(e.id);
+    record('C09', 'Single mode Recent folds other people\'s shidduchim into one quiet line (tap shows them); Shadchan mode shows everything; a note from a shidduch\'s page is about that shidduch', ok, { about, singleLine: singleView.line, inShadchan: shadchanView.shown.includes(e?.id), inSingle: singleView.shown.includes(e?.id), afterTap: opened.includes(e?.id) });
+    await ctx.close();
+  },
+
+  async C10_single_mode_rows_show_my_profile_version() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const line = async pid => inPage(page, p => { ui.detail = null; ui.screen = 'shadchanim'; ui.screenView.shadchanim = 'all'; render(); return document.querySelector(`#app [data-person="${p}"] .warm-person-line`)?.textContent || ''; }, pid);
+    const before = { miriam: await line('p_miriam'), batya: await line('p_batya') };
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_me' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="edit-person"]');
+    await page.fill('#epProfile', 'פרופיל לדוגמה בלבד.'); await L.tap(page, '#overlay [data-act="save-edit-person"]');
+    const after = await line('p_miriam');
+    const v = (await L.idbRead(page)).profileVersions.filter(x => x.personId === 'p_me').sort((a, b) => a.number - b.number).pop();
+    const ok = /has v4$/.test(before.miriam) && !/has v/.test(before.batya) && /has v4 \(old\)$/.test(after) && v.language === 'Hebrew';
+    record('C10', 'Single mode: a shadchan\'s row says which version of my profile they have ("has v4", then "has v4 (old)" after an edit); a version knows its language', ok, { before, after, language: v.language });
+    await ctx.close();
+  },
+
+  async C11_people_views_and_age_with_its_date() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await run(page, [nav('girls')]);
+    const w0 = await writes(page);
+    await L.tap(page, '[data-act="filters"]');
+    await page.selectOption('#pfAgeMin', '33'); await page.selectOption('#pfAgeMax', '34'); await page.selectOption('#pfCity', { label: 'Jerusalem' });
+    const shown = await page.$$eval('#app .warm-stack [data-person]', els => els.map(e => e.dataset.person).sort());
+    await L.closeSheets(page); await L.tap(page, '#app .folder-note [data-folder-view=""]');
+    const all = await page.$$eval('#app .warm-stack [data-person]', els => els.length);
+    const w1 = await writes(page);
+    // Age with its date: an unchanged old age keeps no invented date; a changed age counts on from today.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="edit-person"]'); await L.tap(page, '#overlay [data-act="save-edit-person"]');
+    const kept = byId((await L.idbRead(page)).people, 'p_leah');
+    await L.tap(page, '[data-act="edit-person"]'); await page.fill('#epAge', '35'); await page.selectOption('#epKnow', 'little'); await L.tap(page, '#overlay [data-act="save-edit-person"]');
+    const changed = byId((await L.idbRead(page)).people, 'p_leah');
+    await page.clock.setFixedTime(new Date(L.FIXED_TIME.getTime() + 400 * 86400000));
+    const later = await inPage(page, () => { render(); return { age: personAge(person('p_leah')), know: [...document.querySelectorAll('#app .warm-info-card span')].some(s => s.textContent === 'How well') }; });
+    const ok = JSON.stringify(shown) === '["p_leah","p_tamar"]' && all === 4 && w1 === w0 && kept.age === 34 && !kept.ageAsOf && changed.age === 35 && !!changed.ageAsOf && changed.knowLevel === 'little' && later.age === 36 && later.know;
+    record('C11', 'Shadchan mode Girls: age and city views (writing nothing, Show all clears them); an age is kept with the date it was typed and counts on, an old age gets no invented date; "How well I know them" shows once set', ok, { shown, all, writes: w1 - w0, kept: { age: kept.age, ageAsOf: kept.ageAsOf }, changed: { age: changed.age, ageAsOf: !!changed.ageAsOf }, later });
+    await ctx.close();
+  },
+
+  async C12_date_feedback_points_at_the_side_contact() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_noa' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="add-link"]');
+    await page.selectOption('#kKind', 'mother'); await page.fill('#kName', 'Hadas Weiss'); await page.fill('#kPhone', '050-000-7005'); await L.tap(page, '#overlay [data-act="save-link"]');
+    const mother = (await L.idbRead(page)).people.find(p => p.name === 'Hadas Weiss');
+    await run(page, [...shidduchPath('sh_david_noa'), tab('dates')]);
+    await L.tap(page, '[data-act="add-date"]'); await page.fill('#dateWhen', '2026-10-04T19:00'); await L.tap(page, '#overlay [data-act="save-new-date"]');
+    const did = (await L.idbRead(page)).dates.find(d => d.number === 3)?.id;
+    await L.tap(page, `[data-date="${did}"]`); await L.tap(page, '#overlay [data-act="date-happened"]');
+    const items = (await L.idbRead(page)).openItems.filter(x => x.kind === 'date-feedback' && x.about?.id === did);
+    const by = Object.fromEntries(items.map(x => [x.side, x.personId]));
+    const ok = items.length === 2 && by.girl === mother?.id && by.guy === 'p_david';
+    record('C12', 'On someone else\'s shidduch, each side\'s date feedback is waited on from that side\'s contact (here Noa\'s mother), and only without one from the single', ok, { by, mother: mother?.id });
+    await ctx.close();
+  },
+
   // ---- Backups -----------------------------------------------------------------------------------
   async B01_backup_round_trip() {
     const { ctx, page } = await fresh({ fixture: 'v58-rich' });

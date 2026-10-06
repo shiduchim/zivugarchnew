@@ -47,12 +47,13 @@ function findPersonMatches(candidate,{excludeId=null}={}){
     if((phone&&normPhone(p.phone)===phone)||(email&&normEmail(p.email)===email)){exact.push(p);continue;}
     const pn=normName(p.name);
     const sameReferrer=candidate.referrerId&&sharesReferrer(p.id,candidate.referrerId);
-    if(name&&pn===name&&((city&&normCity(p.city)===city)||sameReferrer)){likely.push(p);continue;}
-    if(!name||!pn)continue;
-    const pt=nameTokens(p.name);
-    const shared=tokens.filter(t=>t.length>=3&&pt.includes(t)).length;
-    const po=pt.map(nameOutline).filter(x=>x.length>=2);
+    const pt=nameTokens(p.name),po=pt.map(nameOutline).filter(x=>x.length>=2);
     const outlineMatch=outlines.length&&outlines.every(o=>po.includes(o));
+    // The same full name in another script (Hebrew / English): every word matches, in both directions.
+    const sameNameAnyScript=pn===name||(outlines.length>=2&&outlines.length===po.length&&outlineMatch);
+    if(name&&sameNameAnyScript&&((city&&normCity(p.city)===city)||sameReferrer)){likely.push(p);continue;}
+    if(!name||!pn)continue;
+    const shared=tokens.filter(t=>t.length>=3&&pt.includes(t)).length;
     if(pn===name||shared>=Math.min(2,tokens.length,pt.length)&&shared>0||outlineMatch)similar.push(p);
   }
   return {exact,likely,similar};
@@ -191,7 +192,7 @@ function matchThenUse(candidate,after){
 }
 function createPersonRecord(c,{notSameAs=null}={}){
   const p={id:id('p'),name:c.name,types:[...new Set(c.types||[])],city:c.city||'',phone:c.phone||'',email:c.email||'',createdAt:iso(),folderIds:[]};
-  if(c.age)p.age=c.age;if(c.occupation)p.occupation=c.occupation;
+  if(c.age){p.age=c.age;p.ageAsOf=iso();}if(c.occupation)p.occupation=c.occupation;
   data.people.push(p);
   const e=addEntry({type:'note',personIds:[p.id],about:[{type:'person',id:p.id}],text:`Added ${p.name}.`,changes:[{kind:'person-added',personId:p.id}]});
   if(c.profile)addProfileVersion(p,c.profile,{entryId:e.id,origin:'created'});
@@ -202,6 +203,7 @@ function createPersonRecord(c,{notSameAs=null}={}){
 function useExistingPerson(existing,c){
   const filled={};
   for(const k of ['phone','email','city','age','occupation'])if(emptyValue(existing[k])&&!emptyValue(c[k])){existing[k]=c[k];filled[k]=c[k];}
+  if(filled.age){existing.ageAsOf=iso();filled.ageAsOf=existing.ageAsOf;}
   const added=(c.types||[]).filter(t=>!(existing.types||[]).includes(t));
   existing.types=[...(existing.types||[]),...added];
   const e=addEntry({type:'status',personIds:[existing.id],about:[{type:'person',id:existing.id}],text:`Matched to ${existing.name}, already here.`,result:'Already here',changes:[{kind:'identity-matched',filled,addedTypes:added}]});
@@ -211,6 +213,9 @@ function useExistingPerson(existing,c){
 async function identitySame(){const f=identityFlow;identityFlow=null;if(!f)return;const p=person(f.existingId);if(!p)return;useExistingPerson(p,f.candidate);await f.after(p.id,true);}
 async function identityDifferent(){const f=identityFlow;identityFlow=null;if(!f)return;const p=createPersonRecord(f.candidate,{notSameAs:f.existingId});await f.after(p.id,false);}
 
+// "Needs a number": a quiet line on the page of someone saved without a phone. Adding one (Edit) runs the
+// matching check again.
+function numberHint(p){return needsNumber(p)?`<div class="identity-hint number-hint"><span>Needs a number</span><button data-act="add-number" data-person-id="${esc(p.id)}">Add</button></div>`:'';}
 // A quiet line on a person's page when another record may be the same person.
 function identityHint(p){
   const others=maybeSamePeople(p);if(!others.length)return '';

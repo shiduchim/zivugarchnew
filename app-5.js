@@ -22,7 +22,8 @@ function handleClick(e){
   if(b.dataset.answerValue){pickAnswer(b.dataset.answerValue);return;}
   if(b.dataset.send){runOnce('send',()=>confirmSend(b.dataset.send));return;}
   if(b.dataset.fileKind){pickFileKind(b.dataset.fileKind);return;}
-  if('folderView' in b.dataset){ui.folder=b.dataset.folderView||'';closeSheet();render();return;}
+  if(b.dataset.listSend){runOnce('send',()=>listSendStep(b.dataset.listSend,b.dataset.personId));return;}
+  if('folderView' in b.dataset){ui.folder=b.dataset.folderView||'';if(b.dataset.viewKey&&ui.peopleFilter)delete ui.peopleFilter[b.dataset.viewKey];closeSheet();render();return;}
   if(b.dataset.segScope){const scope=b.dataset.segScope,val=b.dataset.seg;if(scope==='recent')ui.recentFilter=val;else ui.screenView[scope]=val;render();return;}
   if(b.dataset.detailTab){ui.detailTab=b.dataset.detailTab;render();return;}
   if(b.dataset.contact){if(b.dataset.contact==='wait')waitingSheet(b.dataset.personId);else logContact(b.dataset.personId,b.dataset.contact);return;}
@@ -35,6 +36,7 @@ function handleClick(e){
   else if(act==='add-activity')addActivitySheet(ui.detail?.type==='person'?ui.detail.id:'');
   else if(act==='add-person-note')addActivitySheet(b.dataset.personId||ui.detail?.id||'');
   else if(act==='add-source')addSourceSheet();
+  else if(act==='add-shidduch-note'){const s=shidduch(b.dataset.shidduchId||ui.detail?.id);if(s)addActivitySheet(shidduchGoBetweens(s).find(x=>!isMe(x))||(isMe(s.guyId)?s.girlId:s.guyId),{shidduchId:s.id});}
   else if(act==='add-idea')addIdeaSheet();
   else if(act==='close-sheet')closeSheet();
   else if(act==='save-person')runOnce(act,savePerson);
@@ -63,9 +65,11 @@ function handleClick(e){
   else if(act==='show-wait-them'){ui.screen='shadchanim';ui.screenView.shadchanim='them';ui.detail=null;render();}
   else if(act==='show-active'){ui.screen='shidduchim';ui.screenView.shidduchim='active';ui.detail=null;render();}
   else if(act==='open-about'){const en=data.entries.find(x=>x.id===b.dataset.entryId);if(en)openAbout(en);}
+  else if(act==='show-others'){ui.showOthers=!ui.showOthers;render();}
   else if(act==='show-dormant'){closeSheet();const arr=byType('Shadchan').filter(dormantPerson);openSheet(`<h2>Dormant 60+ days</h2><p class="lead">This is only a filter. It does not create reminders.</p>${arr.length?`<div class="list-card">${arr.map(p=>personRow(p)).join('')}</div>`:empty('Nobody is dormant','Everyone has been contacted in the last 60 days.')}<button class="primary-btn full" style="margin-top:12px" data-act="close-sheet">Done</button>`);}
   else if(act==='detail-menu')detailMenu();
   else if(act==='edit-person')editPersonSheet(ui.detail?.id);
+  else if(act==='add-number'){editPersonSheet(b.dataset.personId);document.getElementById('epPhone')?.focus();}
   else if(act==='log-profile')sendProfileSheet(me().id,b.dataset.personId);
   else if(act==='send-profile')sendProfileSheet(b.dataset.personId||ui.detail?.id);
   else if(act==='profile-versions')profileVersionsSheet(b.dataset.personId||ui.detail?.id);
@@ -87,6 +91,11 @@ function handleClick(e){
   else if(act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
   else if(act==='confirm-end-shidduch')runOnce('end-shidduch',confirmEndShidduch);
   else if(act==='engaged')runOnce(act,()=>markEngaged(b.dataset.shidduchId||ui.detail?.id));
+  else if(act==='pause-shidduch'){closeSheet();pauseSheet(b.dataset.shidduchId||ui.detail?.id);}
+  else if(act==='confirm-pause')runOnce('pause',confirmPause);
+  else if(act==='resume-shidduch')runOnce('pause',()=>resumeShidduch(b.dataset.shidduchId||ui.detail?.id));
+  else if(act==='undo-pause')runOnce('pause',()=>undoPause(b.dataset.entryId));
+  else if(act==='undo-end')runOnce('end-shidduch',()=>undoEnd(b.dataset.entryId));
   else if(act==='set-answer')answerSheet(ui.detail?.id,b.dataset.side);
   else if(act==='save-answer')runOnce(act,saveAnswer);
   else if(act==='add-date')addDateSheet(ui.detail?.id);
@@ -96,9 +105,15 @@ function handleClick(e){
   else if(act==='date-happened')runOnce('date',markDateHappened);
   else if(act==='date-feedback')runOnce('date',saveDateFeedback);
   else if(act==='toggle-round')toggleRound(b.dataset.roundId);
+  else if(act==='how-i-know')howIKnowSheet(b.dataset.personId);
+  else if(act==='open-source'){closeSheet();ui.detail={type:'source',id:b.dataset.sourceId};ui.detailTab='';render();window.scrollTo(0,0);}
+  else if(act==='open-entry'){closeSheet();ui.detail={type:'entry',id:b.dataset.entryId};render();window.scrollTo(0,0);}
   else if(act==='delete-entry')runOnce('entry',()=>deleteEntry(b.dataset.entryId));
   else if(act==='restore-entry')runOnce('entry',()=>restoreEntry(b.dataset.entryId));
   else if(act==='source-add-person')addToListSheet(b.dataset.sourceId);
+  else if(act==='list-send')listSendSheet(b.dataset.sourceId);
+  else if(act==='list-send-start')startListSend();
+  else if(act==='list-send-stop')finishListSend();
   else if(act==='source-line')addToListSheet(b.dataset.sourceId,b.dataset.lineId);
   else if(act==='save-list-person')saveListPerson();
   else if(act==='add-link')addLinkSheet(b.dataset.personId||ui.detail?.id);
@@ -120,22 +135,46 @@ function handleClick(e){
 }
 
 // The shidduch page's ⋯ offers only actions that exist for that shidduch; with none, the ⋯ is hidden.
-function shidduchMenuActions(s){return s&&shStatus(s)!=='ended'&&zmStageForShidduch(s).index!==10?['engaged','end']:[];}
-function detailMenu(){if(ui.detail?.type==='shidduch'){const s=shidduch(ui.detail.id);if(!shidduchMenuActions(s).length)return;openSheet(`<h2>${esc(shidduchTitle(s))}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Engaged</b><span>Mazal tov! Moves the stage to Marriage</span></div><button class="option" data-act="engaged" data-shidduch-id="${esc(s.id)}">Engaged</button></div><div class="setting-row"><div class="setting-copy"><b>End shidduch</b><span>Save where it ended and why</span></div><button class="option" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);return;}if(ui.detail?.type!=='person')return;const p=person(ui.detail.id);openSheet(`<h2>${esc(p.name)}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Edit person</b><span>Facts and profile</span></div><button class="option" data-act="edit-person">Edit</button></div><div class="setting-row"><div class="setting-copy"><b>Add activity</b><span>Call, note, message or referral</span></div><button class="option" data-act="add-person-note" data-person-id="${p.id}">Add</button></div>${data.settings.mode!=='single'&&!p.isMe&&(p.types?.includes('Guy')||p.types?.includes('Girl'))?`<div class="setting-row"><div class="setting-copy"><b>Make match</b><span>Pair ${esc(clarityFirstName(p))} with someone</span></div><button class="option" data-act="make-match-for" data-person-id="${p.id}">Choose</button></div>`:''}<div class="setting-row"><div class="setting-copy"><b>Folders</b><span>${esc((p.folderIds||[]).map(folderName).filter(Boolean).join(', ')||'Not in a folder')}</span></div><button class="option" data-act="folders" data-person-id="${p.id}">Choose</button></div>${profileVersionsOf(p.id).length?`<div class="setting-row"><div class="setting-copy"><b>Send profile</b><span>${p.isMe?'My profile':'This profile'}, the files you choose and your words</span></div><button class="option" data-act="send-profile" data-person-id="${p.id}">Send</button></div>`:''}${p.isMe?'':`<div class="setting-row"><div class="setting-copy"><b>Same person as…</b><span>Make two records one</span></div><button class="option" data-act="merge-sheet" data-person-id="${p.id}">Choose</button></div>`}${data.merges.filter(m=>m.kind==='person'&&m.keepId===p.id&&!m.undoneAt).map(m=>`<div class="setting-row"><div class="setting-copy"><b>Undo merge</b><span>Separate ${esc(personRaw(m.dupId)?.name||'the other record')} again</span></div><button class="option" data-act="undo-merge" data-merge-id="${esc(m.id)}">Undo</button></div>`).join('')}</div><button class="primary-btn full" data-act="close-sheet">Done</button>`);}
-function editPersonSheet(pid){const p=person(pid||ui.detail?.id);if(!p)return;openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid"><div class="field"><label>Name</label><input id="epName" value="${esc(p.name)}"></div><div class="field"><label>City</label><input id="epCity" value="${esc(p.city||'')}"></div><div class="field"><label>Age</label><input id="epAge" inputmode="numeric" value="${esc(p.age||'')}"></div><div class="field"><label>Occupation</label><input id="epOccupation" value="${esc(p.occupation||'')}"></div><div class="field"><label>Phone</label><input id="epPhone" value="${esc(p.phone||'')}"></div><div class="field"><label>Email</label><input id="epEmail" value="${esc(p.email||'')}"></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(currentProfileText(p.id))}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson" data-act="save-edit-person">Save</button></div>`);}
+function shidduchMenuActions(s){return s&&shStatus(s)!=='ended'&&zmStageForShidduch(s).index!==10?['engaged',shPaused(s)?'resume':'pause','end']:[];}
+function detailMenu(){if(ui.detail?.type==='shidduch'){const s=shidduch(ui.detail.id);if(!shidduchMenuActions(s).length)return;openSheet(`<h2>${esc(shidduchTitle(s))}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Engaged</b><span>Mazal tov! Moves the stage to Marriage</span></div><button class="option" data-act="engaged" data-shidduch-id="${esc(s.id)}">Engaged</button></div>${shPaused(s)?`<div class="setting-row"><div class="setting-copy"><b>Resume</b><span>Back in progress</span></div><button class="option" data-act="resume-shidduch" data-shidduch-id="${esc(s.id)}">Resume</button></div>`:`<div class="setting-row"><div class="setting-copy"><b>Pause</b><span>On hold for now; its open items close</span></div><button class="option" data-act="pause-shidduch" data-shidduch-id="${esc(s.id)}">Pause</button></div>`}<div class="setting-row"><div class="setting-copy"><b>End shidduch</b><span>Save where it ended and why</span></div><button class="option" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);return;}if(ui.detail?.type!=='person')return;const p=person(ui.detail.id);openSheet(`<h2>${esc(p.name)}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Edit person</b><span>Facts and profile</span></div><button class="option" data-act="edit-person">Edit</button></div><div class="setting-row"><div class="setting-copy"><b>Add activity</b><span>Call, note, message or referral</span></div><button class="option" data-act="add-person-note" data-person-id="${p.id}">Add</button></div>${data.settings.mode!=='single'&&!p.isMe&&(p.types?.includes('Guy')||p.types?.includes('Girl'))?`<div class="setting-row"><div class="setting-copy"><b>Make match</b><span>Pair ${esc(clarityFirstName(p))} with someone</span></div><button class="option" data-act="make-match-for" data-person-id="${p.id}">Choose</button></div>`:''}<div class="setting-row"><div class="setting-copy"><b>Folders</b><span>${esc((p.folderIds||[]).map(folderName).filter(Boolean).join(', ')||'Not in a folder')}</span></div><button class="option" data-act="folders" data-person-id="${p.id}">Choose</button></div>${profileVersionsOf(p.id).length?`<div class="setting-row"><div class="setting-copy"><b>Send profile</b><span>${p.isMe?'My profile':'This profile'}, the files you choose and your words</span></div><button class="option" data-act="send-profile" data-person-id="${p.id}">Send</button></div>`:''}${p.isMe?'':`<div class="setting-row"><div class="setting-copy"><b>Same person as…</b><span>Make two records one</span></div><button class="option" data-act="merge-sheet" data-person-id="${p.id}">Choose</button></div>`}${data.merges.filter(m=>m.kind==='person'&&m.keepId===p.id&&!m.undoneAt).map(m=>`<div class="setting-row"><div class="setting-copy"><b>Undo merge</b><span>Separate ${esc(personRaw(m.dupId)?.name||'the other record')} again</span></div><button class="option" data-act="undo-merge" data-merge-id="${esc(m.id)}">Undo</button></div>`).join('')}</div><button class="primary-btn full" data-act="close-sheet">Done</button>`);}
+function editPersonSheet(pid){
+  const p=person(pid||ui.detail?.id);if(!p)return;
+  const field=(id,label,value,extra='')=>`<div class="field"><label>${label}</label><input id="${id}" value="${esc(value??'')}"${extra}></div>`;
+  openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid">${field('epName','Name',p.name)}${field('epCity','City',p.city)}${field('epAge','Age',personAge(p),' inputmode="numeric"')}${field('epOccupation','Occupation',p.occupation)}${field('epPhone','Phone',p.phone,' type="tel"')}${field('epEmail','Email',p.email)}<div class="field"><label>How well I know them <span style="font-weight:400">(optional)</span></label><select id="epKnow"><option value="">—</option>${KNOW_LEVELS.map(([v,l])=>`<option value="${v}" ${p.knowLevel===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(currentProfileText(p.id))}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson" data-act="save-edit-person">Save</button></div>`);
+}
+function readEditForm(){const v=id=>document.getElementById(id)?.value??'';return {name:v('epName'),city:v('epCity'),age:v('epAge'),occupation:v('epOccupation'),phone:v('epPhone').trim(),email:v('epEmail').trim(),know:v('epKnow'),profile:v('epProfile')};}
+// The one place an edit is written. A changed age is dated from today (an unchanged one keeps its date);
+// a changed profile becomes a new frozen version.
+function applyPersonEdit(p,f){
+  p.name=f.name.trim()||p.name;p.city=f.city.trim();p.occupation=f.occupation.trim();p.phone=f.phone;p.email=f.email;
+  const age=Number(f.age)||undefined;
+  if(age!==(Number(personAge(p))||undefined)){p.age=age;if(age)p.ageAsOf=iso();else delete p.ageAsOf;}
+  if(f.know)p.knowLevel=f.know;else delete p.knowLevel;
+  const newProfile=f.profile.trim();
+  if(newProfile!==currentProfileText(p.id)){const e=addEntry({type:'profile',personIds:[p.id],about:[{type:'person',id:p.id}],text:'',changes:[]});const v=addProfileVersion(p,newProfile,{entryId:e.id,origin:'edit'});e.text=`Profile updated to v${v.number}.`;e.profileVersionId=v.id;e.changes.push({kind:'profile-version',profileVersionId:v.id});}
+}
 async function finishEditAfterIdentity(merge){
   const pend=saveEditPerson.pending,f=saveEditPerson.form;saveEditPerson.pending=null;if(!pend||!f)return;
   const p=person(pend.pid);if(!p)return;
-  p.name=f.name.trim()||p.name;p.city=f.city.trim();p.age=Number(f.age)||undefined;p.occupation=f.occupation.trim();p.phone=f.phone;p.email=f.email;
-  const newProfile=f.profile.trim();if(newProfile!==currentProfileText(p.id)){const e=addEntry({type:'profile',personIds:[p.id],about:[{type:'person',id:p.id}],text:'',changes:[]});const v=addProfileVersion(p,newProfile,{entryId:e.id,origin:'edit'});e.text=`Profile updated to v${v.number}.`;e.profileVersionId=v.id;e.changes.push({kind:'profile-version',profileVersionId:v.id});}
+  applyPersonEdit(p,f);
   if(merge){const r=mergePeople(p.id,pend.otherId);if(r.error){showToast(r.error);await save();closeSheet();render();return;}await save();closeSheet();ui.detail={type:'person',id:r.merge.keepId};render();showActionToast('Now one person',{act:'undo-merge',mergeId:r.merge.id});return;}
   rememberNotSame(p.id,pend.otherId);await save();closeSheet();render();showToast('Saved');
 }
-// A phone or email typed in that already belongs to someone else asks "same person?" before saving.
-async function saveEditPerson(){const p=person(document.getElementById('epId')?.value);if(!p)return;const phone=document.getElementById('epPhone').value.trim(),email=document.getElementById('epEmail').value.trim();if((phone!==(p.phone||'')||email!==(p.email||''))&&!saveEditPerson.confirmed){const other=findPersonMatches({phone,email},{excludeId:p.id}).exact[0];if(other){saveEditPerson.pending={pid:p.id,otherId:other.id};openSheet(`<h2>Same person?</h2><p class="lead">${esc(other.name)} has this phone number or email. Family members sometimes share a phone.</p>${personMatchCard(other)}<div class="split-actions identity-actions"><button class="ghost-btn" data-act="edit-keep-separate">Keep separate</button><button class="primary-btn" data-act="edit-merge">Same person</button></div>`);saveEditPerson.form={phone,email,name:document.getElementById('epName').value,city:document.getElementById('epCity').value,age:document.getElementById('epAge').value,occupation:document.getElementById('epOccupation').value,profile:document.getElementById('epProfile').value};return;}}saveEditPerson.confirmed=false;p.name=document.getElementById('epName').value.trim()||p.name;p.city=document.getElementById('epCity').value.trim();p.age=Number(document.getElementById('epAge').value)||undefined;p.occupation=document.getElementById('epOccupation').value.trim();p.phone=document.getElementById('epPhone').value.trim();p.email=document.getElementById('epEmail').value.trim();const newProfile=document.getElementById('epProfile').value.trim();if(newProfile!==currentProfileText(p.id)){const e=addEntry({type:'profile',personIds:[p.id],about:[{type:'person',id:p.id}],text:'',changes:[]});const v=addProfileVersion(p,newProfile,{entryId:e.id,origin:'edit'});e.text=`Profile updated to v${v.number}.`;e.profileVersionId=v.id;e.changes.push({kind:'profile-version',profileVersionId:v.id});}await save();closeSheet();render();showToast('Saved');}
+// A phone or email typed in (for example a number added to someone who had none) goes through the
+// matching check again: if it belongs to someone else, it asks "same person?" before saving.
+async function saveEditPerson(){
+  const p=person(document.getElementById('epId')?.value);if(!p)return;
+  const f=readEditForm();
+  if(f.phone!==(p.phone||'')||f.email!==(p.email||'')){
+    const other=findPersonMatches({phone:f.phone,email:f.email},{excludeId:p.id}).exact[0];
+    if(other){saveEditPerson.pending={pid:p.id,otherId:other.id};saveEditPerson.form=f;openSheet(`<h2>Same person?</h2><p class="lead">${esc(other.name)} has this phone number or email. Family members sometimes share a phone.</p>${personMatchCard(other)}<div class="split-actions identity-actions"><button class="ghost-btn" data-act="edit-keep-separate">Keep separate</button><button class="primary-btn" data-act="edit-merge">Same person</button></div>`);return;}
+  }
+  applyPersonEdit(p,f);
+  await save();closeSheet();render();showToast('Saved');
+}
 
 function handleInput(e){if(e.target.matches('[data-role="search"]')){ui.search=e.target.value;clearTimeout(handleInput.t);handleInput.t=setTimeout(render,90);}else if(e.target.id==='sendWords')updateSendPreview();}
-function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])importBackup(e.target.files[0]);else if(['sendVersion','sendTo','sendPurpose'].includes(e.target.id)||e.target.name==='sendFile')updateSendPreview();else if(e.target.id==='aPerson')refreshActivityItems();else if(e.target.id==='personFiles'&&e.target.files?.length)addFilesForPerson(e.target.dataset.personId,[...e.target.files]);else if(['fileFrom','fileIdeaWho'].includes(e.target.id))fileFormChanged(e.target);}
+function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])importBackup(e.target.files[0]);else if(['sendVersion','sendTo','sendPurpose'].includes(e.target.id)||e.target.name==='sendFile')updateSendPreview();else if(e.target.id==='aPerson')refreshActivityItems();else if(e.target.id==='personFiles'&&e.target.files?.length)addFilesForPerson(e.target.dataset.personId,[...e.target.files]);else if(['fileFrom','fileIdeaWho'].includes(e.target.id))fileFormChanged(e.target);else if(e.target.dataset.peopleFilter)readPeopleFilter(e.target.dataset.peopleFilter);}
 
 document.addEventListener('click',handleClick);
 document.addEventListener('input',handleInput);

@@ -4,6 +4,7 @@
 // the turn shows WHO acts next.
 function zmTurnForShidduch(s){
   if(!s||shStatus(s)==='ended')return s&&shStatus(s)==='ended'?'Ended':'';
+  if(shPaused(s))return 'Paused';
   const mine=openForShidduch(s.id,'me');
   if(mine.length)return 'My turn';
   const theirs=openForShidduch(s.id,'them');

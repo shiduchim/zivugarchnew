@@ -57,7 +57,7 @@ function zmGirlAppliesToMe(p){
 // Avoid duplicate city/type text: one concise line, then occupation only if present.
 function zmProfileIdentity(p){
   const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
-  const meta=[type,p.age,p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
+  const meta=[type,personAge(p),p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
   return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
     <div class="zm-profile-identity">
       <button class="warm-back zm-profile-back" data-act="back" aria-label="Back">${icon('back')}</button>

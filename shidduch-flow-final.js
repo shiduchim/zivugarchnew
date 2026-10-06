@@ -34,7 +34,7 @@ function shidduchimScreen(){
   if(v==='ideas')rows=offers.map(zmOfferRow).join('');
   else rows=(v==='active'?inProgress:ended).map(s=>{
     const r=currentRound(s);
-    return `<button class="warm-match-row zm-stage-card ${shStatus(s)==='ended'?'zm-ended-card':''}" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong><time>Round ${roundNumber(r)}</time></div>${zmStageBar(s)}</div><div class="warm-chevron">›</div></button>`;
+    return `<button class="warm-match-row zm-stage-card ${shStatus(s)==='ended'?'zm-ended-card':''}" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong><time>Round ${roundNumber(r)}${shPaused(s)?' · Paused':''}${data.settings.mode!=='single'&&shidduchIsMine(s)?' · Private':''}</time></div>${zmStageBar(s)}</div><div class="warm-chevron">›</div></button>`;
   }).join('');
 
   const emptyTitle=v==='ideas'?'No offers':v==='active'?'No shidduchim in progress':'No ended shidduchim';
@@ -77,16 +77,16 @@ async function confirmEndShidduch(){
   const idx=Math.max(0,Math.min(9,Number(document.getElementById('endStage')?.value)||0));
   const label=ZM_FLOW_STAGE_LABELS[idx];
   const reason=document.getElementById('endReason')?.value.trim()||'';
-  const e=addEntry({type:'status',personIds:[s.guyId,s.girlId,...(r.shadchanIds||[])],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:`Shidduch ended at ${label}.${reason?` ${reason}`:''}`,result:'Ended',changes:[{kind:'round-ended',roundId:r.id,stageIndex:idx}],private:reason?true:undefined});
+  const e=addEntry({type:'status',personIds:[s.guyId,s.girlId,...(r.shadchanIds||[])],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:`Shidduch ended at ${label}.${reason?` ${reason}`:''}`,result:'Ended',changes:[{kind:'round-ended',roundId:r.id,stageIndex:idx,before:Object.fromEntries(['status','endedAt','endedByEntryId','endedStage','endedStageIndex','endReason'].filter(k=>r[k]!==undefined).map(k=>[k,r[k]]))}],private:reason?true:undefined});
   r.status='ended';r.endedAt=e.at;r.endedByEntryId=e.id;r.endedStage=label;r.endedStageIndex=idx;r.endReason=reason;
-  for(const x of openForShidduch(s.id))closeItemRecord(x,{entryId:e.id,kind:'auto',at:e.at});
+  for(const x of openForShidduch(s.id)){closeItemRecord(x,{entryId:e.id,kind:'auto',at:e.at});e.changes.push({kind:'item-closed',itemId:x.id});}
   await save();
   closeSheet();
   ui.detail=null;
   ui.screen='shidduchim';
   ui.screenView.shidduchim='ended';
   render();
-  showToast('Moved to Ended');
+  showActionToast('Moved to Ended',{act:'undo-end',entryId:e.id});
 }
 
 // Pair names no longer use arrow symbols. Compact list/sheet titles use a simple dash.

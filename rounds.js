@@ -20,13 +20,19 @@ function answerSheet(sid,side){
   const current=String(roundAnswer(r,side)).toLowerCase();
   const tellers=[...new Set([...(r.shadchanIds||[]).map(canonId),canonId(side==='guy'?s.guyId:s.girlId)])].map(person).filter(p=>p&&!p.isMe);
   const items=openForShidduch(s.id,'them');
-  openSheet(`<h2>${esc(sideName(s,side))} answer</h2><p class="lead">${esc(shidduchTitle(s))} · Round ${roundNumber(r)}</p>
+  openSheet(`<h2>${esc(sideName(s,side))} answer</h2><p class="lead">${esc(shidduchTitle(s))} · Round ${roundNumber(r)}</p>${answerSourceLine(r,side)}
     <div class="option-group answer-options">${ANSWERS.map(([v,l])=>`<button class="option ${current===v?'active':''}" data-answer-value="${v}">${l}</button>`).join('')}</div>
     <div class="form-grid"><div class="field"><label>Who told you? <span style="font-weight:400">(optional)</span></label><select id="answerFrom"><option value="">Nobody / I decided</option>${tellers.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')}</select></div>
     <div class="field"><label>Their words <span style="font-weight:400">(optional)</span></label><textarea id="answerNote"></textarea></div></div>
     ${items.length?`<div class="sheet-section answer-closes"><div class="setting-copy" style="padding:8px 12px 0"><b>Does this answer one of these?</b></div>${items.map(x=>`<label class="checkbox-row"><input type="checkbox" name="answerCloses" value="${esc(x.id)}"> ${esc(x.label)} · ${esc(person(x.personId)?.name||'')}</label>`).join('')}</div>`:''}
     <input type="hidden" id="answerValue" value="${esc(current)}">
     <div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-answer">Save</button></div>`);
+}
+// Every status shows where it came from: the entry that said it, one tap away.
+function answerSourceLine(r,side){
+  const word=ANSWERS.find(([v])=>v===String(roundAnswer(r,side)).toLowerCase())?.[1];if(!word)return '';
+  const e=answerEntry(r,side),from=e?.fromPersonId&&person(e.fromPersonId);
+  return e?`<div class="answer-source"><span>Now: <b>${esc(word)}</b> · ${from&&!from.isMe?`from ${esc(from.name)} · `:''}${esc(e.at?fmtDate(e.at):'date unknown')}</span><button data-act="open-entry" data-entry-id="${esc(e.id)}">Open</button></div>`:`<div class="answer-source"><span>Now: <b>${esc(word)}</b> · saved before ${esc(APP_VERSION_LABEL)}, with no message linked</span></div>`;
 }
 function pickAnswer(v){const input=document.getElementById('answerValue');if(input)input.value=v;document.querySelectorAll('[data-answer-value]').forEach(b=>b.classList.toggle('active',b.dataset.answerValue===v));}
 async function saveAnswer(){
@@ -37,6 +43,14 @@ async function saveAnswer(){
   const word=ANSWERS.find(([v])=>v===value)[1];
   const e=addEntry({type:'status',channel:from?'Message':'App',direction:from?'in':'none',fromPersonId:from,toPersonId:from?me().id:null,personIds:[s.guyId,s.girlId,from],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:note||`${sideName(s,f.side)} answer: ${word}.`,result:`${sideName(s,f.side)} answer: ${word}`,changes:[{kind:'answer',roundId:r.id,side:f.side,value}]});
   for(const box of document.querySelectorAll('input[name="answerCloses"]:checked')){const x=openItem(box.value);if(x?.status==='open'){closeItemRecord(x,{entryId:e.id,kind:'heard-back',at:e.at});e.changes.push({kind:'item-closed',itemId:x.id,closeKind:'heard-back'});}}
+  // My own side decided (not heard from someone): the go-between still has to be told. One such item at
+  // a time; a newer decision replaces the older one.
+  const goBetween=(r.shadchanIds||[]).map(person).find(p=>p&&!p.isMe);
+  if(!from&&isMe(f.side==='guy'?s.guyId:s.girlId)&&goBetween){
+    for(const x of openForShidduch(s.id,'me').filter(x=>x.kind==='tell-decision')){closeItemRecord(x,{entryId:e.id,kind:'not-needed',at:e.at});e.changes.push({kind:'item-closed',itemId:x.id,closeKind:'not-needed'});}
+    const x=addOpenItem({direction:'me',personId:goBetween.id,about:{type:'shidduch',id:s.id},kind:'tell-decision',label:`Tell ${goBetween.name}: my answer is ${word}`,openedByEntryId:e.id});
+    e.changes.push({kind:'item-opened',itemId:x.id});
+  }
   answerFlow=null;await save();closeSheet();render();showToast('Answer saved');
 }
 
@@ -101,9 +115,12 @@ async function markDateHappened(){
     const mySide=isMe(s.guyId)?'guy':'girl',other=mySide==='guy'?'girl':'guy';
     addOpenItem({direction:'me',personId:goBetween||(other==='guy'?s.guyId:s.girlId),about,kind:'date-feedback',side:mySide,label:`My feedback for Date ${d.number}`,openedByEntryId:e.id});
     addOpenItem({direction:'them',personId:goBetween||(other==='guy'?s.guyId:s.girlId),about,kind:'date-feedback',side:other,label:`Their feedback for Date ${d.number}`,openedByEntryId:e.id});
-  }else for(const side of ['guy','girl'])addOpenItem({direction:'them',personId:side==='guy'?s.guyId:s.girlId,about,kind:'date-feedback',side,label:`${sideName(s,side)} feedback for Date ${d.number}`,openedByEntryId:e.id});
+  }else for(const side of ['guy','girl'])addOpenItem({direction:'them',personId:sideContact(s,side),about,kind:'date-feedback',side,label:`${sideName(s,side)} feedback for Date ${d.number}`,openedByEntryId:e.id});
   await save();render();dateSheet(d.id);showToast('Saved');
 }
+// Who to hear from for one side of someone else's shidduch: that side's contact (a parent, a contact or
+// their shadchan, from the single's links), and only when there is none, the single.
+function sideContact(s,side){const single=side==='guy'?s.guyId:s.girlId;const l=linksOf(single).find(x=>['contact','mother','father','shadchan'].includes(x.kind));return l?.aId||single;}
 // Feedback for this date and this side closes exactly that date's feedback item for that side.
 async function saveDateFeedback(){
   const d=dateById(document.getElementById('dateId')?.value);if(!d)return;
@@ -132,3 +149,42 @@ function shidduchHistory(s){
   return `${timelineHtml(entriesForShidduch(s.id,{roundId:current.id}))}<div class="earlier-rounds"><div class="warm-section-title"><h2>Earlier rounds</h2></div>${earlier.map(r=>`<button class="earlier-round" data-act="toggle-round" data-round-id="${esc(r.id)}"><span>${esc(roundSummary(r))}</span><b>${open.has(r.id)?'−':'+'}</b></button>${open.has(r.id)?timelineHtml(entriesForShidduch(s.id,{roundId:r.id})):''}`).join('')}</div>`;
 }
 function toggleRound(rid){const open=ui.openRounds||(ui.openRounds=new Set());if(open.has(rid))open.delete(rid);else open.add(rid);render();}
+
+// ---- Pause, resume, and undo of a pause or an ending -------------------------------------------------
+// Pausing is an entry about the round; the round is paused while its newest pause/resume entry is a
+// pause. A pause (like an ending) closes the shidduch's open items, each pointing to that entry, and Undo
+// reopens exactly those items and removes the entry.
+function pauseEntry(r){const e=changesAbout('round',r?.id).find(x=>x.changes?.some(c=>c.kind==='round-paused'||c.kind==='round-resumed'));return e?.changes.some(c=>c.kind==='round-paused')?e:null;}
+function shPaused(s){const r=currentRound(s);return !!r&&r.status!=='ended'&&!!pauseEntry(r);}
+function pauseSheet(sid){
+  const s=shidduch(sid);if(!s||shStatus(s)==='ended'||shPaused(s))return;
+  const n=openForShidduch(s.id).length;
+  openSheet(`<h2>Pause shidduch</h2><p class="lead">${esc(shidduchTitle(s))} stays in progress, marked Paused. ${n?`Its ${n} open item${n===1?'':'s'} close${n===1?'s':''}.`:'It has no open items.'} You can resume it any time.</p><input type="hidden" id="pauseShidduchId" value="${esc(s.id)}"><div class="field"><label>Why? <span style="font-weight:400">(optional, private)</span></label><textarea id="pauseReason"></textarea></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="confirm-pause">Pause</button></div>`);
+}
+async function confirmPause(){
+  const s=shidduch(document.getElementById('pauseShidduchId')?.value),r=currentRound(s);if(!s||!r||r.status==='ended'||shPaused(s))return;
+  const reason=document.getElementById('pauseReason')?.value.trim()||'';
+  const e=addEntry({type:'status',personIds:[s.guyId,s.girlId],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:`Shidduch paused.${reason?` ${reason}`:''}`,result:'Paused',changes:[{kind:'round-paused',roundId:r.id}],private:reason?true:undefined});
+  for(const x of openForShidduch(s.id)){closeItemRecord(x,{entryId:e.id,kind:'auto',at:e.at});e.changes.push({kind:'item-closed',itemId:x.id});}
+  await save();closeSheet();render();showActionToast('Paused',{act:'undo-pause',entryId:e.id});
+}
+async function resumeShidduch(sid){
+  const s=shidduch(sid),r=currentRound(s);if(!s||!r||!shPaused(s))return;
+  addEntry({type:'status',personIds:[s.guyId,s.girlId],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:'Shidduch resumed.',result:'Resumed',changes:[{kind:'round-resumed',roundId:r.id}]});
+  await save();closeSheet();render();showToast('Resumed');
+}
+// Undo of a pause or an ending: the items it closed open again, the round is as it was, the entry goes.
+function reopenItemsClosedBy(eid){for(const x of data.openItems)if(x.closedByEntryId===eid&&x.status==='closed'){x.status='open';delete x.closedAt;delete x.closedByEntryId;delete x.closeKind;}}
+async function undoPause(eid){
+  const e=data.entries.find(x=>x.id===eid);if(!e?.changes?.some(c=>c.kind==='round-paused'))return;
+  reopenItemsClosedBy(eid);data.entries=data.entries.filter(x=>x.id!==eid);
+  await save();render();showToast('Not paused');
+}
+async function undoEnd(eid){
+  const e=data.entries.find(x=>x.id===eid),c=e?.changes?.find(x=>x.kind==='round-ended');if(!c)return;
+  const r=round(c.roundId);if(!r||r.endedByEntryId!==eid)return;
+  for(const k of ['status','endedAt','endedByEntryId','endedStage','endedStageIndex','endReason']){if(c.before&&c.before[k]!==undefined)r[k]=c.before[k];else delete r[k];}
+  if(!r.status)r.status='active';
+  reopenItemsClosedBy(eid);data.entries=data.entries.filter(x=>x.id!==eid);
+  await save();ui.detail={type:'shidduch',id:shidduch(r.shidduchId)?.id||r.shidduchId};ui.detailTab='overview';render();showToast('Back in progress');
+}

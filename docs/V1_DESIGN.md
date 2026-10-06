@@ -129,6 +129,22 @@ Each flow lives in one file and writes one entry per real moment.
   It shows "Pasted" until a real time is given. Filing sets who it is from, what it is about and
   (optionally) when, keeps the change as a correction, and never changes the words. Files that came
   with it go to the person it is about.
+- **Pause:** an entry about the round; the round is paused while its newest pause/resume entry is a
+  pause, so it stays In Progress (marked Paused). Pausing closes the shidduch's open items, each
+  pointing to the pause; Undo reopens exactly those items. Ending works the same way and also has
+  Undo, which puts the round back exactly as it was. Interested on a paused pair resumes it.
+- **Telling the go-between:** when I decide my own side (not heard from someone), "Tell Miriam: my
+  answer is Yes" waits on me until I tell her. A newer decision replaces the older item.
+- **Send my profile to a list:** the source page offers it for the people on the list not contacted
+  yet. The version, files and words are chosen once; then one person at a time (WhatsApp opens one
+  chat at a time), each saved as its own send entry with the exact version. Skip sends nothing.
+- **Needs a number:** a shadchan, reference or family member saved with no phone is a light record,
+  marked on its page. Adding a number (Edit) runs the matching check again. Singles are never
+  marked: nothing tells me to chase a single.
+- **Date feedback on someone else's shidduch** is waited on from that side's contact (a parent, a
+  contact or their shadchan, from the single's links), and only without one from the single.
+- **Age** is kept with the date it was typed and counts on from there. An age from v58 has no date
+  and is shown as it was saved.
 - **References and family** are normal people. A reference gets the Reference role; a parent or
   friend gets no role of their own and is reached through the link and search. Adding one goes
   through the matching check.
@@ -204,5 +220,73 @@ browsing.
 | Profile tab (Guy, Girl) | "References and family" with Add | References and links |
 | Files tab | The person's files and "Add file" | Files |
 | Person ⋯ | "Folders" | Folders |
-| Guys / Girls filter | When folders exist, a folder view (otherwise Settings, as before) | Folders |
+| Guys / Girls filter (Shadchan mode) | A view sheet: age, city and folder, with Settings below (Single mode: Settings, as before) | Age and city filters, folders |
+| Person page | "Needs a number" with Add, for a shadchan, reference or family member saved with no phone | Light records |
+| Shadchan → Details | How I know them lists lists, events and referrals, oldest first, with "All" | How I know them |
+| Source page | The other counts in words (not contacted, no reply, new, already here) and "Send my profile to the N not contacted" | Source counts; list send |
+| Shidduch → History | "Add note" (the note is about this shidduch) | The page decides "about" |
+| Shidduch ⋯ | "Pause" or "Resume" | Pause |
+| Shidduch → Overview | "Paused since …" with Resume, while paused | Pause |
+| Shidduchim (Shadchan mode) | My own shidduch's row says "Private"; a paused one says "Paused" | Privacy; pause |
+| Shadchanim rows (Single mode) | "has v4", or "has v3 (old)", once they have my profile | Who has my profile |
+| Answer sheet | "Now: Yes · from Miriam · Oct 2", with Open | Every status shows its source |
+| Edit person | "How well I know them" (optional) | Person field |
+| Recent search | People who match, above History | Search finds everyone |
+| Recent (Single mode) | Other people's shidduchim are one quiet line, "N more in Shadchan mode" | Single mode view |
+
+## Reconciliation with `ARCHITECTURE.md`
+
+Every item of `ARCHITECTURE.md` that was not already built in the first v1.0 pass was checked
+against the newer decisions in the v1.0 brief (cited by its section numbers, §18–§28). Each one is
+REQUIRED FOR v1.0 (and now built), SUPERSEDED BY NEWER UX, or OPTIONAL/FUTURE.
+
+### Required for v1.0 (built, with an acceptance test)
+
+| Item | ARCHITECTURE.md | Test |
+|---|---|---|
+| Needs a number: a light record, checked again when a number is added | §6.1 | C01 |
+| Send my profile to the people on a list not contacted yet | §6.3 | C02 |
+| Pause (items close, with Undo) and Undo for an ending | §7 | C03, C04 |
+| "Tell the go-between" when my side decides | §7 | C05 |
+| Every status shows its source | §4 rule 2 | C05 |
+| How I know them: every meeting and referral, oldest first | §3, §6.2 | C06 |
+| Source counts: new, already here, no reply, not contacted | §3, §6.3 | C02 (shown on the page) |
+| The same name in any script, plus city or referrer, asks | §6.1 | C07 |
+| Search finds everyone, mine first in Single mode | §8 | C08 |
+| My own shidduch marked private in Shidduchim (Shadchan mode) | §5.4, §8 | C08 |
+| Single mode Recent: other people's shidduchim as one quiet line | §8 | C09 |
+| The page decides "about" (a note from a shidduch's page) | §4 rule 4 | C09 |
+| Single mode Shadchanim rows: has my profile / old profile | §8 | C10 |
+| Profile version language | §2 | C10 |
+| Shadchan mode Guys and Girls: age and city filters (and folders) | §9.3 | C11, G01 |
+| Age with its date; how well I know them | §2 | C11 |
+| Date feedback waits on go-betweens, not singles | §7 | C12 |
+| Make match | §5.2, §8 | A05 |
+
+### Superseded by newer UX
+
+| Item | ARCHITECTURE.md | Newer decision |
+|---|---|---|
+| Paste, the mode switch and the backup line in Recent's header | §9.2 | Brief §24 (the gear is the only header button on Recent) and §27 (no redesign). Paste is in the Add sheet, with the To file row at the top of Recent (§9.7); mode and backup are in Settings. |
+| Recent's summary strip, and its To file count | §9.2, §11 | Brief §22: Recent is My to-do, To hear back, History. The To file row shows the count when something waits. |
+| Memos pinned to the top of Recent | §9.7 | Brief §22 |
+| A "To file" chip in Recent's filter | §9.2 | The To file row, shown only while something waits |
+| Girls → For me · Previous; Guys = the guys I help | §8, §9.3 | Brief §21 (Guys = My profile; no For me / Previous) |
+| Shidduchim Active · Ideas · Ended | §8, §9.5 | Brief §25 (Offers · In Progress · Ended) |
+| Bottom navigation order | §9.1 | Brief §20 |
+| Shadchanim views Waiting on them / Waiting on me / Needs contact | §9.4 | Brief §23 wording (To hear back, My to-do, Time to contact) |
+| Shadchanim sort and group options | §9.4 | Brief §23 (default sort as designed; no extra controls) |
+| The shadchan page History filter "All · Leah · mine" | §9.6 | Brief §24 (keep the approved person page) |
+| List zoom (Folders · Names · Details) | §9.3 | Brief §27 (keep the approved compact rows); size and density stay in Settings |
+
+### Optional / future (deferred on purpose)
+
+| Item | Why it can wait |
+|---|---|
+| PeerMatch import, WhatsApp chat import, contact cards (§6.1 ways in, §12) | Not part of ZivugMatch, and not in the brief's list of missing areas (§15). When added, each uses the one matching check that every way in already uses. |
+| ZIP and TXT backup formats (§12, PeerMatch's) | ZivugMatch keeps its JSON backup, now with file contents, and v58 backups restore (brief §18). |
+| Reading times from a pasted chat export | Rule 10 is met: a pasted message says "Pasted Oct 4" until a time is entered. |
+| Renaming or deleting a folder | The architecture asks for folders as labels on people, which is built. |
+| The quick-details checkboxes filter (§9.3) | It filters on PeerMatch's quick-details fields, which ZivugMatch data does not have. |
+| Presentation settings of §11 | `ARCHITECTURE.md` itself says "planned for later"; ZivugMatch keeps its 11 skins and layout settings. |
 

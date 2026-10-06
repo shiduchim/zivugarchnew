@@ -18,6 +18,7 @@ function zmRoundDates(r){return roundDates(r);}
 function zmCleanNextStep(s){
   const r=currentRound(s),g=person(s.guyId),gl=person(s.girlId);
   const mine=openForShidduch(s.id,'me'),theirs=openForShidduch(s.id,'them');
+  if(shPaused(s))return 'Paused';
   if(mine[0]?.label)return mine[0].label;
   if(theirs[0]?.label)return theirs[0].label;
 
@@ -87,8 +88,14 @@ function zmOverviewEnded(s){
   return `<div class="zm-clean-card ended"><div class="zm-clean-heading">Ended</div><div class="zm-clean-row"><span>Ended at</span><strong>${esc(st.label)}</strong></div>${r?.endedAt?`<div class="zm-clean-row"><span>Date ended</span><strong>${esc(fmtDate(r.endedAt))}</strong></div>`:''}${r?.endReason?`<div class="zm-clean-row"><span>Why it ended</span><strong>${esc(r.endReason)}</strong></div>`:''}</div>`;
 }
 
+// While paused, one quiet line says since when, with Resume.
+function zmPausedNote(s){const e=shPaused(s)&&pauseEntry(currentRound(s));return e?`<div class="zm-paused-note"><span>Paused since ${esc(fmtDate(e.at))}</span><button data-act="resume-shidduch" data-shidduch-id="${esc(s.id)}">Resume</button></div>`:'';}
 function zmCleanOverview(s){
   if(shStatus(s)==='ended')return zmOverviewEnded(s);
+  if(shPaused(s))return zmPausedNote(s)+zmCleanOverviewActive(s);
+  return zmCleanOverviewActive(s);
+}
+function zmCleanOverviewActive(s){
   const st=zmStageForShidduch(s);
   if(st.index<=1)return zmOverviewBeforeDating(s);
   if(st.index>=2&&st.index<=9)return zmOverviewDating(s);
@@ -121,7 +128,7 @@ function shidduchDetail(sid){
 
   let content='';
   if(ui.detailTab==='dates')content=zmCleanDates(s);
-  else if(ui.detailTab==='history')content=shidduchHistory(s);
+  else if(ui.detailTab==='history')content=`<div class="warm-section-title"><h2>History</h2><button data-act="add-shidduch-note" data-shidduch-id="${esc(s.id)}">Add note</button></div>${shidduchHistory(s)}`;
   else if(ui.detailTab==='people')content=zmCleanPeople(s);
   else content=zmCleanOverview(s);
 

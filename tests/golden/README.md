@@ -74,6 +74,8 @@ screens, and checks the stored records:
 - **L, O, D, P** the ledger, open items, offers, rounds, dates, profile versions and sending
 - **S, R, F, N, G** sources, references and family, files, intake, folders
 - **A** the checks listed in `docs/ARCHITECTURE.md` §13.2
+- **C** the reconciliation with `ARCHITECTURE.md`: needs a number, sending to a list, pause and undo, telling
+  the go-between, how I know them, search, Single-mode views, age with its date (see `docs/V1_DESIGN.md`)
 - **B** backups, v1.0 and v58
 - **N01** opening every new sheet and searching write nothing
 

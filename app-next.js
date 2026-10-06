@@ -50,8 +50,10 @@ function earlierDataRows(){
   return (loose?row(loose,'Earlier data',`Kept before ${loose.reason} · ${fmtDate(loose.at)} ${fmtTime(loose.at)}`):'')+(pinned?row(pinned,`Before ${APP_VERSION_LABEL}`,`Your data as it was before the update · ${fmtDate(pinned.at)}`):'');
 }
 
+// Single mode: a shadchan's row also says which version of my profile they have (only once they have one).
+function myProfileOnRow(p){if(data.settings.mode!=='single'||!p.types?.includes('Shadchan'))return '';const sent=profileSentTo(p.id);return !sent?'':sent<myProfileVersion()?`has v${sent} (old)`:`has v${sent}`;}
 function personRow(p,{selected=false,context=''}={}){
-  const lc=lastContact(p.id),line=context||ageText(p)||p.city||p.types?.join(', ')||'';
+  const lc=lastContact(p.id),line=context||[ageText(p)||p.city||p.types?.join(', ')||'',myProfileOnRow(p)].filter(Boolean).join(' · ');
   return `<button class="warm-person-row ${selected?'selected':''}" data-person="${p.id}"><div class="warm-avatar ${avatarTone(p)}">${esc(initials(p.name))}</div><div class="warm-person-main"><div class="warm-person-top"><strong>${esc(p.name)}</strong><time>${esc(fmtDay(lc))}</time></div><div class="warm-person-line">${esc(line)}</div><div class="warm-person-status human-status">${esc(statusSentenceForPerson(p))}</div></div><div class="warm-chevron">›</div></button>`;
 }
 

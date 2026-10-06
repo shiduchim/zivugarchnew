@@ -127,6 +127,17 @@ function currentProfileText(pid){return latestProfileVersion(pid)?.text||'';}
 // ---- Sources -----------------------------------------------------------------------------------
 function sourcePeopleIds(src){return [...new Set((src?.lines||[]).map(l=>l.personId).filter(Boolean).map(canonId))];}
 function sourcesForPerson(pid){const c=canonId(pid);return data.sources.filter(s=>sourcePeopleIds(s).includes(c));}
+// How I know someone: every list or event they are on and every referral, oldest first. Worked out from
+// the sources and the ledger; never a field.
+function howIKnow(pid){
+  const c=canonId(pid),out=[];
+  for(const src of sourcesForPerson(c)){
+    const linked=liveEntries().find(e=>e.changes?.some(x=>x.kind==='source-line-linked'&&x.sourceId===src.id&&canonId(x.personId)===c));
+    out.push({kind:'source',id:src.id,at:linked?.at||src.createdAt||null,label:`${src.kind==='event'?'Met at':'On'} ${src.name}`});
+  }
+  for(const e of liveEntries())if(e.type==='referral'&&entryPeople(e).includes(c))out.push({kind:'entry',id:e.id,at:e.at||e.pastedAt||null,label:`Referral: ${e.text||'no note'}`});
+  return out.sort((a,b)=>(a.at?new Date(a.at).getTime():-Infinity)-(b.at?new Date(b.at).getTime():-Infinity));
+}
 // Progress comes from the ledger: contacting someone anywhere in the app updates every list they are on.
 // Contacted = something I sent them since the list arrived; replied = something from them after that.
 function personEntriesInOrder(pid){const c=canonId(pid);return liveEntries().filter(e=>entryPeople(e).includes(c)).sort((a,b)=>entryTime(a)-entryTime(b));}
@@ -141,8 +152,11 @@ function listProgress(pid,src){
 }
 function sourceStats(src){
   const lines=src.lines||[];let contacted=0,replied=0,follow=0;
-  for(const pid of sourcePeopleIds(src)){const s=listProgress(pid,src);if(s.contacted)contacted++;if(s.replied)replied++;if(s.followUp)follow++;}
-  return {total:lines.length,contacted,replied,follow,notContacted:Math.max(0,lines.length-contacted)};
+  const since=src.createdAt?new Date(src.createdAt).getTime():-Infinity;let fresh=0,here=0;
+  for(const pid of sourcePeopleIds(src)){const s=listProgress(pid,src);if(s.contacted)contacted++;if(s.replied)replied++;if(s.followUp)follow++;
+    // New = first added to the app when this list came (or later); already here = known before it.
+    const p=person(pid),t=p?.createdAt?new Date(p.createdAt).getTime():-Infinity;if(t>=since)fresh++;else here++;}
+  return {total:lines.length,contacted,replied,follow,noReply:contacted-replied,notContacted:Math.max(0,lines.length-contacted),fresh,here};
 }
 // Time to contact: never contacted, or a list's follow-up time has passed with no reply.
 function needsContactPerson(p){return !liveEntries().some(e=>sentTo(e,p.id))||sourcesForPerson(p.id).some(src=>listProgress(p.id,src).followUp);}
@@ -154,7 +168,9 @@ function recentKey(p){return String(lastContact(p.id)||p.createdAt||'');}
 function byRecentContact(a,b){return recentKey(b).localeCompare(recentKey(a));}
 function byName(a,b){return String(a.name||'').localeCompare(String(b.name||''));}
 function inFolderView(p){return !ui.folder||(p.folderIds||[]).includes(ui.folder);}
-function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe&&inFolderView(p));const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>personMatchesSearch(p,q));return arr.sort(byRecentContact);}
+// Shadchan mode's Guys and Girls views can also be narrowed by age and city (view only, never saved).
+function inPeopleFilter(p,key){const f=ui.peopleFilter?.[key];if(!f)return true;const a=Number(personAge(p))||0;if(f.ageMin&&!(a>=f.ageMin))return false;if(f.ageMax&&!(a&&a<=f.ageMax))return false;if(f.city&&normCity(p.city)!==f.city)return false;return true;}
+function filteredPeople(type){const key=type==='Girl'?'girls':'guys';let arr=byType(type).filter(p=>!p.isMe&&inFolderView(p)&&inPeopleFilter(p,key));const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>personMatchesSearch(p,q));return arr.sort(byRecentContact);}
 function personMatchesSearch(p,q){return (`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q);}
 function fmtDay(ts){if(!ts)return'No contact yet';const d=new Date(ts),now=new Date();const diff=Math.floor((now-d)/86400000);if(diff<=0)return'Today';if(diff===1)return'Yesterday';if(diff<7)return`${diff} days ago`;return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 function fmtTime(ts){if(!ts)return'';return new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});}
@@ -162,7 +178,16 @@ function fmtDate(ts){if(!ts)return'Date unknown';return new Date(ts).toLocaleDat
 // The time shown on a row; a pasted message with no known time says so instead of inventing one.
 function entryClock(e){return e.at?fmtTime(e.at):e.pastedAt?'Pasted':'';}
 function dayKey(ts){if(!ts)return'Date unknown';const d=new Date(ts),today=new Date(),y=new Date(Date.now()-86400000);const same=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();if(same(d,today))return'Today';if(same(d,y))return'Yesterday';return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
-function ageText(p){return [p.age,p.city,p.occupation].filter(Boolean).join(' · ');}
+// Age with its date: an age typed in counts on from the day it was typed. An older age with no date
+// is shown as it was saved (no date is invented for it).
+function personAge(p){const a=Number(p?.age);if(!a)return '';const t=p.ageAsOf?new Date(p.ageAsOf).getTime():NaN;return Number.isFinite(t)?a+Math.max(0,Math.floor((Date.now()-t)/(365.2425*86400000))):a;}
+const KNOW_LEVELS=[['well','I know them well'],['little','I know them a little'],['not-met','Never met']];
+function knowLevelText(p){return KNOW_LEVELS.find(([v])=>v===p?.knowLevel)?.[1]||'';}
+// A light record: someone I would contact (a shadchan, a reference, family) saved with no phone number.
+// The matching check runs again when one is added. Singles are never marked: nothing tells me to chase a
+// single (ARCHITECTURE.md §7); they are reached through their links.
+function needsNumber(p){return !!p&&!p.isMe&&!phoneDigits(p.phone)&&!p.types?.includes('Guy')&&!p.types?.includes('Girl');}
+function ageText(p){return [personAge(p),p.city,p.occupation].filter(Boolean).join(' · ');}
 function avatarTone(p){const tones=['sky','sage','peach','lav','rose'];let n=0;for(const c of p.name||'')n+=c.charCodeAt(0);return tones[n%tones.length];}
 
 // The words shown for what an entry is about (its first "about").

@@ -114,3 +114,21 @@ button.source-line-unlinked{cursor:pointer;width:100%;text-align:left}
 .file-new input+label{margin-top:8px}
 .intake-actions{grid-template-columns:1fr 1fr 1.3fr}
 .split-actions.three{grid-template-columns:1fr 1fr 1fr}
+
+/* A list: the rest of its counts, and sending my profile to the ones not contacted */
+.source-counts{margin:8px 2px 0;color:var(--text-2);font-size:12px}
+.list-send-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--blue);font-size:12.5px;font-weight:750;text-align:left}
+.list-send-row b{font-size:16px}
+.list-send-people{padding:2px 12px}
+.list-send-people small{color:var(--text-3)}
+.list-send-step{margin-top:12px}
+/* Needs a number */
+.number-hint span{color:var(--text-2)}
+/* A paused shidduch */
+.zm-paused-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:9px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text-2);font-size:12.5px}
+.zm-paused-note button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:12px;padding:6px 12px;border-radius:999px}
+.answer-source{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text-2);font-size:12px}
+.answer-source b{color:var(--text)}
+.answer-source button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:11.5px;padding:5px 11px;border-radius:999px}
+.quiet-line{display:block;width:100%;margin:0 0 8px;padding:8px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:transparent;color:var(--text-2);font-size:12px;text-align:left}
+.view-ages select{min-width:70px}

@@ -23,5 +23,26 @@ function folderFilterHtml(){
   const b=(v,l)=>`<button class="option ${(ui.folder||'')===v?'active':''}" data-folder-view="${esc(v)}">${esc(l)}</button>`;
   return `<div class="setting-row"><div class="setting-copy"><b>Folder</b><span>Show only people in one folder</span></div><div class="option-group">${b('','All')}${data.folders.map(f=>b(f.id,f.name)).join('')}</div></div>`;
 }
-// While a folder is chosen, the list says so, with a way back to everyone.
-function folderViewNote(){return ui.folder&&folderName(ui.folder)?`<div class="folder-note"><span>Folder: <b>${esc(folderName(ui.folder))}</b></span><button data-folder-view="">Show all</button></div>`:'';}
+// While a view is narrowed (a folder, an age range, a city), the list says so, with a way back to everyone.
+function listViewNote(key=''){
+  const f=key?ui.peopleFilter?.[key]||{}:{},parts=[];
+  if(ui.folder&&folderName(ui.folder))parts.push(`Folder: <b>${esc(folderName(ui.folder))}</b>`);
+  if(f.ageMin||f.ageMax)parts.push(`Age <b>${f.ageMin||'…'}–${f.ageMax||'…'}</b>`);
+  if(f.city)parts.push(`<b>${esc(f.cityName||f.city)}</b>`);
+  return parts.length?`<div class="folder-note"><span>${parts.join(' · ')}</span><button data-folder-view="" data-view-key="${esc(key)}">Show all</button></div>`:'';
+}
+// Shadchan mode's Guys or Girls view: age, city and folder.
+function peopleViewSheet(key){
+  const type=key==='girls'?'Girl':'Guy',f=ui.peopleFilter?.[key]||{};
+  const cities=[...new Map(byType(type).filter(p=>p.city).map(p=>[normCity(p.city),p.city])).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
+  const ages=Array.from({length:43},(_,i)=>18+i);
+  const ageSel=(id,v)=>`<select id="${id}" data-people-filter="${key}"><option value="">Any</option>${ages.map(a=>`<option value="${a}" ${v===a?'selected':''}>${a}</option>`).join('')}</select>`;
+  openSheet(`<h2>${key==='girls'?'Girls':'Guys'} view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Age</b><span>From – to</span></div><div class="option-group view-ages">${ageSel('pfAgeMin',f.ageMin)}${ageSel('pfAgeMax',f.ageMax)}</div></div><div class="setting-row"><div class="setting-copy"><b>City</b></div><select id="pfCity" data-people-filter="${key}"><option value="">Any</option>${cities.map(([n,c])=>`<option value="${esc(n)}" ${f.city===n?'selected':''}>${esc(c)}</option>`).join('')}</select></div>${folderFilterHtml()}</div><div class="split-actions"><button class="ghost-btn" data-act="settings">Settings</button><button class="primary-btn" data-act="close-sheet">Done</button></div>`);
+}
+function readPeopleFilter(key){
+  const v=id=>document.getElementById(id)?.value||'',city=document.getElementById('pfCity');
+  const f={ageMin:Number(v('pfAgeMin'))||0,ageMax:Number(v('pfAgeMax'))||0,city:v('pfCity'),cityName:city?.selectedOptions?.[0]?.textContent||''};
+  ui.peopleFilter=ui.peopleFilter||{};
+  if(f.ageMin||f.ageMax||f.city)ui.peopleFilter[key]=f;else delete ui.peopleFilter[key];
+  render();
+}
