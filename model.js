@@ -26,7 +26,8 @@ function liveShidduchim(){return data.shidduchim.filter(s=>!s.mergedIntoId);}
 function shidduchIdsFor(s){const ids=new Set([s.id]);let grew=true;while(grew){grew=false;for(const x of data.shidduchim)if(x.mergedIntoId&&ids.has(x.mergedIntoId)&&!ids.has(x.id)){ids.add(x.id);grew=true;}}return ids;}
 
 // ---- Ledger views ----------------------------------------------------------------------------
-function entryTime(e){const t=e?.at?new Date(e.at).getTime():NaN;return Number.isFinite(t)?t:-Infinity;}
+// A pasted message whose real time is not known yet counts from when it was pasted (and says so).
+function entryTime(e){const v=e?.at||e?.pastedAt,t=v?new Date(v).getTime():NaN;return Number.isFinite(t)?t:-Infinity;}
 function newestFirst(a,b){return entryTime(b)-entryTime(a);}
 function liveEntries(){return data.entries.filter(e=>!e.deletedAt&&!e.toFile);}
 function entryAbout(e,type){return (e.about||[]).filter(a=>a.type===type).map(a=>a.id);}
@@ -113,6 +114,12 @@ function roundDates(r,{withCancelled=false}={}){return data.dates.filter(d=>d.ro
 function profileVersionsOf(pid){const c=canonId(pid);return data.profileVersions.filter(v=>canonId(v.personId)===c).sort((a,b)=>(Number(a.number)||0)-(Number(b.number)||0));}
 function latestProfileVersion(pid){const vs=profileVersionsOf(pid);return vs[vs.length-1]||null;}
 function latestProfileNumber(pid){return Math.max(Number(latestProfileVersion(pid)?.number)||0,Number(person(pid)?.legacyProfileVersion)||0);}
+// ---- Links, files, intake ----------------------------------------------------------------------
+// A link is a lasting fact between two people ("Rachel is Leah's mother"); a or b may have been merged.
+function liveLinks(){return data.links.filter(l=>!l.removedAt);}
+function linksOf(pid){const c=canonId(pid);return liveLinks().filter(l=>canonId(l.bId)===c);}
+function linkedTo(pid){const c=canonId(pid);return liveLinks().filter(l=>canonId(l.aId)===c);}
+function intakeEntries(){return data.entries.filter(e=>e.toFile&&!e.deletedAt).sort(newestFirst);}
 function filesOf(pid){const c=canonId(pid);return data.files.filter(f=>!f.deletedAt&&f.personId&&canonId(f.personId)===c);}
 function profileVersion(vid){return data.profileVersions.find(v=>v.id===vid);}
 function currentProfileText(pid){return latestProfileVersion(pid)?.text||'';}
@@ -121,25 +128,24 @@ function currentProfileText(pid){return latestProfileVersion(pid)?.text||'';}
 function sourcePeopleIds(src){return [...new Set((src?.lines||[]).map(l=>l.personId).filter(Boolean).map(canonId))];}
 function sourcesForPerson(pid){const c=canonId(pid);return data.sources.filter(s=>sourcePeopleIds(s).includes(c));}
 // Progress comes from the ledger: contacting someone anywhere in the app updates every list they are on.
+// Contacted = something I sent them since the list arrived; replied = something from them after that.
+function personEntriesInOrder(pid){const c=canonId(pid);return liveEntries().filter(e=>entryPeople(e).includes(c)).sort((a,b)=>entryTime(a)-entryTime(b));}
+function sentTo(e,pid){return e.direction==='out'&&samePerson(e.toPersonId,pid);}
+function cameFrom(e,pid){return e.direction==='in'&&samePerson(e.fromPersonId,pid);}
+function listProgress(pid,src){
+  const since=src.createdAt?new Date(src.createdAt).getTime():-Infinity;
+  const es=personEntriesInOrder(pid).filter(e=>entryTime(e)>=since);
+  const i=es.findIndex(e=>sentTo(e,pid));if(i<0)return {contacted:false,replied:false,followUp:false};
+  const replied=es.slice(i+1).some(e=>cameFrom(e,pid));
+  return {contacted:true,replied,followUp:!replied&&Date.now()>entryTime(es[i])+(Number(src.followUpDays)||7)*86400000};
+}
 function sourceStats(src){
-  const lines=src.lines||[],pids=sourcePeopleIds(src),since=src.createdAt?new Date(src.createdAt).getTime():-Infinity;
-  let contacted=0,replied=0,follow=0;
-  for(const pid of pids){
-    const es=entriesForPerson(pid).filter(e=>entryTime(e)>=since);
-    const firstOut=[...es].reverse().find(e=>e.direction==='out');
-    if(firstOut){contacted++;const rep=es.find(e=>e.direction==='in'&&entryTime(e)>entryTime(firstOut));if(rep)replied++;else{const due=entryTime(firstOut)+(Number(src.followUpDays)||7)*86400000;if(Date.now()>due)follow++;}}
-  }
+  const lines=src.lines||[];let contacted=0,replied=0,follow=0;
+  for(const pid of sourcePeopleIds(src)){const s=listProgress(pid,src);if(s.contacted)contacted++;if(s.replied)replied++;if(s.followUp)follow++;}
   return {total:lines.length,contacted,replied,follow,notContacted:Math.max(0,lines.length-contacted)};
 }
-function needsContactPerson(p){
-  const es=entriesForPerson(p.id);if(!es.some(e=>e.direction==='out'))return true;
-  for(const src of sourcesForPerson(p.id)){
-    const since=src.createdAt?new Date(src.createdAt).getTime():-Infinity,es2=es.filter(e=>entryTime(e)>=since);
-    const firstOut=[...es2].reverse().find(e=>e.direction==='out');
-    if(firstOut&&!es2.find(e=>e.direction==='in'&&entryTime(e)>entryTime(firstOut))&&Date.now()>entryTime(firstOut)+(Number(src.followUpDays)||7)*86400000)return true;
-  }
-  return false;
-}
+// Time to contact: never contacted, or a list's follow-up time has passed with no reply.
+function needsContactPerson(p){return !liveEntries().some(e=>sentTo(e,p.id))||sourcesForPerson(p.id).some(src=>listProgress(p.id,src).followUp);}
 // Dormant (no contact for 60 days or more) is a view only. It never creates a reminder.
 function dormantPerson(p){const lc=lastContact(p.id);return lc&&Date.now()-new Date(lc).getTime()>60*86400000;}
 
@@ -147,11 +153,14 @@ function dormantPerson(p){const lc=lastContact(p.id);return lc&&Date.now()-new D
 function recentKey(p){return String(lastContact(p.id)||p.createdAt||'');}
 function byRecentContact(a,b){return recentKey(b).localeCompare(recentKey(a));}
 function byName(a,b){return String(a.name||'').localeCompare(String(b.name||''));}
-function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe);const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>personMatchesSearch(p,q));return arr.sort(byRecentContact);}
+function inFolderView(p){return !ui.folder||(p.folderIds||[]).includes(ui.folder);}
+function filteredPeople(type){let arr=byType(type).filter(p=>!p.isMe&&inFolderView(p));const q=ui.search.trim().toLowerCase();if(q)arr=arr.filter(p=>personMatchesSearch(p,q));return arr.sort(byRecentContact);}
 function personMatchesSearch(p,q){return (`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q);}
 function fmtDay(ts){if(!ts)return'No contact yet';const d=new Date(ts),now=new Date();const diff=Math.floor((now-d)/86400000);if(diff<=0)return'Today';if(diff===1)return'Yesterday';if(diff<7)return`${diff} days ago`;return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 function fmtTime(ts){if(!ts)return'';return new Date(ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});}
 function fmtDate(ts){if(!ts)return'Date unknown';return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric',year:new Date(ts).getFullYear()===new Date().getFullYear()?undefined:'numeric'});}
+// The time shown on a row; a pasted message with no known time says so instead of inventing one.
+function entryClock(e){return e.at?fmtTime(e.at):e.pastedAt?'Pasted':'';}
 function dayKey(ts){if(!ts)return'Date unknown';const d=new Date(ts),today=new Date(),y=new Date(Date.now()-86400000);const same=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();if(same(d,today))return'Today';if(same(d,y))return'Yesterday';return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});}
 function ageText(p){return [p.age,p.city,p.occupation].filter(Boolean).join(' · ');}
 function avatarTone(p){const tones=['sky','sage','peach','lav','rose'];let n=0;for(const c of p.name||'')n+=c.charCodeAt(0);return tones[n%tones.length];}

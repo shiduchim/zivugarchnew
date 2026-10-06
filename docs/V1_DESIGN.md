@@ -106,6 +106,11 @@ Each flow lives in one file and writes one entry per real moment.
 | `offers.js` | Offer rows and sheet, Not applicable (private reason, no shidduch), Interested (one shidduch per pair; a new round only after the last one ended), Link earlier history |
 | `rounds.js` | Answers (Yes / Thinking / No, who told me, which item it answers), Engaged, dates (add, move, cancelled, happened, feedback) and earlier rounds folded on the History tab |
 | `items.js` | What's next? (Done, Heard back, Check in now, Not needed, Undo), the "after talking to …" question, items settled from Add activity |
+| `sources.js` | Sources and lists: the original text, each line kept as written and pointing to one Person (or "not added yet"), adding people through the matching check, the list's one follow-up item |
+| `links.js` | References and family: links between two normal Person records, shown on both pages and on the shidduch's People tab |
+| `files.js` | Files stored once (content in `blobs`), the Files tab, opening a file only when tapped, delete with Undo |
+| `folders.js` | Folders as labels on people, and the folder view in Guys, Girls and Shadchanim |
+| `intake.js` | Paste, the "To file" row on Recent, and filing: who sent it, when, and what it is (idea for me, a shidduch, a shadchan, a list, a note) |
 
 - **Open items close only by choice.** The app names the open items (after a contact, an answer, a
   date's feedback) and I tick the one that was settled. Only that item closes, linked to the entry
@@ -115,6 +120,18 @@ Each flow lives in one file and writes one entry per real moment.
   opens one feedback item per side, and feedback for a side closes exactly that item.
 - **Current state** (an answer, a date's state, a stage) is read from the newest entry; two entries
   with the same time count in the order they were written.
+- **Lists** count from the ledger: contacted means I sent them something after the list arrived;
+  replied means something came from them after that. A list has one quiet follow-up item for the
+  whole list. The first contact with someone on it opens the item (showing the list never does),
+  it is due after the list's follow-up time (7 days by default), and it closes when everyone
+  contacted has replied, or by Done / Not needed on the list's page.
+- **Intake:** a pasted message is an entry marked "to file", with `at` empty and `pastedAt` set.
+  It shows "Pasted" until a real time is given. Filing sets who it is from, what it is about and
+  (optionally) when, keeps the change as a correction, and never changes the words. Files that came
+  with it go to the person it is about.
+- **References and family** are normal people. A reference gets the Reference role; a parent or
+  friend gets no role of their own and is reached through the link and search. Adding one goes
+  through the matching check.
 
 ## Identity
 
@@ -177,4 +194,12 @@ same, element for element.
 | Shidduch → History | Includes date entries; earlier rounds folded below | One ledger; rounds |
 | Shidduch ⋯ | "Engaged" | Marriage stage |
 | Entry page | "What was sent", later links, "Delete this activity" for plain entries | Ledger |
+| Add sheet | A "Paste" tile | Intake |
+| Recent | "To file" row, only while something waits | Intake |
+| Add source | "Who gave it?" and the names as they came | Sources keep the original text |
+| Source page | "Add" for People; unlinked lines can be tapped to add that person; the list as it came; the one follow-up | Sources |
+| Profile tab (Guy, Girl) | "References and family" with Add | References and links |
+| Files tab | The person's files and "Add file" | Files |
+| Person ⋯ | "Folders" | Folders |
+| Guys / Girls filter | When folders exist, a folder view (otherwise Settings, as before) | Folders |
 

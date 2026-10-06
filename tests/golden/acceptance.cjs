@@ -478,6 +478,195 @@ const tests = {
     await ctx.close();
   },
 
+  // ---- Sources and lists ---------------------------------------------------------------------------
+  async S01_same_human_from_several_sources() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const addSource = async (name, kind, from, text) => {
+      await run(page, [nav('shadchanim'), seg('shadchanim', 'sources')]); await L.tap(page, '[data-act="add-source"]');
+      await page.fill('#sName', name); await page.selectOption('#sKind', kind); if (from) await page.selectOption('#sFrom', from); await page.fill('#sText', text);
+      await L.tap(page, '#overlay [data-act="save-source"]');
+      return inPage(page, () => ui.detail.id);
+    };
+    const listText = 'Chana Feld 050-000-7001\nYael Brill';
+    const a = await addSource("Rivka's new names", 'list', 'p_rivka', listText);
+    const lineA = await inPage(page, sid => source(sid).lines[0].id, a);
+    await L.tap(page, `[data-act="source-line"][data-line-id="${lineA}"]`);
+    const guessed = await page.$eval('#lName', e => e.value) + ' | ' + await page.$eval('#lPhone', e => e.value);
+    await L.tap(page, '#overlay [data-act="save-list-person"]');
+    // The same woman at an event, written another way.
+    const b = await addSource('Wedding in Haifa', 'event', '', 'Chana Feld +972 50-000-7001');
+    const lineB = await inPage(page, sid => source(sid).lines[0].id, b);
+    await L.tap(page, `[data-act="source-line"][data-line-id="${lineB}"]`);
+    await L.tap(page, '#overlay [data-act="save-list-person"]');
+    const asked = !!(await page.$('#overlay [data-act="identity-same"]'));
+    if (asked) await L.tap(page, '#overlay [data-act="identity-same"]');
+    // And once more from a third source's Add button, by name and phone in a local format.
+    const c = await addSource('Sarah’s list', 'list', '', '');
+    await L.tap(page, '[data-act="source-add-person"]'); await page.fill('#lName', 'Chana Feld'); await page.fill('#lPhone', '0500007001');
+    await L.tap(page, '#overlay [data-act="save-list-person"]'); if (await page.$('#overlay [data-act="identity-same"]')) await L.tap(page, '#overlay [data-act="identity-same"]');
+    const st = await L.idbRead(page);
+    const chanas = st.people.filter(p => p.name === 'Chana Feld' && !p.mergedIntoId);
+    const srcs = [a, b, c].map(x => byId(st.sources, x));
+    const sameId = chanas.length === 1 && srcs.every(s => s.lines.some(l => l.personId === chanas[0].id));
+    const textsKept = srcs[0].originalText === listText && srcs[0].lines.map(l => l.text).join('\n') === listText && srcs[1].lines[0].text === 'Chana Feld +972 50-000-7001';
+    const howKnown = await inPage(page, pid => sourcesForPerson(pid).map(s => s.name), chanas[0]?.id);
+    const ok = sameId && asked && textsKept && howKnown.length === 3 && guessed === 'Chana Feld | 050-000-7001' && srcs[0].lines[1].personId == null;
+    record('S01', 'The same human from a list, an event and another list stays one Person (asked "same person?"); every line keeps its original words; How I know her lists all three', ok, { people: chanas.length, asked, textsKept, howKnown, guessed });
+    await ctx.close();
+  },
+
+  async S02_list_progress_comes_from_the_ledger() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const stats = () => inPage(page, () => sourceStats(source('src_rivka10')));
+    await run(page, [nav('shadchanim'), seg('shadchanim', 'sources'), ['tap', '[data-source="src_rivka10"]']]);
+    const w0 = await writes(page); const s0 = await stats(); const items0 = (await L.idbRead(page)).openItems.length;
+    const renderWrites = (await writes(page)) - w0;
+    // Call Sarah Deutsch from her own page: the list counts change with no action on the list.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_s_2' }; ui.detailTab = 'details'; render(); });
+    await L.tap(page, '[data-contact="call"]'); await L.settle(page); await L.closeSheets(page);
+    const s1 = await stats();
+    const st1 = await L.idbRead(page);
+    const fu = st1.openItems.filter(x => x.kind === 'list-follow-up' && x.about?.id === 'src_rivka10');
+    const quiet = await inPage(page, () => { ui.detail = null; ui.screen = 'recent'; render(); return [...document.querySelectorAll('#app .zm-todo-card strong')].map(e => e.textContent); });
+    // Eight days later the one follow-up is due and shows in My to-do (and Time to contact).
+    await page.clock.setFixedTime(new Date(L.FIXED_TIME.getTime() + 8 * 86400000));
+    const due = await inPage(page, () => { render(); return { todo: [...document.querySelectorAll('#app .zm-todo-card strong')].map(e => e.textContent), needs: needsContactPerson(person('p_s_2')) }; });
+    // She answers: replied goes up, from the ledger.
+    await inPage(page, () => addActivitySheet('p_s_2')); await page.selectOption('#aType', 'message'); await page.selectOption('#aWho', 'in'); await page.fill('#aText', 'Sarah answered.');
+    await L.tap(page, '#overlay [data-act="save-activity"]');
+    const s2 = await stats();
+    const ok = renderWrites === 0 && s1.contacted === s0.contacted + 1 && s1.notContacted === s0.notContacted - 1 && fu.length === 1 && fu[0].personId === null && !quiet.some(t => /Follow up/.test(t)) && due.todo.some(t => /Follow up on/.test(t)) && s2.replied === s1.replied + 1 && st1.openItems.length === items0 + 1;
+    record('S02', 'A list updates itself: a call from the person\'s page counts as contacted, a reply as replied; one quiet follow-up for the whole list opens with the contact (not by showing the list) and shows only when due', ok, { renderWrites, before: s0, afterCall: s1, afterReply: s2, followUps: fu.length, dueTodo: due.todo });
+    await ctx.close();
+  },
+
+  // ---- References and links -----------------------------------------------------------------------
+  async R01_references_are_people_with_links() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    const addLink = async (kind, name, phone) => { await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="add-link"]'); await page.selectOption('#kKind', kind); await page.fill('#kName', name); await page.fill('#kPhone', phone); await L.tap(page, '#overlay [data-act="save-link"]'); };
+    await addLink('mother', 'Rachel Rosen', '050-000-7002');
+    // Miriam, already here, as a reference: the matching check finds her; no second record.
+    await addLink('reference', 'Miriam C', '+972 50 555 0101');
+    if (await page.$('#overlay [data-act="identity-same"]')) await L.tap(page, '#overlay [data-act="identity-same"]');
+    const st = await L.idbRead(page);
+    const rachel = st.people.find(p => p.name === 'Rachel Rosen');
+    const links = st.links.filter(l => l.bId === 'p_leah');
+    const miriam = byId(st.people, 'p_miriam');
+    const leahCard = await page.$$eval('#app .link-open b', els => els.map(e => e.textContent));
+    await inPage(page, idv => { ui.detail = { type: 'person', id: idv }; ui.detailTab = 'profile'; render(); }, rachel?.id);
+    const rachelCard = await page.$$eval('#app .link-open span', els => els.map(e => e.textContent));
+    await run(page, [...shidduchPath('sh_me_leah'), tab('people')]);
+    const shPeople = await page.$eval('#app', a => a.textContent);
+    // Remove, then Undo.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'profile'; render(); });
+    const rid = links.find(l => l.aId === rachel?.id)?.id;
+    await L.tap(page, `[data-act="remove-link"][data-link-id="${rid}"]`);
+    const removed = !!byId((await L.idbRead(page)).links, rid)?.removedAt;
+    await page.evaluate(() => document.querySelector('#toast [data-act="restore-link"]').click()); await L.settle(page); await page.waitForTimeout(150);
+    const back = !byId((await L.idbRead(page)).links, rid)?.removedAt;
+    const ok = !!rachel && (rachel.types || []).length === 0 && st.people.length === s0.people.length + 1 && links.length === 2 && links.some(l => l.aId === 'p_miriam' && l.kind === 'reference') && miriam.types.includes('Reference') && miriam.types.includes('Shadchan')
+      && leahCard.includes('Rachel Rosen') && leahCard.includes('Miriam Cohen') && rachelCard.some(t => /Mother of Leah/.test(t)) && /References and family/.test(shPeople) && /Rachel Rosen/.test(shPeople) && removed && back;
+    record('R01', 'References and family are normal people linked to the single (no extra list or tab): shown on both pages and on the shidduch\'s People tab; someone already here is reused and gets the Reference role; removing a link has Undo', ok, { newPeople: st.people.length - s0.people.length, links: links.map(l => `${l.kind}:${l.aId}`), miriamTypes: miriam.types, leahCard, rachelCard, removed, back });
+    await ctx.close();
+  },
+
+  // ---- Files ---------------------------------------------------------------------------------------
+  async F01_files_are_stored_once_and_backed_up() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const bytes = Buffer.from('%PDF-1.4 made-up test file');
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'files'; render(); });
+    await page.setInputFiles('#personFiles', { name: 'leah-resume.pdf', mimeType: 'application/pdf', buffer: bytes });
+    await L.settle(page); await page.waitForTimeout(300);
+    const st = await L.idbRead(page);
+    const f = st.files.find(x => x.name === 'leah-resume.pdf');
+    const blob = await page.evaluate(fid => new Promise(r => { const q = indexedDB.open('ZivugMatchDB'); q.onsuccess = () => { const g = q.result.transaction('blobs').objectStore('blobs').get(fid); g.onsuccess = async () => { const b = g.result; q.result.close(); r(b ? await b.text() : null); }; }; }), f?.id);
+    const row = await page.$(`#app [data-act="open-file"][data-file-id="${f?.id}"]`);
+    await L.tap(page, `#app [data-act="open-file"][data-file-id="${f?.id}"]`);
+    const opened = !!(await page.$('#overlay a[download="leah-resume.pdf"]'));
+    // The backup carries the file's content; another device gets it back.
+    await L.closeSheets(page); await L.tap(page, '[data-act="back"]').catch(() => {});
+    await inPage(page, () => { ui.detail = null; ui.screen = 'recent'; render(); });
+    await L.tap(page, '[data-act="settings"]');
+    const file = await download(page, '#overlay [data-act="export-backup"]');
+    const second = await L.newPage(browser, BASE, L.WIDTHS.phone);
+    await L.idbWrite(second.page, FIX('demo')); await L.openApp(second.page); await L.tap(second.page, '[data-act="settings"]');
+    await second.page.setInputFiles('#backupFile', { name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(file) });
+    await L.settle(second.page); await second.page.waitForTimeout(300);
+    const restored = await second.page.evaluate(fid => new Promise(r => { const q = indexedDB.open('ZivugMatchDB'); q.onsuccess = () => { const g = q.result.transaction('blobs').objectStore('blobs').get(fid); g.onsuccess = async () => { const b = g.result; q.result.close(); r(b ? await b.text() : null); }; }; }), f?.id);
+    // Delete keeps it for Undo.
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_leah' }; ui.detailTab = 'files'; render(); });
+    await L.tap(page, `#app [data-act="open-file"][data-file-id="${f?.id}"]`); await L.tap(page, '#overlay [data-act="delete-file"]');
+    const hidden = !(await page.$(`#app [data-file-id="${f?.id}"]`));
+    await page.evaluate(() => document.querySelector('#toast [data-act="restore-file"]').click()); await L.settle(page); await page.waitForTimeout(150);
+    const back = !!(await page.$(`#app [data-file-id="${f?.id}"]`));
+    const ok = !!f && f.personId === 'p_leah' && f.mime === 'application/pdf' && blob === bytes.toString() && !!row && opened && JSON.parse(file).blobs?.[f.id]?.startsWith('data:') && restored === bytes.toString() && hidden && back;
+    record('F01', 'A file added on the Files tab is stored once with its content, opens when tapped, is carried by the backup to another device, and Delete has Undo', ok, { file: f && { name: f.name, personId: f.personId }, stored: blob === bytes.toString(), opened, inBackup: !!JSON.parse(file).blobs?.[f?.id], restored: restored === bytes.toString(), hidden, back });
+    await second.ctx.close(); await ctx.close();
+  },
+
+  // ---- Intake --------------------------------------------------------------------------------------
+  async N02_intake_list_from_paste() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const text = 'Rivka Stern: names for you\nChana Feld 050-000-7001\nYael Brill';
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay [data-add="paste"]');
+    await page.fill('#pasteText', text); await L.tap(page, '#overlay [data-act="save-paste"]');
+    const filingOpen = !!(await page.$('#overlay [data-act="save-filing"]'));
+    await L.closeSheets(page);
+    const waiting = await inPage(page, () => { ui.detail = null; ui.screen = 'recent'; render(); return { row: document.querySelector('#app .to-file-row strong')?.textContent, inHistory: liveEntries().some(e => e.channel === 'Pasted') }; });
+    await L.tap(page, '#app [data-act="intake"]'); await L.tap(page, '#overlay [data-act="file-entry"]');
+    const guess = await page.$eval('#fileFrom', e => e.value);
+    await L.tap(page, '#overlay [data-file-kind="list"]'); await page.fill('#fileListName', "Rivka's new names");
+    await L.tap(page, '#overlay [data-act="save-filing"]');
+    const st = await L.idbRead(page);
+    const e = st.entries.find(x => x.channel === 'Pasted');
+    const src = st.sources.find(s => s.name === "Rivka's new names");
+    const after = await inPage(page, eid => ({ row: !!document.querySelector('#app .to-file-row'), time: document.querySelector(`#app [data-entry="${eid}"] time`)?.textContent }), e?.id);
+    const ok = filingOpen && waiting.row === '1' && !waiting.inHistory && guess === 'p_rivka' && !e.toFile && e.text === text && e.at === null && !!e.pastedAt && e.fromPersonId === 'p_rivka' && e.about.some(a => a.type === 'source' && a.id === src?.id) && e.corrections?.[0]?.field === 'filed'
+      && src.fromPersonId === 'p_rivka' && src.entryId === e.id && src.originalText === text && src.lines.length === 3 && !after.row && after.time === 'Pasted';
+    record('N02', 'Paste: the message waits in To file (shown on Recent only then, not in History); filing it as a list from Rivka (guessed) makes the source from the exact words; no time is invented ("Pasted")', ok, { filingOpen, waiting, guess, entry: e && { at: e.at, from: e.fromPersonId, toFile: !!e.toFile }, source: src && { lines: src.lines.length, from: src.fromPersonId }, after });
+    await ctx.close();
+  },
+
+  async N03_intake_idea_with_photo() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const s0 = await L.idbRead(page);
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay [data-add="paste"]');
+    await page.fill('#pasteText', 'Miriam Cohen: an idea for you, Shira Katz from Haifa.');
+    await page.setInputFiles('#pasteFiles', { name: 'shira.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('made-up image') });
+    await L.tap(page, '#overlay [data-act="save-paste"]');
+    await L.tap(page, '#overlay [data-file-kind="idea"]');
+    await page.selectOption('#fileIdeaWho', '__new'); await page.fill('#fileIdeaName', 'Shira Katz');
+    await L.tap(page, '#overlay [data-act="save-filing"]');
+    const st = await L.idbRead(page);
+    const shira = st.people.find(p => p.name === 'Shira Katz');
+    const i = st.ideas.find(x => x.girlId === shira?.id);
+    const item = st.openItems.find(x => x.about?.type === 'idea' && x.about.id === i?.id);
+    const photo = st.files.find(f => f.name === 'shira.jpg');
+    const ok = !!shira && shira.types.includes('Girl') && i?.guyId === 'p_me' && i.suggestedByPersonId === 'p_miriam' && i.status === 'open' && item?.personId === 'p_miriam' && item.direction === 'me' && photo?.personId === shira.id && st.shidduchim.length === s0.shidduchim.length;
+    record('N03', 'Filing a pasted idea for me: the suggested girl gets one record (through the matching check), the offer is from Miriam with "answer Miriam" waiting on me, her photo goes on her record, and no shidduch is made', ok, { shira: !!shira, idea: i && { status: i.status, by: i.suggestedByPersonId }, item: item?.label, photoTo: photo?.personId === shira?.id, shidduchim: st.shidduchim.length - s0.shidduchim.length });
+    await ctx.close();
+  },
+
+  // ---- Folders -------------------------------------------------------------------------------------
+  async G01_folders_label_people_and_filter_views() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await run(page, personPath('p_miriam', 'shadchan')); await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="folders"]');
+    await page.fill('#newFolder', 'Top'); await L.tap(page, '#overlay [data-act="save-folders"]');
+    const st = await L.idbRead(page);
+    const folder = st.folders.find(f => f.name === 'Top');
+    await run(page, [nav('shadchanim'), seg('shadchanim', 'all')]);
+    const w0 = await writes(page);
+    await L.tap(page, '[data-act="filters"]'); await L.tap(page, `#overlay [data-folder-view="${folder?.id}"]`);
+    const shown = await page.$$eval('#app [data-person]', els => [...new Set(els.map(e => e.dataset.person))]);
+    await L.tap(page, '#app .folder-note [data-folder-view=""]');
+    const all = await page.$$eval('#app [data-person]', els => new Set(els.map(e => e.dataset.person)).size);
+    const w1 = await writes(page);
+    const ok = !!folder && byId(st.people, 'p_miriam').folderIds.includes(folder.id) && JSON.stringify(shown) === '["p_miriam"]' && all > 10 && w1 === w0;
+    record('G01', 'A folder is a label on a person (from ⋯); choosing it in a list shows only those people, Show all brings everyone back, and the view writes nothing', ok, { folder: folder?.name, shown, all, writes: w1 - w0 });
+    await ctx.close();
+  },
+
   // ---- Showing never writes ------------------------------------------------------------------------
   async N01_new_sheets_and_search_write_nothing() {
     const { ctx, page } = await fresh({ mode: 'shadchan' });

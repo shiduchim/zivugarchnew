@@ -6,13 +6,14 @@
 // and each correction is kept on the entry.
 
 function addEntry(spec){
-  const e={id:id('e'),at:spec.at||iso(),type:spec.type||'note',channel:spec.channel||'App',direction:spec.direction||'none',
+  const e={id:id('e'),at:spec.at!==undefined?spec.at:iso(),type:spec.type||'note',channel:spec.channel||'App',direction:spec.direction||'none',
     fromPersonId:spec.fromPersonId||null,toPersonId:spec.toPersonId||null,
     personIds:[...new Set((spec.personIds||[spec.fromPersonId,spec.toPersonId]).filter(Boolean))],
     about:(spec.about||[]).filter(a=>a&&a.type&&a.id),text:String(spec.text||''),result:spec.result||'',
     fileIds:spec.fileIds||[],changes:spec.changes||[]};
   for(const k of ['private','profileVersionId','profileVersionNumber','toFile','pastedAt','sentText'])if(spec[k]!=null)e[k]=spec[k];
   data.entries.push(e);
+  if(!e.toFile)noteListProgress(e);
   return e;
 }
 
@@ -48,7 +49,7 @@ function entryTitle(e){return e.type==='message'?e.channel||'Message':e.type==='
 function entryDetail(eid){
   const e=data.entries.find(x=>x.id===eid);if(!e||e.deletedAt)return recentScreen();
   const from=person(e.fromPersonId),to=person(e.toPersonId);
-  const head=`${detailHeader(entryTitle(e),e.at?`${fmtDate(e.at)} · ${fmtTime(e.at)}`:'Date unknown')}<div class="profile-card"><h3>${e.direction==='in'?`${esc(from?.name||'Someone')} → Me`:e.direction==='out'?`Me → ${esc(to?.name||'Someone')}`:'Activity'}</h3><div class="profile-text">${esc(e.text||'')}</div></div>`;
+  const head=`${detailHeader(entryTitle(e),e.at?`${fmtDate(e.at)} · ${fmtTime(e.at)}`:e.pastedAt?`Pasted ${fmtDate(e.pastedAt)}`:'Date unknown')}<div class="profile-card"><h3>${e.direction==='in'?`${esc(from?.name||'Someone')} → Me`:e.direction==='out'?`Me → ${esc(to?.name||'Someone')}`:'Activity'}</h3><div class="profile-text">${esc(e.text||'')}</div></div>`;
   const sent=e.sentText?`<div class="profile-card entry-sent"><h3>What was sent</h3><div class="profile-text">${esc(e.sentText)}</div></div>`:'';
   const rest=(e.about||[]).slice(1).map(a=>`<div class="info-row"><div class="info-label">Also about</div><div class="info-value">${esc(aboutLabel(a))}</div><span></span></div>`).join('');
   const about=linkedAbout(e)?`<div class="info-card"><div class="info-row"><div class="info-label">About</div><div class="info-value">${esc(linkedAbout(e))}</div><button class="info-action" data-act="open-about" data-entry-id="${e.id}">Open</button></div>${rest}${e.result?`<div class="info-row"><div class="info-label">Result</div><div class="info-value">${esc(e.result)}</div><span></span></div>`:''}</div>`:'';

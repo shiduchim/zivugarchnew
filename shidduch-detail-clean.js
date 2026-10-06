@@ -109,7 +109,7 @@ function zmRoleRow(p,role){
 
 function zmCleanPeople(s){
   const g=person(s.guyId),gl=person(s.girlId),shads=shidduchGoBetweens(s).map(person).filter(Boolean);
-  return `<div class="zm-role-section"><div class="zm-clean-heading">The couple</div><div class="warm-stack">${[g,gl].filter(Boolean).map(p=>zmRoleRow(p,p.id===s.guyId?'Guy':'Girl')).join('')}</div></div>${shads.length?`<div class="zm-role-section"><div class="zm-clean-heading">Shadchanim</div><div class="warm-stack">${shads.map(p=>zmRoleRow(p,'Shadchan')).join('')}</div></div>`:''}`;
+  return `<div class="zm-role-section"><div class="zm-clean-heading">The couple</div><div class="warm-stack">${[g,gl].filter(Boolean).map(p=>zmRoleRow(p,p.id===s.guyId?'Guy':'Girl')).join('')}</div></div>${shads.length?`<div class="zm-role-section"><div class="zm-clean-heading">Shadchanim</div><div class="warm-stack">${shads.map(p=>zmRoleRow(p,'Shadchan')).join('')}</div></div>`:''}${shidduchReferencesHtml(s)}`;
 }
 
 // This is the final shidduch-detail renderer. It intentionally removes the old repeated

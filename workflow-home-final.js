@@ -10,7 +10,7 @@ function zmShortOpenLabel(items){
 }
 
 function zmTodoCard(x){
-  const p=person(x.personId);
+  const p=person(x.personId)||(x.about?.type==='source'&&source(x.about.id)?{name:source(x.about.id).name}:null);
   const when=x.createdAt?fmtDay(x.createdAt):'';
   return `<button class="next-card zm-todo-card" ${nextTargetAttrs(x)}>
     <div class="next-avatar ${avatarTone(p||{name:'?'})}">${esc(initials(p?.name||'?'))}</div>

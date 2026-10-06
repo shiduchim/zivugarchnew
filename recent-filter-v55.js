@@ -20,6 +20,7 @@ function recentScreen(){
 
   return `${header('Recent','',{add:true})}
     ${searchBox('Find anyone or anything…')}
+    ${toFileRow()}
     <div class="warm-section-title zm-home-section-title"><h2>My to-do list</h2></div>
     ${todo}
     ${zmHearBackSummary(them)}

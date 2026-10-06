@@ -57,11 +57,12 @@ function personRow(p,{selected=false,context=''}={}){
 
 function nextTargetAttrs(x){
   if(x.about?.type==='shidduch'&&shidduch(x.about.id))return `data-shidduch="${shidduch(x.about.id).id}"`;
+  if(!x.personId&&x.about?.type==='source'&&source(x.about.id))return `data-source="${x.about.id}"`;
   return `data-person="${x.personId}"`;
 }
 
 function activityFeed(entries){
-  const groups={};for(const e of entries){const k=dayKey(e.at);(groups[k]??=[]).push(e);}
+  const groups={};for(const e of entries){const k=dayKey(e.at||e.pastedAt);(groups[k]??=[]).push(e);}
   return Object.entries(groups).map(([day,arr])=>`<section class="warm-day"><div class="warm-day-label">${esc(day)}</div><div class="warm-feed">${arr.map(activityRow).join('')}</div></section>`).join('')||empty('Nothing here yet','Calls, messages, notes and profiles will appear here automatically.','add-activity');
 }
 

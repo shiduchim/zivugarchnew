@@ -16,10 +16,6 @@ function addActivitySheet(pid=''){
   openSheet(`<h2>Add activity</h2><p class="lead">Add something that happened outside the app. It will also appear in this person's History.</p><div class="form-grid"><div class="field"><label>Person</label><select id="aPerson"><option value="">Choose…</option>${peopleOptions.map(p=>`<option value="${p.id}" ${pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="aType"><option value="note">Note</option><option value="call">Call</option><option value="message">Message</option><option value="profile">Profile</option><option value="referral">Referral</option></select></div><div class="field"><label>Who reached out?</label><select id="aWho"><option value="out">I contacted them</option><option value="in">They contacted me</option></select></div><div class="field"><label>What happened?</label><textarea id="aText" placeholder="Short note…"></textarea></div><div class="sheet-section activity-settles" id="aItems">${activityItemsHtml(pid)}</div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-activity">Save</button></div>`);
 }
 
-function addSourceSheet(){
-  openSheet(`<h2>Add source</h2><p class="lead">A source is where these names came from.</p><div class="form-grid"><div class="field"><label>Name</label><input id="sName" placeholder="For example: Rivka's shadchanim list" /></div><div class="field"><label>Type</label><select id="sKind"><option value="list">List</option><option value="event">Event</option><option value="site">Website</option><option value="referral">Referral</option></select></div><div class="field"><label>Contact again after</label><select id="sDays"><option value="7">7 days</option><option value="14">14 days</option><option value="30">30 days</option></select></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-source">Save source</button></div>`);
-}
-
 // Filters: Recent's filter/sort sheet (History only), the Shadchanim view sheet, otherwise Settings.
 function filtersSheet(){
   if(ui.screen==='recent'){
@@ -43,6 +39,7 @@ function filtersSheet(){
     return;
   }
   if(ui.screen==='shadchanim'){
-    openSheet(`<h2>Shadchanim view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>No contact for 60 days or more</b><span>Show people you have not contacted recently</span></div><button class="option" data-act="show-dormant">Show</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);
-  }else settingsSheet();
+    openSheet(`<h2>Shadchanim view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>No contact for 60 days or more</b><span>Show people you have not contacted recently</span></div><button class="option" data-act="show-dormant">Show</button></div>${folderFilterHtml()}</div><button class="primary-btn full" data-act="close-sheet">Done</button>`);
+  }else if(['guys','girls'].includes(ui.screen)&&data.folders.length)openSheet(`<h2>${ui.screen==='guys'?'Guys':'Girls'} view</h2><div class="sheet-section">${folderFilterHtml()}</div><div class="split-actions"><button class="ghost-btn" data-act="settings">Settings</button><button class="primary-btn" data-act="close-sheet">Done</button></div>`);
+  else settingsSheet();
 }

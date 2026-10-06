@@ -48,7 +48,7 @@ function addIdeaSheet(){
 }
 
 function universalAddSheet(){
-  openSheet(`<h2>Add</h2><p class="lead">What do you want to add?</p><div class="quick-add-grid"><button id="qaIdea" data-act="quick-add" data-add="offer"><span>♡</span><b>Offer</b><small>Someone suggested a match</small></button><button id="qaGuy" data-act="quick-add" data-add="Guy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad" data-act="quick-add" data-add="Shadchan"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl" data-act="quick-add" data-add="Girl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote" data-act="quick-add" data-add="note"><span>✎</span><b>Note or call</b><small>Add something that happened</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
+  openSheet(`<h2>Add</h2><p class="lead">What do you want to add?</p><div class="quick-add-grid"><button id="qaIdea" data-act="quick-add" data-add="offer"><span>♡</span><b>Offer</b><small>Someone suggested a match</small></button><button id="qaGuy" data-act="quick-add" data-add="Guy"><span>G</span><b>Guy</b><small>Add a person</small></button><button id="qaShad" data-act="quick-add" data-add="Shadchan"><span>S</span><b>Shadchan</b><small>Add to your network</small></button><button id="qaGirl" data-act="quick-add" data-add="Girl"><span>G</span><b>Girl</b><small>Add a person</small></button><button id="qaNote" data-act="quick-add" data-add="note"><span>✎</span><b>Note or call</b><small>Add something that happened</small></button><button id="qaPaste" data-act="quick-add" data-add="paste"><span>⎘</span><b>Paste</b><small>A message someone sent</small></button></div><button class="ghost-btn full" data-act="close-sheet">Cancel</button>`);
 }
 
 // A choice in the Add sheet closes it and opens that form.
@@ -56,6 +56,7 @@ function quickAdd(kind){
   closeSheet();
   if(kind==='offer')addIdeaSheet();
   else if(kind==='note')addActivitySheet();
+  else if(kind==='paste')pasteSheet();
   else addPersonSheet(kind);
 }
 
