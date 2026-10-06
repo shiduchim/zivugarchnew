@@ -14,7 +14,6 @@
 
 /* Ended cards are intentionally quieter/grey, while their bar length still shows where they stopped. */
 .zm-ended-card{border-color:color-mix(in srgb,#8f97a2 45%,var(--border,#d9dce6))!important}
-.zm-stage.ended .zm-stage-seg.done,.zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
 
 .zm-end-action{display:flex;justify-content:center;margin:16px auto 28px;max-width:760px}
 .zm-end-action .ghost-btn{min-width:150px}

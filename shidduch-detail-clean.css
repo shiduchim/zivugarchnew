@@ -1,7 +1,7 @@
 /* Simplified, stage-aware shidduch detail. */
 .zm-clean-hero{margin:10px 0 14px;padding:18px 18px 14px;border-radius:24px;background:color-mix(in srgb,var(--surface,#fff) 92%,transparent);box-shadow:var(--warm-shadow-soft,0 4px 14px rgba(70,53,34,.055));border:1px solid color-mix(in srgb,var(--line,rgba(64,77,90,.10)) 70%,transparent)}
 .zm-clean-hero .pair-people{justify-content:center;margin-bottom:8px}
-.zm-clean-hero .zm-stage{margin-top:2px;width:100%}
+.zm-clean-hero .zm-stage{width:100%}
 
 .zm-clean-card{margin-top:12px;border:1px solid color-mix(in srgb,var(--line,rgba(64,77,90,.10)) 90%,transparent);border-radius:18px;background:var(--surface,#fff);overflow:hidden;box-shadow:var(--warm-shadow-soft,0 4px 14px rgba(70,53,34,.055))}
 .zm-clean-card.ended{background:color-mix(in srgb,#8f97a2 6%,var(--surface,#fff))}

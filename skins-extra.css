@@ -21,10 +21,8 @@
 .quick-add-grid button{border:1px solid var(--line);background:var(--surface);border-radius:17px;padding:13px;text-align:left;box-shadow:var(--shadow-soft);min-height:94px}.quick-add-grid button:last-child{grid-column:1/-1;min-height:78px}
 .quick-add-grid span{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--blue-2);color:var(--blue);font-weight:900;margin-bottom:8px}.quick-add-grid b{display:block;font-size:12px}.quick-add-grid small{display:block;font-size:9px;color:var(--text-3);margin-top:3px;line-height:1.25}
 
-/* Extra swatches */.skin-swatch.glass{background:linear-gradient(135deg,rgba(255,220,210,.9),rgba(219,226,255,.9));color:#536ea6}
+/* Extra swatches */
 
 /* Frosted Glass */
-html[data-skin="glass"]{--bg:#eef2f8;--bg-2:#f6f8fb;--surface:rgba(255,255,255,.66);--surface-2:rgba(255,255,255,.44);--text:#27364d;--text-2:#68758a;--text-3:#94a0b2;--line:rgba(255,255,255,.55);--blue:#627db7;--blue-2:rgba(224,232,255,.72);--blue-3:rgba(212,225,249,.8);--shadow:0 14px 34px rgba(61,78,110,.10);--shadow-soft:0 6px 18px rgba(61,78,110,.08)}
-html[data-skin="glass"] body{background:radial-gradient(circle at 10% 0,#f8deda,transparent 30%),radial-gradient(circle at 90% 10%,#dce8ff,transparent 35%),linear-gradient(135deg,#f7f1f4,#eef4fb)!important}html[data-skin="glass"] .warm-person-row,html[data-skin="glass"] .warm-activity-row,html[data-skin="glass"] .next-card,html[data-skin="glass"] .warm-bottom-nav{backdrop-filter:blur(18px)}
 
 @media(max-width:520px){.skin-picker-many{grid-template-columns:1fr 1fr}.skin-picker-many .skin-choice{grid-template-columns:38px 1fr}.quick-add-grid{grid-template-columns:1fr 1fr}.next-card{grid-template-columns:44px 1fr auto}}

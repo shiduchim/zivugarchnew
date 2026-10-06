@@ -30,9 +30,6 @@ html[data-skin="kids"] .warm-detail-page{
   margin:0 auto!important;
   padding:22px 24px 36px!important;
   overflow:visible!important;
-  display:grid!important;
-  grid-template-columns:84px minmax(0,1fr) 44px;
-  column-gap:14px;
   row-gap:16px;
   align-content:start;
   container-type:inline-size;
@@ -82,7 +79,6 @@ html[data-skin="kids"] .warm-more{
 
 /* Hero background sits behind the existing avatar/name/facts nodes. */
 html[data-skin="kids"] .warm-detail-page::before{
-  content:"";
   grid-column:1 / -1;
   grid-row:2 / 4;
   background:var(--cartoon-lav);
@@ -99,11 +95,8 @@ html[data-skin="kids"] .warm-person-big{
   justify-self:center;
   position:relative;
   z-index:1;
-  width:84px!important;
-  height:84px!important;
   margin:0!important;
   border:var(--cartoon-outline)!important;
-  border-radius:26px!important;
   background:linear-gradient(145deg,var(--cartoon-mint),var(--cartoon-sky-strong))!important;
   color:var(--cartoon-navy)!important;
   box-shadow:var(--cartoon-lift)!important;
@@ -182,14 +175,11 @@ html[data-skin="kids"] .warm-tabs{
 }
 html[data-skin="kids"] .warm-tabs button{
   min-width:0;
-  min-height:46px!important;
   padding:0 2px!important;
   border:3px solid transparent!important;
-  border-radius:16px!important;
   background:transparent!important;
   color:var(--cartoon-muted)!important;
   box-shadow:none!important;
-  font-size:clamp(11.5px,3.6cqi,15px)!important;
   font-weight:850!important;
   white-space:nowrap;
 }
@@ -197,8 +187,6 @@ html[data-skin="kids"] .warm-tabs button.active{
   background:var(--cartoon-sky-strong)!important;
   border-color:var(--cartoon-navy)!important;
   color:var(--cartoon-navy)!important;
-  box-shadow:0 3px 0 var(--cartoon-navy)!important;
-  transform:translateY(-1px);
 }
 
 /* Profile notebook and other detail content. */
@@ -337,12 +325,9 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
 
 @container (max-width:380px){
   html[data-skin="kids"] .warm-detail-page{
-    grid-template-columns:68px minmax(0,1fr) 44px;
-    column-gap:12px;
     row-gap:12px;
     padding:14px 12px 28px!important;
   }
-  html[data-skin="kids"] .warm-person-big{width:68px!important;height:68px!important;border-radius:22px!important;font-size:23px!important}
   html[data-skin="kids"] .warm-contact-row{gap:5px!important}
   html[data-skin="kids"] .warm-contact{padding:7px 1px!important;min-height:72px!important}
   html[data-skin="kids"] .warm-contact>span{width:38px!important;height:38px!important}

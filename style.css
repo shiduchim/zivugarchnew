@@ -52,7 +52,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .app-mark{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .wordmark{font:700 14px/1 Georgia,"Times New Roman",serif;letter-spacing:.01em;color:var(--blue)}
 .bh{margin-left:auto;font-size:11px;color:var(--text-2);font-weight:700}
-.back-btn{border:0;background:var(--surface);box-shadow:var(--shadow-soft);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--blue)}
+.back-btn{border:0;border-radius:50%;display:grid;place-items:center}
 .back-btn{width:38px;height:38px;background:transparent;box-shadow:none;color:var(--text);margin-left:-6px}
 .back-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .segment{display:flex;gap:4px;min-width:max-content;background:var(--surface-2);padding:4px;border-radius:15px}
