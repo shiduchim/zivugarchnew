@@ -41,10 +41,6 @@ html[data-skin="kids"] .warm-detail-page{
 html[data-skin="kids"] .warm-detail-glow,
 html[data-skin="kids"] .warm-detail-page>.warm-wordmark{display:none!important}
 
-/* Flatten the two existing identity wrappers into the page grid. No fields change. */
-html[data-skin="kids"] .warm-detail-title,
-html[data-skin="kids"] .warm-person-hero{display:contents!important}
-
 /* Top bar */
 html[data-skin="kids"] .warm-back,
 html[data-skin="kids"] .warm-more{
@@ -96,46 +92,6 @@ html[data-skin="kids"] .warm-detail-page::before{
   min-height:118px;
   z-index:0;
 }
-html[data-skin="kids"] .warm-detail-name{
-  grid-column:2 / 4;
-  grid-row:2;
-  align-self:end;
-  z-index:1;
-  min-width:0;
-  display:grid;
-  grid-template-columns:max-content minmax(0,1fr);
-  column-gap:8px;
-  align-items:center;
-  padding:16px 16px 0 0;
-}
-html[data-skin="kids"] .warm-detail-name h1{
-  grid-column:1 / -1;
-  margin:0!important;
-  color:var(--cartoon-navy)!important;
-  font:800 clamp(24px,7cqi,34px)/1.08 var(--cartoon-display)!important;
-  letter-spacing:-.025em!important;
-  text-shadow:none!important;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-detail-name>div{
-  margin:6px 0 0!important;
-  color:var(--cartoon-navy)!important;
-  font-size:15px!important;
-  font-weight:750;
-  min-width:0;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-detail-name>span{
-  justify-self:start;
-  margin:6px 0 0!important;
-  padding:3px 11px!important;
-  border:2.5px solid var(--cartoon-navy)!important;
-  border-radius:999px!important;
-  background:var(--cartoon-butter-strong)!important;
-  color:var(--cartoon-navy)!important;
-  font-size:12px!important;
-  font-weight:850!important;
-}
 html[data-skin="kids"] .warm-person-big{
   grid-column:1;
   grid-row:2 / 4;
@@ -157,77 +113,6 @@ html[data-skin="kids"] .warm-person-big{
 /* Initials only. Explicitly neutralizes the old star sticker. */
 html[data-skin="kids"] .warm-person-big::after,
 html[data-skin="kids"] .person-avatar::after{content:none!important;display:none!important}
-
-html[data-skin="kids"] .warm-person-hero-copy{
-  grid-column:2 / 4;
-  grid-row:3;
-  z-index:1;
-  align-self:start;
-  padding:0 16px 16px 0;
-  min-width:0;
-}
-html[data-skin="kids"] .warm-person-hero-copy strong{
-  display:block;
-  color:var(--cartoon-navy)!important;
-  font-size:15px!important;
-  font-weight:850!important;
-  overflow-wrap:anywhere;
-}
-html[data-skin="kids"] .warm-person-hero-copy small{
-  display:block;
-  margin-top:3px!important;
-  color:var(--cartoon-muted)!important;
-  font-size:13px!important;
-}
-
-/* Summary tiles */
-html[data-skin="kids"] .warm-metric-grid{
-  grid-column:1 / -1;
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:10px!important;
-  margin:0!important;
-  max-width:none!important;
-}
-html[data-skin="kids"] .warm-metric{
-  min-height:94px!important;
-  padding:12px 8px!important;
-  border:var(--cartoon-outline)!important;
-  border-radius:22px!important;
-  box-shadow:var(--cartoon-lift)!important;
-  display:grid!important;
-  justify-items:center;
-  align-content:center;
-  gap:6px!important;
-  text-align:center;
-  color:var(--cartoon-navy)!important;
-}
-html[data-skin="kids"] .warm-metric.sage{background:var(--cartoon-sky)!important}
-html[data-skin="kids"] .warm-metric.amber{background:var(--cartoon-butter-strong)!important}
-html[data-skin="kids"] .warm-metric.blue{background:var(--cartoon-mint)!important}
-html[data-skin="kids"] .warm-metric-icon{
-  width:44px!important;
-  height:44px!important;
-  border:2.5px solid var(--cartoon-navy)!important;
-  border-radius:50%!important;
-  background:var(--cartoon-paper)!important;
-  color:var(--cartoon-navy)!important;
-  display:grid!important;
-  place-items:center!important;
-  overflow:hidden;
-}
-html[data-skin="kids"] .warm-metric-icon svg{width:58%!important;height:58%!important;stroke:var(--cartoon-navy)!important;stroke-width:2!important}
-html[data-skin="kids"] .warm-metric small{font-size:12.5px!important;line-height:1.15!important;color:var(--cartoon-muted)!important;font-weight:750!important}
-html[data-skin="kids"] .warm-metric strong{margin:0!important;font:800 22px/1.05 var(--cartoon-display)!important;color:var(--cartoon-navy)!important;overflow:visible!important}
-/* Active shidduchim uses the same drawn heart language as the preview. */
-html[data-skin="kids"] .warm-metric.blue .warm-metric-icon svg{display:none!important}
-html[data-skin="kids"] .warm-metric.blue .warm-metric-icon{
-  background-color:var(--cartoon-paper)!important;
-  background-repeat:no-repeat!important;
-  background-position:center!important;
-  background-size:58%!important;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237ed9a8' stroke='%231b2a49' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20.5S3.5 15.4 3.5 9.6A4.4 4.4 0 0 1 12 7.9a4.4 4.4 0 0 1 8.5 1.7c0 5.8-8.5 10.9-8.5 10.9z'/%3E%3C/svg%3E")!important;
-}
 
 /* Contact actions: five equal cartoon tiles across the same column. */
 html[data-skin="kids"] .warm-contact-row{
@@ -340,7 +225,6 @@ html[data-skin="kids"] .warm-profile-card + .warm-info-card{
 }
 html[data-skin="kids"] .warm-info-card,
 html[data-skin="kids"] .warm-history,
-html[data-skin="kids"] .warm-related-card,
 html[data-skin="kids"] .warm-empty{
   background:var(--cartoon-paper)!important;
   border:var(--cartoon-outline)!important;
@@ -449,15 +333,6 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
 }
 
 @container (min-width:600px){
-  html[data-skin="kids"] .warm-metric{
-    grid-template-columns:auto minmax(0,1fr)!important;
-    grid-template-rows:auto auto;
-    justify-items:start;
-    text-align:left;
-    align-items:center;
-    column-gap:12px!important;
-  }
-  html[data-skin="kids"] .warm-metric-icon{grid-row:1 / 3}
 }
 
 @container (max-width:380px){
@@ -468,12 +343,6 @@ html[data-skin="kids"] .cartoon-nav .warm-nav-icon.cartoon-emoji{
     padding:14px 12px 28px!important;
   }
   html[data-skin="kids"] .warm-person-big{width:68px!important;height:68px!important;border-radius:22px!important;font-size:23px!important}
-  html[data-skin="kids"] .warm-detail-name{padding:12px 10px 0 0}
-  html[data-skin="kids"] .warm-person-hero-copy{padding:0 10px 12px 0}
-  html[data-skin="kids"] .warm-detail-name>div{font-size:13px!important}
-  html[data-skin="kids"] .warm-person-hero-copy strong{font-size:14px!important}
-  html[data-skin="kids"] .warm-metric{padding:10px 4px!important;min-height:90px!important}
-  html[data-skin="kids"] .warm-metric small{font-size:11.5px!important}
   html[data-skin="kids"] .warm-contact-row{gap:5px!important}
   html[data-skin="kids"] .warm-contact{padding:7px 1px!important;min-height:72px!important}
   html[data-skin="kids"] .warm-contact>span{width:38px!important;height:38px!important}

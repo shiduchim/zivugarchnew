@@ -1,9 +1,6 @@
 /* Shidduch stage bar: Profile sent → References → Date 1–8 → Marriage. */
 .zm-stage-card .warm-match-main{min-width:0}
 .zm-stage{margin-top:7px;min-width:0}
-.zm-stage-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px;min-width:0}
-.zm-stage-meta strong{font-size:10.5px;line-height:1.1;color:var(--text-1);white-space:nowrap}
-.zm-stage-meta span{font-size:9.5px;line-height:1.1;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .zm-stage-track{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:3px;align-items:center;width:100%;height:8px}
 .zm-stage-seg{display:block;height:4px;border-radius:999px;background:color-mix(in srgb,var(--border,#d9dce6) 72%,transparent)}
 .zm-stage-seg.done,.zm-stage-seg.now{opacity:1}
@@ -19,16 +16,11 @@
 .zm-stage-seg.s8.done,.zm-stage-seg.s8.now{background:#e4579d;color:#e4579d}
 .zm-stage-seg.s9.done,.zm-stage-seg.s9.now{background:#ee6b7f;color:#ee6b7f}
 .zm-stage-seg.s10.done,.zm-stage-seg.s10.now{background:#39b86c;color:#39b86c}
-.zm-idea-note{margin-top:5px;font-size:10px;font-weight:750;color:var(--blue,#557ea6)}
 .zm-stage.detail{width:min(92%,420px);margin:10px auto 3px;padding:9px 11px;border-radius:12px;background:color-mix(in srgb,var(--surface,#fff) 70%,transparent);border:1px solid color-mix(in srgb,var(--border,#d9dce6) 78%,transparent)}
-.zm-stage.detail .zm-stage-meta strong{font-size:11px}
-.zm-stage.detail .zm-stage-meta span{font-size:10px}
 .zm-stage.detail .zm-stage-track{height:10px}
 .zm-stage.detail .zm-stage-seg{height:5px}
 .zm-stage.detail .zm-stage-seg.now{height:8px}
 @media (max-width:520px){
   .zm-stage-track{gap:2px}
-  .zm-stage-meta strong{font-size:10px}
-  .zm-stage-meta span{font-size:9px;max-width:48%}
   .zm-stage.detail{width:calc(100% - 18px)}
 }

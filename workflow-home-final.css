@@ -123,34 +123,14 @@
 .zm-profile-meta{margin-top:4px;font-size:12px;font-weight:700;color:var(--text-2,#68727b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .zm-profile-occupation{margin-top:3px;font-size:11.5px;color:var(--text-3,#8b9095);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.zm-profile-identity.is-stuck{
-  grid-template-columns:40px 36px minmax(0,1fr) 40px;
-  column-gap:8px;
-  min-height:56px;
-  margin-left:-10px;
-  margin-right:-10px;
-  padding:6px 10px;
-  border-radius:0 0 16px 16px;
-  background:color-mix(in srgb,var(--surface,#fff) 94%,transparent);
-  box-shadow:0 8px 22px rgba(24,38,54,.10);
-  backdrop-filter:blur(14px);
-}
-.zm-profile-identity.is-stuck .zm-profile-avatar{width:34px!important;height:34px!important;min-width:34px!important;font-size:11px!important}
-.zm-profile-identity.is-stuck .zm-profile-copy h1{font-size:16px;line-height:1.1}
-.zm-profile-identity.is-stuck .zm-profile-meta,
-.zm-profile-identity.is-stuck .zm-profile-occupation{display:none}
-
-html[data-skin="dark"] .zm-hear-back-row,
-html[data-skin="midnight"] .zm-hear-back-row{background:rgba(255,255,255,.06)}
+html[data-skin="dark"] .zm-hear-back-row{background:rgba(255,255,255,.06)}
 html[data-skin="dark"] .zm-person-open-box.mine{background:rgba(80,145,205,.16)}
 html[data-skin="dark"] .zm-person-open-box.theirs{background:rgba(208,154,66,.16)}
 html[data-skin="dark"] .zm-person-open-box b{color:inherit}
-html[data-skin="dark"] .zm-profile-identity.is-stuck{background:rgba(24,29,35,.94)}
 html[data-skin="dark"] .zm-profile-copy h1{color:inherit}
 
 html[data-skin="contrast"] .zm-hear-back-row,
 html[data-skin="contrast"] .zm-person-open-box{border:2px solid currentColor;box-shadow:none}
-html[data-skin="contrast"] .zm-profile-identity.is-stuck{border-bottom:2px solid currentColor;box-shadow:none}
 
 @media(min-width:760px){
   .warm-title-copy h1{font-size:40px}

@@ -6,51 +6,36 @@ html[data-skin="boys"] .warm-person-row,
 html[data-skin="boys"] .warm-activity-row,
 html[data-skin="boys"] .warm-match-row,
 html[data-skin="boys"] .warm-summary,
-html[data-skin="boys"] .warm-metric,
 html[data-skin="boys"] .warm-info-card,
-html[data-skin="boys"] .warm-history-card,
 html[data-skin="boys"] .warm-profile-card,
-html[data-skin="boys"] .warm-related-card,
 html[data-skin="boys"] .next-card,
 html[data-skin="girls"] .warm-person-row,
 html[data-skin="girls"] .warm-activity-row,
 html[data-skin="girls"] .warm-match-row,
 html[data-skin="girls"] .warm-summary,
-html[data-skin="girls"] .warm-metric,
 html[data-skin="girls"] .warm-info-card,
-html[data-skin="girls"] .warm-history-card,
 html[data-skin="girls"] .warm-profile-card,
-html[data-skin="girls"] .warm-related-card,
 html[data-skin="girls"] .next-card,
 html[data-skin="neon"] .warm-person-row,
 html[data-skin="neon"] .warm-activity-row,
 html[data-skin="neon"] .warm-match-row,
 html[data-skin="neon"] .warm-summary,
-html[data-skin="neon"] .warm-metric,
 html[data-skin="neon"] .warm-info-card,
-html[data-skin="neon"] .warm-history-card,
 html[data-skin="neon"] .warm-profile-card,
-html[data-skin="neon"] .warm-related-card,
 html[data-skin="neon"] .next-card,
 html[data-skin="ocean"] .warm-person-row,
 html[data-skin="ocean"] .warm-activity-row,
 html[data-skin="ocean"] .warm-match-row,
 html[data-skin="ocean"] .warm-summary,
-html[data-skin="ocean"] .warm-metric,
 html[data-skin="ocean"] .warm-info-card,
-html[data-skin="ocean"] .warm-history-card,
 html[data-skin="ocean"] .warm-profile-card,
-html[data-skin="ocean"] .warm-related-card,
 html[data-skin="ocean"] .next-card,
 html[data-skin="sunset"] .warm-person-row,
 html[data-skin="sunset"] .warm-activity-row,
 html[data-skin="sunset"] .warm-match-row,
 html[data-skin="sunset"] .warm-summary,
-html[data-skin="sunset"] .warm-metric,
 html[data-skin="sunset"] .warm-info-card,
-html[data-skin="sunset"] .warm-history-card,
 html[data-skin="sunset"] .warm-profile-card,
-html[data-skin="sunset"] .warm-related-card,
 html[data-skin="sunset"] .next-card{
   color:var(--text)!important;
   border:1px solid var(--line)!important;
@@ -67,7 +52,7 @@ html[data-skin="boys"]{
   --shadow:0 12px 28px rgba(31,100,125,.10);--shadow-soft:0 6px 16px rgba(31,100,125,.08)
 }
 html[data-skin="boys"] body{background:radial-gradient(circle at 90% 3%,#b6eff7 0,transparent 30%),linear-gradient(155deg,#e8f9ff,#f7fdff 52%,#ddf6ef) fixed!important}
-html[data-skin="boys"] .warm-person-row,html[data-skin="boys"] .warm-activity-row,html[data-skin="boys"] .warm-match-row,html[data-skin="boys"] .warm-summary,html[data-skin="boys"] .warm-metric{background:rgba(255,255,255,.94)!important}
+html[data-skin="boys"] .warm-person-row,html[data-skin="boys"] .warm-activity-row,html[data-skin="boys"] .warm-match-row,html[data-skin="boys"] .warm-summary{background:rgba(255,255,255,.94)!important}
 html[data-skin="boys"] .warm-avatar,html[data-skin="boys"] .warm-person-big{background:linear-gradient(135deg,#65d8f1,#7fe3bf)!important;color:#12384b!important}
 html[data-skin="boys"] .warm-bottom-nav{background:rgba(247,253,255,.97)!important;border-top:1px solid rgba(15,135,170,.16)!important}
 html[data-skin="boys"] .warm-nav.active,html[data-skin="boys"] .warm-seg.active{background:#cfeff7!important;color:#0f6281!important}
@@ -82,7 +67,7 @@ html[data-skin="girls"]{
   --shadow:0 12px 28px rgba(126,63,102,.10);--shadow-soft:0 6px 16px rgba(126,63,102,.08)
 }
 html[data-skin="girls"] body{background:radial-gradient(circle at 13% 0,#ffd4e9 0,transparent 31%),radial-gradient(circle at 92% 14%,#ead8ff 0,transparent 30%),linear-gradient(160deg,#fff1f8,#fffafe 55%,#f8efff) fixed!important}
-html[data-skin="girls"] .warm-person-row,html[data-skin="girls"] .warm-activity-row,html[data-skin="girls"] .warm-match-row,html[data-skin="girls"] .warm-summary,html[data-skin="girls"] .warm-metric{background:rgba(255,255,255,.94)!important}
+html[data-skin="girls"] .warm-person-row,html[data-skin="girls"] .warm-activity-row,html[data-skin="girls"] .warm-match-row,html[data-skin="girls"] .warm-summary{background:rgba(255,255,255,.94)!important}
 html[data-skin="girls"] .warm-avatar,html[data-skin="girls"] .warm-person-big{background:linear-gradient(135deg,#ffb3d2,#d8b6ff)!important;color:#582744!important}
 html[data-skin="girls"] .warm-bottom-nav{background:rgba(255,249,253,.97)!important;border-top:1px solid rgba(181,83,134,.15)!important}
 html[data-skin="girls"] .warm-nav.active,html[data-skin="girls"] .warm-seg.active{background:#f6dceb!important;color:#9a3f72!important}
@@ -97,7 +82,7 @@ html[data-skin="neon"]{
   --shadow:0 12px 30px rgba(99,65,180,.11);--shadow-soft:0 6px 18px rgba(44,196,220,.10)
 }
 html[data-skin="neon"] body{background:radial-gradient(circle at 16% 0,#e2d9ff 0,transparent 32%),radial-gradient(circle at 90% 15%,#c9f8ff 0,transparent 30%),linear-gradient(150deg,#f8f4ff,#ffffff 55%,#eefcff) fixed!important}
-html[data-skin="neon"] .warm-person-row,html[data-skin="neon"] .warm-activity-row,html[data-skin="neon"] .warm-match-row,html[data-skin="neon"] .warm-summary,html[data-skin="neon"] .warm-metric{background:#fff!important;border-color:rgba(93,72,232,.18)!important;box-shadow:0 0 0 1px rgba(0,210,235,.05),0 8px 22px rgba(91,72,232,.10)!important}
+html[data-skin="neon"] .warm-person-row,html[data-skin="neon"] .warm-activity-row,html[data-skin="neon"] .warm-match-row,html[data-skin="neon"] .warm-summary{background:#fff!important;border-color:rgba(93,72,232,.18)!important;box-shadow:0 0 0 1px rgba(0,210,235,.05),0 8px 22px rgba(91,72,232,.10)!important}
 html[data-skin="neon"] .warm-nav.active,html[data-skin="neon"] .warm-seg.active{background:linear-gradient(135deg,#e8e2ff,#d9f9ff)!important;color:#4c3ac3!important}
 html[data-skin="neon"] .warm-bottom-nav{background:rgba(255,255,255,.96)!important}
 
@@ -111,7 +96,7 @@ html[data-skin="ocean"]{
   --shadow:0 12px 28px rgba(23,111,126,.10);--shadow-soft:0 6px 16px rgba(23,111,126,.08)
 }
 html[data-skin="ocean"] body{background:radial-gradient(circle at 88% 4%,#b5eff1 0,transparent 31%),linear-gradient(160deg,#e7fbfc,#f8ffff 48%,#e8f8ef) fixed!important}
-html[data-skin="ocean"] .warm-person-row,html[data-skin="ocean"] .warm-activity-row,html[data-skin="ocean"] .warm-match-row,html[data-skin="ocean"] .warm-summary,html[data-skin="ocean"] .warm-metric{background:rgba(255,255,255,.95)!important}
+html[data-skin="ocean"] .warm-person-row,html[data-skin="ocean"] .warm-activity-row,html[data-skin="ocean"] .warm-match-row,html[data-skin="ocean"] .warm-summary{background:rgba(255,255,255,.95)!important}
 html[data-skin="ocean"] .warm-bottom-nav{background:rgba(248,255,255,.97)!important}
 html[data-skin="ocean"] .warm-nav.active,html[data-skin="ocean"] .warm-seg.active{background:#d4f0f1!important;color:#116f82!important}
 
@@ -125,14 +110,14 @@ html[data-skin="sunset"]{
   --shadow:0 12px 28px rgba(170,79,92,.10);--shadow-soft:0 6px 16px rgba(170,79,92,.08)
 }
 html[data-skin="sunset"] body{background:radial-gradient(circle at 12% 0,#ffd1c3 0,transparent 31%),radial-gradient(circle at 93% 14%,#efddff 0,transparent 30%),linear-gradient(155deg,#fff0e9,#fffafa 52%,#f9edff) fixed!important}
-html[data-skin="sunset"] .warm-person-row,html[data-skin="sunset"] .warm-activity-row,html[data-skin="sunset"] .warm-match-row,html[data-skin="sunset"] .warm-summary,html[data-skin="sunset"] .warm-metric{background:rgba(255,255,255,.95)!important}
+html[data-skin="sunset"] .warm-person-row,html[data-skin="sunset"] .warm-activity-row,html[data-skin="sunset"] .warm-match-row,html[data-skin="sunset"] .warm-summary{background:rgba(255,255,255,.95)!important}
 html[data-skin="sunset"] .warm-bottom-nav{background:rgba(255,250,248,.97)!important}
 html[data-skin="sunset"] .warm-nav.active,html[data-skin="sunset"] .warm-seg.active{background:#f8dfeb!important;color:#90416e!important}
 
 /* High contrast stays light and extremely readable. */
 html[data-skin="contrast"]{color-scheme:light;--bg:#fff;--bg-2:#fff;--surface:#fff;--surface-2:#f2f2f2;--surface-3:#e8e8e8;--text:#000;--text-2:#222;--text-3:#4a4a4a;--line:#111;--blue:#0645ad;--blue-2:#e6f0ff;--blue-3:#cfe1ff;--sage:#116b35;--sage-2:#e2f4e8;--amber:#7a5600;--amber-2:#fff2bd;--shadow:none;--shadow-soft:none}
 html[data-skin="contrast"] body{background:#fff!important}
-html[data-skin="contrast"] .warm-person-row,html[data-skin="contrast"] .warm-activity-row,html[data-skin="contrast"] .warm-match-row,html[data-skin="contrast"] .warm-summary,html[data-skin="contrast"] .warm-metric{background:#fff!important;border:2px solid #111!important;box-shadow:none!important}
+html[data-skin="contrast"] .warm-person-row,html[data-skin="contrast"] .warm-activity-row,html[data-skin="contrast"] .warm-match-row,html[data-skin="contrast"] .warm-summary{background:#fff!important;border:2px solid #111!important;box-shadow:none!important}
 
 /* Never allow inherited dark text colors from earlier skin rules to reduce readability. */
 html[data-skin="boys"] .warm-title-copy h1,html[data-skin="boys"] .warm-title-copy p,html[data-skin="boys"] .warm-person-top strong,html[data-skin="boys"] .warm-activity-top strong,

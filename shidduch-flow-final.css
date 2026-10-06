@@ -14,22 +14,14 @@
 
 /* Ended cards are intentionally quieter/grey, while their bar length still shows where they stopped. */
 .zm-ended-card{border-color:color-mix(in srgb,#8f97a2 45%,var(--border,#d9dce6))!important}
-.zm-stage.ended .zm-stage-meta strong{color:#6f7781!important}
-.zm-stage.ended .zm-stage-meta span{color:#8a919a!important}
 .zm-stage.ended .zm-stage-seg.done,.zm-stage.ended .zm-stage-seg.now{background:#8f97a2!important;color:#8f97a2!important}
 
 .zm-end-action{display:flex;justify-content:center;margin:16px auto 28px;max-width:760px}
 .zm-end-action .ghost-btn{min-width:150px}
-.zm-ended-summary{display:grid;gap:8px;max-width:760px;margin:14px auto 28px;padding:14px 16px;border:1px solid color-mix(in srgb,#8f97a2 35%,var(--border,#d9dce6));border-radius:14px;background:color-mix(in srgb,#8f97a2 7%,var(--surface,#fff))}
-.zm-ended-summary>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:start}
-.zm-ended-summary span{font-size:10px;color:var(--text-2);font-weight:700}
-.zm-ended-summary strong{font-size:12px;color:var(--text-1);font-weight:800;overflow-wrap:anywhere}
 
 /* High Contrast owns its selected-state treatment. */
 html[data-skin="contrast"] .warm-seg[data-seg-scope="shidduchim"].active{box-shadow:none!important}
 
 @media(max-width:520px){
-  .zm-ended-summary{margin:12px 9px 24px}
-  .zm-ended-summary>div{grid-template-columns:92px minmax(0,1fr)}
   .warm-seg[data-seg-scope="shidduchim"]{font-size:11px!important}
 }

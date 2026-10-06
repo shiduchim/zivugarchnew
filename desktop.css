@@ -64,8 +64,6 @@
   .warm-segment-scroll{margin:0 0 18px!important;overflow:visible!important;}
   .warm-segment{min-width:0!important;width:max-content!important;max-width:100%;padding:5px!important;border-radius:17px!important;}
   .warm-seg{padding:9px 15px!important;font-size:12px!important;}
-
-  .warm-summary-grid{grid-template-columns:repeat(3,minmax(180px,1fr))!important;gap:14px!important;margin:8px 0 22px!important;max-width:860px!important;margin-left:0!important;}
   .warm-summary{min-height:98px!important;border-radius:21px!important;padding:15px!important;gap:12px!important;}
   .warm-summary-icon{width:40px!important;height:40px!important;}
   .warm-summary-icon svg{width:20px!important;height:20px!important;}
@@ -103,33 +101,17 @@
   /* Detail pages stay focused, but use the extra width instead of looking like a stretched phone. */
   .warm-detail-page{max-width:980px!important;margin:0 auto!important;padding:4px 8px 40px!important;overflow:visible!important;}
   .warm-detail-glow{left:-16%!important;right:-16%!important;top:-185px!important;height:380px!important;}
-  .warm-detail-title{grid-template-columns:40px minmax(0,1fr) 40px!important;gap:12px!important;}
-  .warm-detail-name h1{font-size:43px!important;}
-  .warm-detail-name>div{font-size:13px!important;margin-top:7px!important;}
-  .warm-detail-name>span{font-size:10px!important;padding:6px 11px!important;}
-  .warm-person-hero{margin:20px 0 18px!important;gap:16px!important;}
   .warm-person-big{width:82px!important;height:82px!important;font-size:22px!important;}
-  .warm-person-hero-copy strong{font-size:15px!important;}
-  .warm-person-hero-copy small{font-size:11.5px!important;}
-  .warm-metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin-bottom:17px!important;}
-  .warm-metric{min-height:108px!important;border-radius:21px!important;padding:16px 14px!important;gap:11px!important;}
-  .warm-metric-icon{width:42px!important;height:42px!important;}
-  .warm-metric small{font-size:10px!important;}
-  .warm-metric strong{font-size:16px!important;margin-top:9px!important;}
   .warm-contact-row{grid-template-columns:repeat(5,92px)!important;justify-content:start!important;gap:10px!important;margin:8px 0 18px!important;}
   .warm-contact{font-size:9.5px!important;}
   .warm-contact>span{width:44px!important;height:44px!important;}
   .warm-tabs{max-width:720px!important;margin-bottom:17px!important;}
-  .warm-info-card,.warm-history-card,.warm-profile-card,.warm-related-card{max-width:900px!important;}
+  .warm-info-card,.warm-profile-card{max-width:900px!important;}
 
   /* Sheets become proper desktop dialogs instead of phone bottom sheets. */
   .scrim{display:grid!important;place-items:center!important;padding:28px!important;}
   .sheet{width:min(620px,100%)!important;max-height:calc(100vh - 56px)!important;border-radius:28px!important;margin:0!important;box-shadow:0 28px 80px rgba(40,35,30,.20)!important;}
   .sheet-handle{display:none!important;}
-
-  /* Dark mode still uses the same desktop structure. */
-  html[data-theme="dark"] body{background:linear-gradient(135deg,#151917 0%,#171d1a 60%,#141816 100%);}
-  html[data-theme="dark"] .warm-bottom-nav{background:rgba(32,38,34,.96)!important;}
 }
 
 @media (min-width: 1180px){
@@ -138,9 +120,7 @@
   .warm-stack{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;}
   .warm-title-copy h1{font-size:46px!important;}
   .warm-search-row{grid-template-columns:minmax(0,780px) 50px!important;}
-  .warm-summary-grid{max-width:930px!important;}
   .warm-detail-page{max-width:1080px!important;}
-  .warm-metric-grid{max-width:930px!important;}
 }
 
 @media (min-width: 1500px){

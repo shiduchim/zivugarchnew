@@ -1,26 +1,4 @@
 /* Clickable person links inside shidduch detail. */
-.zm-profile-link{
-  appearance:none;
-  border:0;
-  padding:0;
-  cursor:pointer;
-  font:inherit;
-  transition:transform .14s ease,box-shadow .14s ease;
-}
-.zm-profile-link.guy{
-  background:#e7f0ff!important;
-  color:#2f63d8!important;
-  box-shadow:inset 0 0 0 2px #c9dcff;
-}
-.zm-profile-link.girl{
-  background:#fde7f1!important;
-  color:#d83f84!important;
-  box-shadow:inset 0 0 0 2px #f8c9dc;
-}
-.zm-profile-link:hover,.zm-profile-link:focus-visible{
-  transform:translateY(-1px) scale(1.04);
-  box-shadow:0 0 0 3px rgba(91,126,255,.16),inset 0 0 0 2px currentColor;
-}
 .zm-person-text-link{
   appearance:none;
   border:0;
