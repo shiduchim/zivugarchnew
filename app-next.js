@@ -24,7 +24,7 @@ function settingsSheet(){
 
     <div class="settings-heading">Spacing</div>
     <div class="sheet-section">
-      <div class="setting-row"><div class="setting-copy"><b>Layout feel</b><span>Choose how roomy the screens feel</span></div><div class="option-group">${[['1','Standard'],['2','Roomy'],['3','Compact']].map(([v,l])=>`<button class="option ${String(s.appearance||'1')===v?'active':''}" data-setting="appearance" data-value="${v}">${l}</button>`).join('')}</div></div>
+      <div class="setting-row"><div class="setting-copy"><b>Layout feel</b><span>Choose how roomy the screens feel</span></div><div class="option-group layout-feel-options">${[['1','Standard'],['2','Roomy'],['3','Compact']].map(([v,l])=>`<button class="option ${String(s.appearance||'1')===v?'active':''}" data-setting="appearance" data-value="${v}" aria-pressed="${String(s.appearance||'1')===v?'true':'false'}">${l}</button>`).join('')}</div></div>
     </div>
 
     <div class="settings-heading">Use</div>
