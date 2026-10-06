@@ -2,7 +2,15 @@
 // A save action ignores repeated taps while it is still running (prevents double records).
 function runOnce(key,fn){if(runOnce.busy[key])return;runOnce.busy[key]=true;Promise.resolve().then(fn).finally(()=>{runOnce.busy[key]=false;});}
 runOnce.busy={};
-function handleClick(e){const b=e.target.closest('button');if(!b)return;
+// The app's one click handler.
+function handleClick(e){
+  if(e.target.classList.contains('scrim')){closeSheet();return;}
+  const zmPerson=e.target.closest('[data-zm-person]');
+  if(zmPerson){openPersonFromShidduch(zmPerson.dataset.zmPerson);return;}
+  if(followShidduchReturn(e))return;
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.screen==='guys'&&openMyProfileInSingleMode())return;
+  if('recentFilter' in b.dataset||'recentSort' in b.dataset){setRecentView(b);return;}
   if(b.dataset.screen){ui.screen=b.dataset.screen;ui.detail=null;ui.search='';ui.detailTab='';render();window.scrollTo({top:0,behavior:'smooth'});return;}
   if(b.dataset.person){ui.detail={type:'person',id:b.dataset.person};const p=person(b.dataset.person);ui.detailTab=p?.types?.includes('Shadchan')?'details':'profile';render();window.scrollTo(0,0);return;}
   if(b.dataset.shidduch){ui.detail={type:'shidduch',id:b.dataset.shidduch};ui.detailTab='overview';render();window.scrollTo(0,0);return;}
@@ -44,12 +52,17 @@ function handleClick(e){const b=e.target.closest('button');if(!b)return;
   else if(act==='detail-menu')detailMenu();
   else if(act==='edit-person')editPersonSheet(ui.detail?.id);
   else if(act==='log-profile')logProfileSend(b.dataset.personId);
+  else if(act==='quick-add')quickAdd(b.dataset.add);
+  else if(act==='save-edit-person')runOnce(act,saveEditPerson);
+  else if(act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
+  else if(act==='confirm-end-shidduch')runOnce('end-shidduch',confirmEndShidduch);
 }
 
 // The shidduch page's ⋯ offers only actions that exist for that shidduch; with none, the ⋯ is hidden.
 function shidduchMenuActions(s){return s&&s.status!=='ended'&&zmStageForShidduch(s).index!==10?['end']:[];}
 function detailMenu(){if(ui.detail?.type==='shidduch'){const s=shidduch(ui.detail.id);if(!shidduchMenuActions(s).length)return;openSheet(`<h2>${esc(shidduchTitle(s))}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>End shidduch</b><span>Save where it ended and why</span></div><button class="option" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);return;}if(ui.detail?.type!=='person')return;const p=person(ui.detail.id);openSheet(`<h2>${esc(p.name)}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Edit person</b><span>Facts and profile</span></div><button class="option" data-act="edit-person">Edit</button></div><div class="setting-row"><div class="setting-copy"><b>Add activity</b><span>Call, note, message or referral</span></div><button class="option" data-act="add-person-note" data-person-id="${p.id}">Add</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);}
-function editPersonSheet(pid){const p=person(pid||ui.detail?.id);if(!p)return;openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid"><div class="field"><label>Name</label><input id="epName" value="${esc(p.name)}"></div><div class="field"><label>City</label><input id="epCity" value="${esc(p.city||'')}"></div><div class="field"><label>Age</label><input id="epAge" inputmode="numeric" value="${esc(p.age||'')}"></div><div class="field"><label>Occupation</label><input id="epOccupation" value="${esc(p.occupation||'')}"></div><div class="field"><label>Phone</label><input id="epPhone" value="${esc(p.phone||'')}"></div><div class="field"><label>Email</label><input id="epEmail" value="${esc(p.email||'')}"></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(p.profileText||'')}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson">Save</button></div>`);document.getElementById('saveEditPerson').onclick=async()=>{p.name=document.getElementById('epName').value.trim()||p.name;p.city=document.getElementById('epCity').value.trim();p.age=Number(document.getElementById('epAge').value)||undefined;p.occupation=document.getElementById('epOccupation').value.trim();p.phone=document.getElementById('epPhone').value.trim();p.email=document.getElementById('epEmail').value.trim();const newProfile=document.getElementById('epProfile').value.trim();if(newProfile!==p.profileText){p.profileText=newProfile;p.profileVersion=(p.profileVersion||0)+1;}await save();closeSheet();render();showToast('Saved');};}
+function editPersonSheet(pid){const p=person(pid||ui.detail?.id);if(!p)return;openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid"><div class="field"><label>Name</label><input id="epName" value="${esc(p.name)}"></div><div class="field"><label>City</label><input id="epCity" value="${esc(p.city||'')}"></div><div class="field"><label>Age</label><input id="epAge" inputmode="numeric" value="${esc(p.age||'')}"></div><div class="field"><label>Occupation</label><input id="epOccupation" value="${esc(p.occupation||'')}"></div><div class="field"><label>Phone</label><input id="epPhone" value="${esc(p.phone||'')}"></div><div class="field"><label>Email</label><input id="epEmail" value="${esc(p.email||'')}"></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(p.profileText||'')}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson" data-act="save-edit-person">Save</button></div>`);}
+async function saveEditPerson(){const p=person(document.getElementById('epId')?.value);if(!p)return;p.name=document.getElementById('epName').value.trim()||p.name;p.city=document.getElementById('epCity').value.trim();p.age=Number(document.getElementById('epAge').value)||undefined;p.occupation=document.getElementById('epOccupation').value.trim();p.phone=document.getElementById('epPhone').value.trim();p.email=document.getElementById('epEmail').value.trim();const newProfile=document.getElementById('epProfile').value.trim();if(newProfile!==p.profileText){p.profileText=newProfile;p.profileVersion=(p.profileVersion||0)+1;}await save();closeSheet();render();showToast('Saved');}
 
 function handleInput(e){if(e.target.matches('[data-role="search"]')){ui.search=e.target.value;clearTimeout(handleInput.t);handleInput.t=setTimeout(render,90);}}
 function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])importBackup(e.target.files[0]);}
@@ -57,7 +70,6 @@ function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])impo
 document.addEventListener('click',handleClick);
 document.addEventListener('input',handleInput);
 document.addEventListener('change',handleChange);
-overlay.addEventListener('click',e=>{if(e.target.classList.contains('scrim'))closeSheet();});
 
 async function init(){
   try{data=await dbGet(STATE_KEY);}

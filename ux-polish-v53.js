@@ -33,21 +33,19 @@ function nav(){
   return `<nav class="warm-bottom-nav">${items.map(([screen,ic,label])=>`<button class="warm-nav ${ui.screen===screen?'active':''}" data-screen="${screen}"><span class="warm-nav-icon">${icon(ic)}</span><span>${label}</span></button>`).join('')}</nav>`;
 }
 
-// Intercept My profile before the older general navigation handler.
-document.addEventListener('click',function(e){
-  const b=e.target.closest('button[data-screen="guys"]');
-  if(!b||data?.settings?.mode!=='single')return;
+// Single mode: the Guys tab is My profile.
+function openMyProfileInSingleMode(){
+  if(data?.settings?.mode!=='single')return false;
   const self=me();
-  if(!self)return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
+  if(!self)return false;
   ui.screen='guys';
   ui.detail={type:'person',id:self.id};
   ui.detailTab='profile';
   ui.search='';
   render();
   window.scrollTo({top:0,behavior:'smooth'});
-},true);
+  return true;
+}
 
 function zmGirlAppliesToMe(p){
   const self=me();

@@ -27,15 +27,10 @@ function recentScreen(){
     ${activityFeed(entries)}`;
 }
 
-// Handle the Recent sheet before the older generic click handler sees these buttons.
-document.addEventListener('click',function(e){
-  const filterButton=e.target.closest('button[data-recent-filter]');
-  const sortButton=e.target.closest('button[data-recent-sort]');
-  if(!filterButton&&!sortButton)return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
-  if(filterButton)ui.recentFilter=filterButton.dataset.recentFilter||'all';
-  if(sortButton)ui.recentSort=sortButton.dataset.recentSort||'newest';
+// The Recent filter sheet changes only how History is shown; the sheet stays open.
+function setRecentView(b){
+  if('recentFilter' in b.dataset)ui.recentFilter=b.dataset.recentFilter||'all';
+  if('recentSort' in b.dataset)ui.recentSort=b.dataset.recentSort||'newest';
   render();
   filtersSheet();
-},true);
+}
