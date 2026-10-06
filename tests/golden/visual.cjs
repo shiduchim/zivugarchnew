@@ -1,4 +1,4 @@
-// Visual + DOM golden run. Usage: node visual.cjs <baseURL> <outDir> [--hash-only] [--workers=4]
+// Visual + DOM golden run. Usage: node visual.cjs <baseURL> <outDir> [--hash-only] [--workers=4] [--fixture=demo]
 const L = require('./lib.cjs');
 const { states } = require('./states.cjs');
 const fs = require('fs');
@@ -11,7 +11,7 @@ const HASH_ONLY = process.argv.includes('--hash-only');   // keep DOM snapshots,
 const DOM_ONLY = process.argv.includes('--dom-only');     // no screenshots at all (fast)
 const WORKERS = Number(opt('workers', 4));
 const ONLY_SKINS = opt('skins', ''), ONLY_WIDTHS = opt('widths', ''), ONLY_MODES = opt('modes', ''), NO_VARIANTS = process.argv.includes('--no-variants');
-const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/demo.json'), 'utf8'));
+const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, `fixtures/${opt('fixture', 'demo')}.json`), 'utf8'));
 
 const VARIANT_STATES = ['tab-recent', 'tab-shadchanim-all', 'tab-shidduchim-inprogress', 'shadchan-miriam-details', 'person-leah-profile', 'shidduch-david_noa-overview', 'sheet-settings'];
 const combos = [];
