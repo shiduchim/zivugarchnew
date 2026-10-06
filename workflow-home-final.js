@@ -63,31 +63,6 @@ function zmPersonOpenStatus(p){
   return `<div class="zm-person-status-area">${boxes}<div class="zm-person-meta">${meta.map((x,i)=>`${i?'<i>·</i>':''}<span>${esc(x)}</span>`).join('')}</div></div>`;
 }
 
-const personDetailBeforeWorkflowHome=personDetail;
-personDetail=function(pid){
-  const p=person(pid);
-  let html=personDetailBeforeWorkflowHome(pid);
-  if(!p)return html;
-
-  // Compact identity area: one avatar, one name, one concise metadata block.
-  html=html.replace(/<div class="warm-detail-title">[\s\S]*?(?=<div class="warm-metric-grid">)/,zmProfileIdentity(p));
-
-  // Replace the three equal metric cards with status only when there is actually something open.
-  html=html.replace(/<div class="warm-metric-grid">[\s\S]*?(?=<div class="warm-contact-row">)/,zmPersonOpenStatus(p));
-
-  // This is an action, not a waiting status.
-  html=html.replace(/<button class="warm-contact wait"[^>]*>[\s\S]*?<\/button>/,`<button class="warm-contact wait zm-whats-next" data-contact="wait" data-person-id="${esc(p.id)}"><span>${icon('check')}</span><small>What's next?</small></button>`);
-
-  // Details contains stable facts only. Live workflow/status already lives above the tabs.
-  if(p.types?.includes('Shadchan')&&ui.detailTab==='details'){
-    html=html.replace(/<div><span>Their turn<\/span>[\s\S]*?<\/div>/,'');
-    html=html.replace(/<div><span>My turn<\/span>[\s\S]*?<\/div>/,'');
-    html=html.replace(/<div><span>Last contact<\/span>[\s\S]*?<\/div>/,'');
-    html=html.replaceAll('No source recorded','Not added yet');
-  }
-  return html;
-};
-
 // Collapse the compact profile identity further once the user scrolls past its start.
 let zmStickyRaf=0;
 function zmSyncProfileSticky(){

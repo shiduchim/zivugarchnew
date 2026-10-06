@@ -5,18 +5,6 @@
 
 function clarityFirstName(p){return String(p?.name||'').trim().split(/\s+/)[0]||'them';}
 
-// Person pages use the same wording as Recent and avoid ambiguous labels.
-const personDetailBeforeClarity=personDetail;
-personDetail=function(pid){
-  return personDetailBeforeClarity(pid)
-    .replaceAll('Waiting on them','Their turn')
-    .replaceAll('Waiting on me','My turn')
-    .replaceAll('Active shidduchim','Current shidduchim')
-    .replaceAll('Relationship and shidduch contact','Shadchan details and history')
-    .replaceAll('How I know her','How I know them')
-    .replaceAll('<small>Waiting</small>','<small>Set turn</small>');
-};
-
 // Clearer add flows without changing fields or actions.
 function addPersonSheet(typePreset){
   const types=['Guy','Girl','Shadchan','Reference'];

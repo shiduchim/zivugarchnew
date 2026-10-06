@@ -53,13 +53,6 @@ function universalAddSheet(){
   go('#qaIdea',()=>addIdeaSheet());go('#qaGuy',()=>addPersonSheet('Guy'));go('#qaShad',()=>addPersonSheet('Shadchan'));go('#qaGirl',()=>addPersonSheet('Girl'));go('#qaNote',()=>addActivitySheet());
 }
 
-const personDetailBeforeOffers=personDetail;
-personDetail=function(pid){
-  return personDetailBeforeOffers(pid)
-    .replaceAll('Ideas and shidduchim','Offers and shidduchim')
-    .replaceAll('Idea ·','Offer ·');
-};
-
 function openEndShidduchSheet(sid){
   const s=shidduch(sid);if(!s||s.status==='ended')return;
   const st=zmStageForShidduch(s);
