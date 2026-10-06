@@ -684,6 +684,94 @@ const tests = {
     await ctx.close();
   },
 
+  // ---- ARCHITECTURE.md §13.2 -------------------------------------------------------------------------
+  async A01_recent_is_a_view_of_the_ledger() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // Every row opens its entry, and from there one tap reaches what it is about.
+    const targets = await inPage(page, () => { const out = {}; for (const e of liveEntries()) { const a = e.about?.[0]; if (a && !out[a.type]) out[a.type] = e.id; } return out; });
+    const reached = {};
+    for (const [type, eid] of Object.entries(targets)) {
+      await inPage(page, () => { closeSheet(); ui.detail = null; ui.screen = 'recent'; render(); });
+      if (!(await page.$(`#app [data-entry="${eid}"]`))) { reached[type] = 'no row'; continue; }
+      await L.tap(page, `#app [data-entry="${eid}"]`); await L.tap(page, '#app [data-act="open-about"]');
+      reached[type] = await inPage(page, () => document.querySelector('#overlay .sheet') ? 'sheet' : ui.detail?.type || ui.screen);
+    }
+    const want = { person: 'person', shidduch: 'shidduch', round: 'shidduch', date: 'shidduch', source: 'source', idea: 'sheet' };
+    const opens = Object.entries(reached).every(([t, r]) => r === want[t]);
+    // Deleting an entry removes it from every view at once (Recent and the History) — they are views, not copies.
+    await inPage(page, () => { closeSheet(); addActivitySheet('p_miriam'); }); await page.fill('#aText', 'Short note for the view test.'); await L.tap(page, '#overlay [data-act="save-activity"]');
+    const eid = (await L.idbRead(page)).entries.find(e => e.text === 'Short note for the view test.')?.id;
+    const seen = async () => inPage(page, eid => { const r = {}; ui.detail = null; ui.screen = 'recent'; render(); r.recent = !!document.querySelector(`#app [data-entry="${eid}"]`); ui.detail = { type: 'person', id: 'p_miriam' }; ui.detailTab = 'conversation'; render(); r.history = !!document.querySelector(`#app [data-entry="${eid}"]`); return r; }, eid);
+    const before = await seen();
+    await inPage(page, eid => { ui.detail = { type: 'entry', id: eid }; render(); }, eid); await L.tap(page, '#app [data-act="delete-entry"]');
+    const after = await seen();
+    const ok = opens && before.recent && before.history && !after.recent && !after.history;
+    record('A01', 'Recent is the ledger: each row opens the right person, shidduch, date, source or offer; deleting an entry removes it from Recent and the History at once', ok, { reached, before, after });
+    await ctx.close();
+  },
+
+  async A02_no_shidduch_without_a_pairing() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    // Send my profile, call a reference, meet someone at an event, introduce myself, and say Not applicable.
+    await inPage(page, () => sendProfileSheet(me().id, 'p_batya')); await L.tap(page, '#overlay [data-send="copy"]'); await L.settle(page);
+    await inPage(page, () => { ui.detail = { type: 'person', id: 'p_david' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="add-link"]');
+    await page.fill('#kName', 'Yosef Brill'); await page.fill('#kPhone', '050-000-7003'); await L.tap(page, '#overlay [data-act="save-link"]');
+    const ref = (await L.idbRead(page)).people.find(p => p.name === 'Yosef Brill');
+    await inPage(page, idv => { ui.detail = { type: 'person', id: idv }; ui.detailTab = 'profile'; render(); }, ref.id); await L.tap(page, '[data-contact="call"]'); await L.settle(page); await L.closeSheets(page);
+    await inPage(page, () => { ui.detail = { type: 'source', id: 'src_event' }; render(); }); await L.tap(page, '[data-act="source-add-person"]'); await page.fill('#lName', 'Devora Lev'); await L.tap(page, '#overlay [data-act="save-list-person"]');
+    await inPage(page, () => addActivitySheet('p_dina')); await page.selectOption('#aType', 'message'); await page.fill('#aText', 'Introduced myself.'); await L.tap(page, '#overlay [data-act="save-activity"]');
+    await inPage(page, () => ideaSheet('idea_moshe_tamar')); await L.tap(page, '#overlay [data-act="idea-no"]'); await L.tap(page, '#overlay [data-act="idea-no-save"]');
+    const st = await L.idbRead(page);
+    const ok = st.shidduchim.length === s0.shidduchim.length && st.rounds.length === s0.rounds.length && st.entries.length >= s0.entries.length + 5;
+    record('A02', 'No shidduch without a pairing: sending my profile, calling a reference, meeting someone at an event, introducing myself and Not applicable make no shidduch or round', ok, { shidduchim: st.shidduchim.length - s0.shidduchim.length, rounds: st.rounds.length - s0.rounds.length, newEntries: st.entries.length - s0.entries.length });
+    await ctx.close();
+  },
+
+  async A03_not_applicable_for_me_hides_but_keeps() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay [data-add="offer"]');
+    await page.selectOption('#iGuy', 'p_me'); await page.selectOption('#iGirl', 'p_tamar'); await page.selectOption('#iBy', 'p_miriam');
+    await L.tap(page, '#overlay [data-act="save-idea"]');
+    const s0 = await L.idbRead(page);
+    const girls = async q => inPage(page, q => { ui.detail = null; ui.screen = 'girls'; ui.search = q; render(); const ids = [...document.querySelectorAll('#app [data-person]')].map(e => e.dataset.person); ui.search = ''; return ids; }, q);
+    const browsingBefore = await girls('');
+    const offer = s0.ideas.find(i => i.guyId === 'p_me' && i.girlId === 'p_tamar' && i.status === 'open');
+    await inPage(page, idv => ideaSheet(idv), offer.id); await L.tap(page, '#overlay [data-act="idea-no"]'); await L.tap(page, '#overlay [data-act="idea-no-save"]');
+    const browsingAfter = await girls(''), searched = await girls('Tamar');
+    await inPage(page, async () => { data.settings.mode = 'shadchan'; await save(); applySettings(); });
+    const shadchanView = await girls('');
+    const s1 = await L.idbRead(page);
+    const kept = JSON.stringify(byId(s1.people, 'p_tamar')) === JSON.stringify(byId(s0.people, 'p_tamar')) && JSON.stringify(s1.profileVersions.filter(v => v.personId === 'p_tamar')) === JSON.stringify(s0.profileVersions.filter(v => v.personId === 'p_tamar')) && s0.entries.every(e => s1.entries.some(x => x.id === e.id));
+    const ok = browsingBefore.includes('p_tamar') && !browsingAfter.includes('p_tamar') && searched.includes('p_tamar') && shadchanView.includes('p_tamar') && kept;
+    record('A03', 'Not applicable for me: she leaves Single-mode browsing, search still finds her, she is normal in Shadchan mode, and nothing about her is lost', ok, { before: browsingBefore.includes('p_tamar'), after: browsingAfter.includes('p_tamar'), search: searched.includes('p_tamar'), shadchanMode: shadchanView.includes('p_tamar'), kept });
+    await ctx.close();
+  },
+
+  async A04_declined_then_a_new_pair_starts_clean() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    // Leah says No to me through Miriam, and I end it with a private reason.
+    await run(page, [...shidduchPath('sh_me_leah'), tab('overview')]);
+    await L.tap(page, '[data-act="set-answer"][data-side="girl"]'); await L.tap(page, '#overlay [data-answer-value="no"]'); await page.selectOption('#answerFrom', 'p_miriam'); await page.fill('#answerNote', 'PRIVATE-HER-NO'); await L.tap(page, '#overlay [data-act="save-answer"]');
+    await L.tap(page, '[data-act="end-shidduch"]'); await page.fill('#endReason', 'PRIVATE-HASHKAFA'); await L.tap(page, '#overlay [data-act="confirm-end-shidduch"]');
+    const mine = await inPage(page, () => entriesForShidduch('sh_me_leah').map(e => e.id));
+    // Later, Rivka suggests David – Leah.
+    await inPage(page, async () => { data.ideas.push({ id: 'idea_david_leah2', guyId: 'p_david', girlId: 'p_leah', suggestedByPersonId: 'p_rivka', createdAt: iso(), status: 'open' }); await save(); ideaSheet('idea_david_leah2'); });
+    await L.tap(page, '#overlay [data-act="idea-yes"]'); await L.closeSheets(page);
+    const st = await L.idbRead(page);
+    const dl = st.shidduchim.find(s => s.guyId === 'p_david' && s.girlId === 'p_leah');
+    const view = await inPage(page, sid => ({ history: entriesForShidduch(sid).map(e => e.id), goBetweens: shidduchGoBetweens(shidduch(sid)), rounds: roundsOf(shidduch(sid)).length }), dl?.id);
+    await inPage(page, () => sendProfileSheet('p_leah', 'p_rivka'));
+    const preview = await page.$eval('#sendPreview', e => e.textContent);
+    const leahText = await inPage(page, () => latestProfileVersion('p_leah')?.text || '');
+    await run(page, [['close']]); await inPage(page, sid => { ui.detail = { type: 'shidduch', id: sid }; ui.detailTab = 'people'; render(); }, dl?.id);
+    const peopleTab = await page.$eval('#app', a => a.textContent);
+    const ok = !!dl && dl.id !== 'sh_me_leah' && view.rounds === 1 && view.history.length === 1 && !view.history.some(x => mine.includes(x)) && JSON.stringify(view.goBetweens) === '["p_rivka"]'
+      && preview === leahText && !/PRIVATE-/.test(preview) && !/Miriam/.test(peopleTab);
+    record('A04', 'Declined, then David – Leah: a new shidduch that starts empty (only its own entry), go-betweens only from its own offer, and a send preview holding only her profile version', ok, { newRecord: !!dl, rounds: view.rounds, history: view.history.length, goBetweens: view.goBetweens, previewIsProfile: preview === leahText, miriamOnPeopleTab: /Miriam/.test(peopleTab) });
+    await ctx.close();
+  },
+
   // ---- Backups -----------------------------------------------------------------------------------
   async B01_backup_round_trip() {
     const { ctx, page } = await fresh({ fixture: 'v58-rich' });

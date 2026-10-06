@@ -177,8 +177,10 @@ through that pointer, so nothing is copied or rewritten:
 
 ## What looks different from v58
 
-Checked by the golden harness (DOM of every state against the cleaned v58). Everything else is the
-same, element for element.
+Checked by the golden harness against the cleaned v58: 2,871 states (11 skins, both modes, phone
+and desktop, layout variants). The DOM differs only in the 24 states below, and no screenshot
+changed anywhere the DOM stayed the same. No state has a console error or writes anything while
+browsing.
 
 | Where | Difference | Why |
 |---|---|---|

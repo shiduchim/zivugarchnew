@@ -1,6 +1,6 @@
 'use strict';
 
-// v53 final UX polish: clearer single mode, distinct contact icons,
+// UX polish: clearer single mode, distinct contact icons,
 // current workflow wording, and compact sticky Shadchanim header.
 
 function warmContactButtons(p){

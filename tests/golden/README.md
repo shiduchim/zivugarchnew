@@ -65,6 +65,26 @@ node compare.cjs runs/base runs/x --common
 - **S (safety requirements).** They failed on v58 and pass once the data-safety fixes are in.
 - **K (recorded v58 bugs).** A K result changes only when a fix is made on purpose.
 
+`acceptance.cjs` holds the v1.0 architecture acceptance tests. Each starts from made-up v58-shaped
+data (`fixtures/demo.json`, or `fixtures/v58-rich.json` for the upgrade), drives the app's own
+screens, and checks the stored records:
+
+- **M** the one-time upgrade: safety copy, runs once, failure is recoverable, nothing lost or merged
+- **I** one record per person: matching, "not the same", merge and undo
+- **L, O, D, P** the ledger, open items, offers, rounds, dates, profile versions and sending
+- **S, R, F, N, G** sources, references and family, files, intake, folders
+- **A** the checks listed in `docs/ARCHITECTURE.md` §13.2
+- **B** backups, v1.0 and v58
+- **N01** opening every new sheet and searching write nothing
+
+```sh
+node acceptance.cjs http://127.0.0.1:8810/ runs/acc        # all
+node acceptance.cjs http://127.0.0.1:8810/ runs/acc O0     # only tests starting with O0
+```
+
+`fixtures/v58-rich.json` is made by `make-v58-rich.cjs` and is never edited by hand or by a test.
+v1.0 differences from the v58 screens are listed in `docs/V1_DESIGN.md` ("What looks different").
+
 ## Determinism
 
 - Fixed clock (2026-10-05 12:00, Asia/Jerusalem, en-US).

@@ -321,7 +321,7 @@ const checks = {
     const { ctx, page } = await L.newPage(browser, BASE, L.WIDTHS.phone);
     const fx = FIX('demo'); Object.assign(fx.settings, { mode: 'shadchan' }); fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' });
     await L.idbWrite(page, fx); await L.openApp(page);
-    await ctx.route(/recent-filter-v55\.js/, async r => { const res = await r.fetch(); r.fulfill({ response: res, body: (await res.text()) + "\n;recentScreen=function(){throw new Error('simulated render failure')};" }); });
+    await ctx.route(/recent(-filter-v55)?\.js/, async r => { const res = await r.fetch(); r.fulfill({ response: res, body: (await res.text()) + "\n;recentScreen=function(){throw new Error('simulated render failure')};" }); });
     await L.openApp(page);
     const s0 = await L.idbRead(page);
     const text = await page.$eval('#app', a => a.textContent);
