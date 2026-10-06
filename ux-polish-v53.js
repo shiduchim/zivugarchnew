@@ -47,8 +47,9 @@ function openMyProfileInSingleMode(){
 function zmGirlAppliesToMe(p){
   const self=me();
   if(!self)return false;
-  const pairIdea=data.ideas.some(i=>i.status==='open'&&((i.guyId===self.id&&i.girlId===p.id)||(i.girlId===self.id&&i.guyId===p.id)));
-  const activeMatch=data.shidduchim.some(s=>s.status==='active'&&((s.guyId===self.id&&s.girlId===p.id)||(s.girlId===self.id&&s.guyId===p.id)));
+  const pair=x=>(isMe(x.guyId)&&samePerson(x.girlId,p.id))||(isMe(x.girlId)&&samePerson(x.guyId,p.id));
+  const pairIdea=data.ideas.some(i=>i.status==='open'&&pair(i));
+  const activeMatch=liveShidduchim().some(s=>shStatus(s)==='active'&&pair(s));
   return pairIdea||activeMatch;
 }
 

@@ -1,9 +1,8 @@
 'use strict';
 
-const APP_VERSION='0.10.0';
-const DB_NAME='ZivugMatchDB';
-const STORE='kv';
-const STATE_KEY='state';
+// ZivugMatch v1.0. Earlier builds were numbered v53…v58 during development.
+const APP_VERSION='1.0.0';
+const APP_VERSION_LABEL='v1.0';
 const app=document.getElementById('app');
 const overlay=document.getElementById('overlay');
 const toastEl=document.getElementById('toast');
@@ -52,7 +51,9 @@ const ui={screen:'recent',screenView:{shadchanim:'all',shidduchim:'active',girls
 
 function defaultSettings(){return {mode:'single',theme:'warm',density:'comfortable',iconSize:'medium',dashboard:'summary-first',summaryCards:true,seededDemo:true,appearance:'1',layout:'auto',skin:'classic'};}
 
-function demoData(){
+// The demo is written in the v58 shape and upgraded like real data, so the demo and the test fixtures
+// can never drift apart. Everything in it is made up.
+function legacyDemoState(){
   const me='p_me',miriam='p_miriam',rivka='p_rivka',batya='p_batya',dina='p_dina',leah='p_leah',tamar='p_tamar',noa='p_noa',rina='p_rina',david='p_david',moshe='p_moshe',ari='p_ari';
   const people=[
     {id:me,name:'Me',types:['Guy'],city:'',phone:'',email:'',createdAt:daysAgo(200),profileText:'My current profile',profileVersion:4,isMe:true},
@@ -112,26 +113,16 @@ function demoData(){
   ];
   return {version:1,settings:defaultSettings(),people,entries,sources,ideas,shidduchim,rounds,dates,openItems,profileVersions:[],files:[],folders:[],meta:{createdAt:iso(),updatedAt:iso(),demo:true}};
 }
+function demoData(){
+  const d=migrateV58(legacyDemoState()).data;
+  // Demo profiles were written when each person was added, so their dates are known.
+  for(const v of d.profileVersions){v.createdAt=d.people.find(p=>p.id===v.personId)?.createdAt||null;delete v.dateUnknown;v.origin='created';}
+  return d;
+}
 
-function emptyData(){return {version:1,settings:{...defaultSettings(),seededDemo:false},people:[{id:'p_me',name:'Me',types:['Guy'],city:'',phone:'',email:'',createdAt:iso(),profileText:'',profileVersion:1,isMe:true}],entries:[],sources:[],ideas:[],shidduchim:[],rounds:[],dates:[],openItems:[],profileVersions:[],files:[],folders:[],meta:{createdAt:iso(),updatedAt:iso(),demo:false}};}
-
-function openDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
-async function dbGet(key){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
-async function dbPut(key,val){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(val,key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}
-let storageBlocked=false;
-async function save(){if(storageBlocked){showToast('Not saved: local storage is unavailable');return;}data.meta.updatedAt=iso();await dbPut(STATE_KEY,data);}
-
-// Older or partial data (e.g. a backup without some lists) gets empty lists so screens never break.
-// Nothing else is changed and no record is invented.
-const DATA_LISTS=['people','entries','sources','ideas','shidduchim','rounds','dates','openItems','profileVersions','files','folders'];
-function normalizeData(d){for(const k of DATA_LISTS)if(!Array.isArray(d[k]))d[k]=[];if(!d.meta||typeof d.meta!=='object')d.meta={demo:false};if(!d.settings||typeof d.settings!=='object')d.settings={};return d;}
-
-// Safety copies: before data is replaced as a whole (demo, restore), the current data is kept
-// under its own key so it can be brought back with Undo or from Settings. Newest first.
-const SAFETY_KEY='safetyCopies',SAFETY_MAX=5;
-let safetyCopies=[];
-async function loadSafetyCopies(){try{safetyCopies=((await dbGet(SAFETY_KEY))||[]).map(({id,at,reason})=>({id,at,reason}));}catch(e){safetyCopies=[];}}
-async function keepSafetyCopy(reason){if(storageBlocked)return null;const list=(await dbGet(SAFETY_KEY))||[];const copy={id:id('safe'),at:iso(),reason,data:JSON.parse(JSON.stringify(data))};list.unshift(copy);list.splice(SAFETY_MAX);await dbPut(SAFETY_KEY,list);safetyCopies=list.map(({id,at,reason})=>({id,at,reason}));return copy.id;}
-async function restoreSafetyCopy(copyId){const list=(await dbGet(SAFETY_KEY))||[];const c=list.find(x=>x.id===copyId)||list[0];if(!c){showToast('Nothing to restore');return;}const back=await keepSafetyCopy('restoring earlier data');data=normalizeData(c.data);await save();closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast('Earlier data restored',back);}
-
-function person(pid){return data.people.find(p=>p.id===pid)}
+function emptyData(){
+  const d={schema:DATA_SCHEMA,settings:{...defaultSettings(),seededDemo:false},meta:{createdAt:iso(),updatedAt:iso(),demo:false}};
+  for(const c of COLLECTIONS)d[c]=[];
+  d.people.push({id:'p_me',name:'Me',types:['Guy'],city:'',phone:'',email:'',createdAt:iso(),folderIds:[],isMe:true});
+  return d;
+}

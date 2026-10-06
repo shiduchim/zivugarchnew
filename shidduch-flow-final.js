@@ -22,8 +22,8 @@ function zmFlowStageIndexFromLabel(label){
 // Tabs are deliberately lifecycle order: Offers -> In Progress -> Ended.
 function shidduchimScreen(){
   const v=ui.screenView.shidduchim;
-  const inProgress=data.shidduchim.filter(s=>s.status==='active');
-  const ended=data.shidduchim.filter(s=>s.status==='ended');
+  const inProgress=liveShidduchim().filter(s=>shStatus(s)==='active');
+  const ended=liveShidduchim().filter(s=>shStatus(s)==='ended');
   const offers=data.ideas.filter(i=>i.status==='open');
   const tabs=[
     {value:'ideas',label:'Offers',count:offers.length},
@@ -33,8 +33,8 @@ function shidduchimScreen(){
   let rows='';
   if(v==='ideas')rows=offers.map(zmOfferRow).join('');
   else rows=(v==='active'?inProgress:ended).map(s=>{
-    const r=getCurrentRound(s);
-    return `<button class="warm-match-row zm-stage-card ${s.status==='ended'?'zm-ended-card':''}" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong><time>Round ${r?.number||1}</time></div>${zmStageBar(s)}</div><div class="warm-chevron">›</div></button>`;
+    const r=currentRound(s);
+    return `<button class="warm-match-row zm-stage-card ${shStatus(s)==='ended'?'zm-ended-card':''}" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong><time>Round ${roundNumber(r)}</time></div>${zmStageBar(s)}</div><div class="warm-chevron">›</div></button>`;
   }).join('');
 
   const emptyTitle=v==='ideas'?'No offers':v==='active'?'No shidduchim in progress':'No ended shidduchim';
@@ -60,28 +60,23 @@ function quickAdd(kind){
 }
 
 function openEndShidduchSheet(sid){
-  const s=shidduch(sid);if(!s||s.status==='ended')return;
+  const s=shidduch(sid);if(!s||shStatus(s)==='ended')return;
   const st=zmStageForShidduch(s);
   const options=ZM_FLOW_STAGE_LABELS.slice(0,10).map((label,i)=>`<option value="${i}" ${i===st.index?'selected':''}>${esc(label)}</option>`).join('');
   openSheet(`<h2>End shidduch</h2><p class="lead">Save where it ended so you can understand the history later.</p><input type="hidden" id="endShidduchId" value="${esc(s.id)}"><div class="form-grid"><div class="field"><label>Where did it end?</label><select id="endStage">${options}</select></div><div class="field"><label>Why did it end? <span style="font-weight:400">(optional)</span></label><textarea id="endReason" placeholder="Short private note…"></textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="confirm-end-shidduch">Save as ended</button></div>`);
 }
 
+// Ending writes to the current round (the shidduch's status is worked out from it) and closes the
+// shidduch's open items, each pointing to the entry that ended it.
 async function confirmEndShidduch(){
   const sid=document.getElementById('endShidduchId')?.value;
-  const s=shidduch(sid);if(!s)return;
+  const s=shidduch(sid),r=currentRound(s);if(!s||!r||r.status==='ended')return;
   const idx=Math.max(0,Math.min(9,Number(document.getElementById('endStage')?.value)||0));
   const label=ZM_FLOW_STAGE_LABELS[idx];
   const reason=document.getElementById('endReason')?.value.trim()||'';
-  const stamp=iso();
-  s.status='ended';
-  s.endedAt=stamp;
-  s.endedStage=label;
-  s.endedStageIndex=idx;
-  s.endReason=reason;
-  const r=getCurrentRound(s);
-  if(r){r.status='ended';r.endedAt=stamp;r.endedStage=label;r.endedStageIndex=idx;r.endReason=reason;}
-  data.openItems.filter(x=>x.aboutType==='shidduch'&&x.aboutId===s.id&&x.status==='open').forEach(x=>{x.status='closed';x.closedAt=stamp;});
-  data.entries.push({id:id('e'),at:stamp,type:'status',channel:'App',direction:'none',personIds:[s.guyId,s.girlId,...(s.shadchanIds||[])],aboutType:'shidduch',aboutId:s.id,text:`Shidduch ended at ${label}.${reason?` ${reason}`:''}`,result:'Ended'});
+  const e=addEntry({type:'status',personIds:[s.guyId,s.girlId,...(r.shadchanIds||[])],about:[{type:'shidduch',id:s.id},{type:'round',id:r.id}],text:`Shidduch ended at ${label}.${reason?` ${reason}`:''}`,result:'Ended',changes:[{kind:'round-ended',roundId:r.id,stageIndex:idx}],private:reason?true:undefined});
+  r.status='ended';r.endedAt=e.at;r.endedByEntryId=e.id;r.endedStage=label;r.endedStageIndex=idx;r.endReason=reason;
+  for(const x of openForShidduch(s.id))closeItemRecord(x,{entryId:e.id,kind:'auto',at:e.at});
   await save();
   closeSheet();
   ui.detail=null;
@@ -106,5 +101,5 @@ function zmOfferRow(i){
 function ideaSheet(iid){
     const i=idea(iid);if(!i)return;
     const g=person(i.guyId),gl=person(i.girlId),sug=person(i.suggestedByPersonId);
-    openSheet(`<h2>${esc(g?.name)} – ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(gl?.profileText||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
+    openSheet(`<h2>${esc(g?.name)} – ${esc(gl?.name)}</h2><p class="lead">Offer · suggested by ${esc(sug?.name||'you')} · ${esc(fmtDate(i.createdAt))}. An offer is not yet a shidduch.</p><div class="profile-card"><h3>${esc(gl?.name||'Profile')}</h3><div class="profile-text">${esc(currentProfileText(gl?.id)||'No profile text saved.')}</div></div><div class="split-actions"><button class="ghost-btn" data-act="idea-no" data-idea-id="${i.id}">Not applicable</button><button class="primary-btn" data-act="idea-yes" data-idea-id="${i.id}">Interested</button></div>`);
   }

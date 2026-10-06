@@ -49,29 +49,47 @@ async function newPage(browser, base, viewport = WIDTHS.phone) {
   return { ctx, page };
 }
 
+// Seed storage the way a v58 user has it: a fresh database (version 1) with one kv/state value.
+// v1.0 builds upgrade it on their first load, so every run also exercises the upgrade.
 async function idbWrite(page, value) {
   await page.goto(page.__base + '__blank');
   await page.evaluate(async ({ DB, value }) => {
+    await new Promise((res, rej) => { const d = indexedDB.deleteDatabase(DB.name); d.onsuccess = () => res(); d.onerror = () => rej(d.error); d.onblocked = () => res(); });
+    if (value === null) return;
     await new Promise((res, rej) => {
       const req = indexedDB.open(DB.name, 1);
       req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains(DB.store)) req.result.createObjectStore(DB.store); };
       req.onsuccess = () => { const db = req.result; const tx = db.transaction(DB.store, 'readwrite');
-        if (value === null) tx.objectStore(DB.store).delete(DB.key); else tx.objectStore(DB.store).put(value, DB.key);
+        tx.objectStore(DB.store).put(value, DB.key);
         tx.oncomplete = () => { db.close(); res(); }; tx.onerror = () => rej(tx.error); };
       req.onerror = () => rej(req.error);
     });
   }, { DB, value });
 }
 
+// Read the stored data. v1.0 (schema 2) keeps one store per collection; v58 keeps one kv/state value.
+// v1.0 data is returned as one object with the same collection names.
 async function idbRead(page) {
-  return page.evaluate(async (DB) => new Promise((res, rej) => {
-    const req = indexedDB.open(DB.name, 1);
-    req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains(DB.store)) req.result.createObjectStore(DB.store); };
-    req.onsuccess = () => { const db = req.result; const r = db.transaction(DB.store, 'readonly').objectStore(DB.store).get(DB.key);
-      r.onsuccess = () => { db.close(); res(r.result === undefined ? null : JSON.parse(JSON.stringify(r.result))); }; r.onerror = () => rej(r.error); };
-    req.onerror = () => rej(req.error);
-  }), DB);
+  return page.evaluate(async (DB) => {
+    const db = await new Promise((res, rej) => { const req = indexedDB.open(DB.name); req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains(DB.store)) req.result.createObjectStore(DB.store); }; req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
+    const get = (store, key) => new Promise((res, rej) => { const r = db.transaction(store, 'readonly').objectStore(store).get(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+    const all = store => new Promise((res, rej) => { const r = db.transaction(store, 'readonly').objectStore(store).getAll(); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+    try {
+      const meta = db.objectStoreNames.contains(DB.store) ? await get(DB.store, 'meta') : null;
+      if (meta && Number(meta.schema) >= 2) {
+        const out = { schema: Number(meta.schema), meta: { ...meta }, settings: (await get(DB.store, 'settings')) || {} };
+        delete out.meta.schema;
+        for (const name of db.objectStoreNames) if (!['kv', 'blobs', 'copies'].includes(name)) out[name] = await all(name);
+        return JSON.parse(JSON.stringify(out));
+      }
+      const v = db.objectStoreNames.contains(DB.store) ? await get(DB.store, DB.key) : undefined;
+      return v === undefined ? null : JSON.parse(JSON.stringify(v));
+    } finally { db.close(); }
+  }, DB);
 }
+
+// Seed the fixture and load the app once (a v1.0 build upgrades it then), so later loads write nothing.
+async function seedApp(page, value) { await idbWrite(page, value); await openApp(page); }
 
 async function frames(page, n = 3) {
   await page.evaluate(n => new Promise(r => { let i = 0; const f = () => (++i >= n ? r() : requestAnimationFrame(f)); requestAnimationFrame(f); }), n);
@@ -120,4 +138,4 @@ async function snapshotDom(page) {
   });
 }
 
-module.exports = { launch, newPage, idbWrite, idbRead, openApp, settle, tap, closeSheets, frames, sha, mkdirp, snapshotDom, SKINS, WIDTHS, FIXED_TIME, DB };
+module.exports = { launch, newPage, idbWrite, idbRead, seedApp, openApp, settle, tap, closeSheets, frames, sha, mkdirp, snapshotDom, SKINS, WIDTHS, FIXED_TIME, DB };

@@ -2,12 +2,12 @@
 
 // Keep the current calm Recent layout, but make its History honor the filter/sort sheet.
 function recentScreen(){
-  const mine=data.openItems.filter(x=>x.status==='open'&&x.direction==='me').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  const them=data.openItems.filter(x=>x.status==='open'&&x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  let entries=[...data.entries];
+  const mine=openItems().filter(x=>x.direction==='me'&&itemIsDue(x)).sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+  const them=openItems().filter(x=>x.direction==='them').sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+  let entries=liveEntries();
   const recentFilter=ui.recentFilter||'all';
   if(recentFilter!=='all')entries=entries.filter(e=>e.type===recentFilter);
-  entries.sort((a,b)=>(ui.recentSort||'newest')==='oldest'?new Date(a.at)-new Date(b.at):new Date(b.at)-new Date(a.at));
+  entries.sort((a,b)=>(ui.recentSort||'newest')==='oldest'?entryTime(a)-entryTime(b):entryTime(b)-entryTime(a));
   if(ui.search){
     const q=ui.search.toLowerCase();
     entries=entries.filter(e=>(e.text+' '+linkedAbout(e)+' '+(e.personIds||[]).map(pid=>person(pid)?.name).join(' ')).toLowerCase().includes(q));

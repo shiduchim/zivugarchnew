@@ -31,7 +31,7 @@ async function runCombo(browser, c, manifest) {
   const { ctx, page } = await L.newPage(browser, BASE, L.WIDTHS[c.width]);
   const seeded = JSON.parse(JSON.stringify(fixture));
   Object.assign(seeded.settings, { mode: c.mode, skin: c.skin }, c.settings);
-  await L.idbWrite(page, seeded);
+  await L.seedApp(page, seeded);
   const before = JSON.stringify(await L.idbRead(page));
   const dirKey = c.tag ? `variants/${c.tag}/${c.width}` : `${c.mode}/${c.skin}/${c.width}`;
   for (const st of states(c.mode)) {

@@ -29,9 +29,9 @@ function activityRow(e){
 function peopleScreen(type){
   const isGirl=type==='Girl',key=isGirl?'girls':'guys';
   if(isGirl&&data.settings.mode==='single'){
-    let arr=byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
+    // Browsing shows the girls who apply to me; a search looks through every girl (opening one changes nothing).
     const q=ui.search.trim().toLowerCase();
-    if(q)arr=arr.filter(p=>(`${p.name} ${p.city||''} ${p.occupation||''} ${p.phone||''}`).toLowerCase().includes(q));
+    let arr=q?byType('Girl').filter(p=>!p.isMe&&personMatchesSearch(p,q)):byType('Girl').filter(p=>!p.isMe&&zmGirlAppliesToMe(p));
     arr=arr.sort(byRecentContact);
     return `${header('Girls','Profiles applicable to you',{add:true})}${searchBox('Search girls…')}<div class="warm-stack">${arr.map(p=>personRow(p)).join('')||empty('No applicable profiles yet','Profiles connected to an open offer or current shidduch with you will appear here.','add-current')}</div>`;
   }
@@ -51,7 +51,7 @@ function shadchanScreen(){
   const tabs=shadchanTabs(all.length,them.length,mine.length,needs.length);
   if(v==='all'&&!ui.search){
     const byNameAll=[...all].sort(byName);
-    const active=byNameAll.filter(p=>openForPerson(p.id).length||shidduchimForPerson(p.id).some(s=>s.status==='active'));
+    const active=byNameAll.filter(p=>openForPerson(p.id).length||shidduchimForPerson(p.id).some(s=>shStatus(s)==='active'));
     const activeIds=new Set(active.map(p=>p.id)),rest=byNameAll.filter(p=>!activeIds.has(p.id));
     const groups={};for(const p of rest){const k=(p.name?.[0]||'#').toUpperCase();(groups[k]??=[]).push(p);}
     const activeHtml=active.length?`<div class="warm-section-title shad-section"><h2>Working with</h2><span>${active.length}</span></div><div class="warm-stack">${active.slice(0,8).map(p=>personRow(p)).join('')}</div>`:'';
@@ -78,8 +78,9 @@ function warmTimeline(entries,onPersonPage=false){if(!entries.length)return empt
 let timelineHtml=warmTimeline;
 
 // Which version of my profile this person has, worked out from the profile sends in the history.
-function myProfileVersion(){return Number(me()?.profileVersion)||1;}
-function profileSentTo(pid){const mine=me()?.id;let best=0;for(const e of data.entries){if(!e||e.type!=='profile'||e.direction!=='out'||e.toPersonId!==pid||(e.fromPersonId!==mine&&e.aboutId!==mine))continue;const v=Number(e.profileVersion)||Number(/v(\d+)/.exec(e.text||'')?.[1])||0;if(v>best)best=v;}return best;}
+function myProfileVersion(){return latestProfileNumber(me()?.id)||1;}
+function sentVersionNumber(e){return Number(profileVersion(e.profileVersionId)?.number)||Number(e.profileVersionNumber)||Number(/v(\d+)/.exec(e.text||'')?.[1])||0;}
+function profileSentTo(pid){let best=0;for(const e of entriesForPerson(pid)){if(e.type!=='profile'||e.direction!=='out'||!samePerson(e.toPersonId,pid)||!(isMe(e.fromPersonId)||entryAbout(e,'person').some(isMe)))continue;const v=sentVersionNumber(e);if(v>best)best=v;}return best;}
 function myProfileStatus(pid){const cur=myProfileVersion(),sent=profileSentTo(pid);return !sent?`Not sent yet · v${cur} ready`:sent<cur?`Has v${sent} · v${cur} ready`:`Has v${sent}`;}
 
 // A person's page: compact identity bar, open items (only when there are any), contact buttons, tabs.
@@ -90,12 +91,12 @@ function personDetail(pid){
   const defaultTab=isShad?'details':'profile';if(!['details','profile','conversation','shidduchim','files'].includes(ui.detailTab))ui.detailTab=defaultTab;
   let content='';
   if(ui.detailTab==='conversation')content=`<div class="warm-section-title"><h2>History</h2><button data-act="add-person-note" data-person-id="${p.id}">Add note</button></div>${warmTimeline(entriesForPerson(pid),true)}`;
-  else if(ui.detailTab==='shidduchim'){const ideas=ideasForPerson(pid),shids=shidduchimForPerson(pid);const rows=[...ideas.map(i=>`<button class="warm-match-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>Offer · ${esc(person(i.guyId)?.name)} ↔ ${esc(person(i.girlId)?.name)}</strong></div><p>${esc(i.status)}</p></div><div class="warm-chevron">›</div></button>`),...shids.map(s=>`<button class="warm-match-row" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong></div><p>${esc(getCurrentRound(s)?.stage||s.status)}</p></div><div class="warm-chevron">›</div></button>`)].join('');content=`<div class="warm-section-title"><h2>Offers and shidduchim</h2></div><div class="warm-stack">${rows||empty('Nothing linked yet','Offers and shidduchim involving this person will stay together here.')}</div>`;}
+  else if(ui.detailTab==='shidduchim'){const ideas=ideasForPerson(pid),shids=shidduchimForPerson(pid);const rows=[...ideas.map(i=>`<button class="warm-match-row" data-idea="${i.id}"><div class="warm-match-avatar">♡</div><div class="warm-match-main"><div><strong>Offer · ${esc(person(i.guyId)?.name)} ↔ ${esc(person(i.girlId)?.name)}</strong></div><p>${esc(i.status)}</p></div><div class="warm-chevron">›</div></button>`),...shids.map(s=>`<button class="warm-match-row" data-shidduch="${s.id}"><div class="warm-match-avatar filled">♥</div><div class="warm-match-main"><div><strong>${esc(shidduchTitle(s))}</strong></div><p>${esc(currentRound(s)?.stage||shStatus(s))}</p></div><div class="warm-chevron">›</div></button>`)].join('');content=`<div class="warm-section-title"><h2>Offers and shidduchim</h2></div><div class="warm-stack">${rows||empty('Nothing linked yet','Offers and shidduchim involving this person will stay together here.')}</div>`;}
   else if(ui.detailTab==='files')content=empty('No files yet','Profiles, PDFs and recordings will live here without mixing with private history.');
-  else if(ui.detailTab==='profile')content=`<div class="warm-profile-card"><h3>Profile${p.profileVersion?` · v${p.profileVersion}`:''}</h3><p>${esc(p.profileText||'No profile text saved yet.')}</p></div><div class="warm-info-card"><div><span>Age</span><strong>${esc(p.age||'—')}</strong><button data-act="edit-person">Edit</button></div><div><span>City</span><strong>${esc(p.city||'—')}</strong></div><div><span>Occupation</span><strong>${esc(p.occupation||'—')}</strong></div></div>`;
+  else if(ui.detailTab==='profile')content=`<div class="warm-profile-card"><h3>Profile${latestProfileNumber(p.id)?` · v${latestProfileNumber(p.id)}`:''}</h3><p>${esc(currentProfileText(p.id)||'No profile text saved yet.')}</p></div><div class="warm-info-card"><div><span>Age</span><strong>${esc(p.age||'—')}</strong><button data-act="edit-person">Edit</button></div><div><span>City</span><strong>${esc(p.city||'—')}</strong></div><div><span>Occupation</span><strong>${esc(p.occupation||'—')}</strong></div></div>`;
   else if(isShad)content=`<div class="warm-info-card"><div><span>My profile</span><strong>${esc(myProfileStatus(p.id))}</strong><button data-act="log-profile" data-person-id="${p.id}">Send v${myProfileVersion()}</button></div><div><span>How I know them</span><strong>${esc(sourceNamesForPerson(p.id).replace('No source recorded','Not added yet'))}</strong></div></div>`;
   else content=`<div class="warm-info-card"><div><span>Their turn</span><strong>${esc(them.map(x=>x.label).join(', ')||'Nothing')}</strong></div><div><span>My turn</span><strong>${esc(mine.map(x=>x.label).join(', ')||'Nothing')}</strong></div><div><span>Last contact</span><strong>${esc(lc?`${fmtDay(lc)} · ${fmtTime(lc)}`:'Never')}</strong></div><div><span>How I know them</span><strong>${esc(sourceNamesForPerson(p.id))}</strong></div></div>`;
   return `<div class="warm-detail-page"><div class="warm-detail-glow"></div>${warmWordmark()}${zmProfileIdentity(p)}${zmPersonOpenStatus(p)}${warmContactButtons(p)}${warmPersonTabs(p,ui.detailTab)}<div class="warm-detail-content">${content}</div></div>`;
 }
 
-function sourceNamesForPerson(pid){const srcs=data.sources.filter(s=>s.peopleIds?.includes(pid));if(!srcs.length)return'No source recorded';const first=srcs.slice(0,2).map(s=>s.name).join(' · ');return srcs.length>2?`${first} · ${srcs.length-2} more`:first;}
+function sourceNamesForPerson(pid){const srcs=sourcesForPerson(pid);if(!srcs.length)return'No source recorded';const first=srcs.slice(0,2).map(s=>s.name).join(' · ');return srcs.length>2?`${first} · ${srcs.length-2} more`:first;}

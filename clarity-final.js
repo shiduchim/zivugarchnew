@@ -12,7 +12,7 @@ function addPersonSheet(typePreset){
 }
 
 function addActivitySheet(pid=''){
-  const peopleOptions=data.people.filter(p=>!p.isMe).sort(byName);
+  const peopleOptions=livePeople().filter(p=>!p.isMe).sort(byName);
   openSheet(`<h2>Add activity</h2><p class="lead">Add something that happened outside the app. It will also appear in this person's History.</p><div class="form-grid"><div class="field"><label>Person</label><select id="aPerson"><option value="">Choose…</option>${peopleOptions.map(p=>`<option value="${p.id}" ${pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="aType"><option value="note">Note</option><option value="call">Call</option><option value="message">Message</option><option value="profile">Profile</option><option value="referral">Referral</option></select></div><div class="field"><label>What happened?</label><textarea id="aText" placeholder="Short note…"></textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-activity">Save</button></div>`);
 }
 
@@ -51,13 +51,15 @@ function filtersSheet(){
 async function saveWaiting(){
   const pid=document.getElementById('wPerson')?.value,direction=document.getElementById('wDirection')?.value,label=document.getElementById('wLabel')?.value.trim();
   if(!pid||!label)return showToast('Say what needs to happen');
-  data.openItems.push({id:id('oi'),direction,personId:pid,aboutType:'person',aboutId:pid,label,createdAt:iso(),status:'open'});
   const turn=direction==='them'?'Their turn':'My turn';
-  data.entries.push({id:id('e'),at:iso(),type:'status',channel:'App',direction:'none',personIds:[pid],aboutType:'person',aboutId:pid,text:`${turn}: ${label}`,result:turn});
+  const e=addEntry({type:'status',personIds:[pid],about:[{type:'person',id:pid}],text:`${turn}: ${label}`,result:turn,changes:[]});
+  const x=addOpenItem({direction,personId:pid,about:{type:'person',id:pid},kind:'manual',label,openedByEntryId:e.id});
+  e.changes.push({kind:'item-opened',itemId:x.id});
   await save();closeSheet();render();showToast('Turn saved');
 }
 
 async function logProfileSend(pid){
-  const p=person(pid);data.entries.push({id:id('e'),at:iso(),type:'profile',channel:'WhatsApp',direction:'out',fromPersonId:me().id,toPersonId:pid,personIds:[me().id,pid],aboutType:'person',aboutId:me().id,text:`Sent my profile v${me().profileVersion||1} to ${p.name}.`,profileVersion:me().profileVersion||1,result:''});
+  const p=person(pid),v=latestProfileVersion(me().id),n=v?.number||myProfileVersion();
+  addEntry({type:'profile',channel:'WhatsApp',direction:'out',fromPersonId:me().id,toPersonId:p.id,personIds:[me().id,p.id],about:[{type:'person',id:me().id}],text:`Sent my profile v${n} to ${p.name}.`,profileVersionId:v?.id,profileVersionNumber:n,changes:[{kind:'profile-sent',profileVersionId:v?.id||null}]});
   await save();render();showToast('Profile marked as sent');
 }

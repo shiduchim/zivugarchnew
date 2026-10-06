@@ -1,3 +1,4 @@
+'use strict';
 
 // A save action ignores repeated taps while it is still running (prevents double records).
 function runOnce(key,fn){if(runOnce.busy[key])return;runOnce.busy[key]=true;Promise.resolve().then(fn).finally(()=>{runOnce.busy[key]=false;});}
@@ -39,6 +40,8 @@ function handleClick(e){
   else if(act==='idea-no')runOnce('idea',()=>chooseIdea(b.dataset.ideaId,false));
   else if(act==='idea-yes')runOnce('idea',()=>chooseIdea(b.dataset.ideaId,true));
   else if(act==='export-backup')exportBackup();
+  else if(act==='export-original')exportOriginalState();
+  else if(act==='reload-app')location.reload();
   else if(act==='import-backup')document.getElementById('backupFile')?.click();
   else if(act==='toggle-demo')runOnce(act,()=>{const wasDemo=data.meta.demo;return keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});});
   else if(act==='undo-safety')runOnce(act,()=>restoreSafetyCopy(b.dataset.copyId));
@@ -59,10 +62,10 @@ function handleClick(e){
 }
 
 // The shidduch page's ⋯ offers only actions that exist for that shidduch; with none, the ⋯ is hidden.
-function shidduchMenuActions(s){return s&&s.status!=='ended'&&zmStageForShidduch(s).index!==10?['end']:[];}
+function shidduchMenuActions(s){return s&&shStatus(s)!=='ended'&&zmStageForShidduch(s).index!==10?['end']:[];}
 function detailMenu(){if(ui.detail?.type==='shidduch'){const s=shidduch(ui.detail.id);if(!shidduchMenuActions(s).length)return;openSheet(`<h2>${esc(shidduchTitle(s))}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>End shidduch</b><span>Save where it ended and why</span></div><button class="option" data-act="end-shidduch" data-shidduch-id="${esc(s.id)}">End</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);return;}if(ui.detail?.type!=='person')return;const p=person(ui.detail.id);openSheet(`<h2>${esc(p.name)}</h2><p class="lead">Less-used actions live here so the main page stays calm.</p><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>Edit person</b><span>Facts and profile</span></div><button class="option" data-act="edit-person">Edit</button></div><div class="setting-row"><div class="setting-copy"><b>Add activity</b><span>Call, note, message or referral</span></div><button class="option" data-act="add-person-note" data-person-id="${p.id}">Add</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);}
-function editPersonSheet(pid){const p=person(pid||ui.detail?.id);if(!p)return;openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid"><div class="field"><label>Name</label><input id="epName" value="${esc(p.name)}"></div><div class="field"><label>City</label><input id="epCity" value="${esc(p.city||'')}"></div><div class="field"><label>Age</label><input id="epAge" inputmode="numeric" value="${esc(p.age||'')}"></div><div class="field"><label>Occupation</label><input id="epOccupation" value="${esc(p.occupation||'')}"></div><div class="field"><label>Phone</label><input id="epPhone" value="${esc(p.phone||'')}"></div><div class="field"><label>Email</label><input id="epEmail" value="${esc(p.email||'')}"></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(p.profileText||'')}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson" data-act="save-edit-person">Save</button></div>`);}
-async function saveEditPerson(){const p=person(document.getElementById('epId')?.value);if(!p)return;p.name=document.getElementById('epName').value.trim()||p.name;p.city=document.getElementById('epCity').value.trim();p.age=Number(document.getElementById('epAge').value)||undefined;p.occupation=document.getElementById('epOccupation').value.trim();p.phone=document.getElementById('epPhone').value.trim();p.email=document.getElementById('epEmail').value.trim();const newProfile=document.getElementById('epProfile').value.trim();if(newProfile!==p.profileText){p.profileText=newProfile;p.profileVersion=(p.profileVersion||0)+1;}await save();closeSheet();render();showToast('Saved');}
+function editPersonSheet(pid){const p=person(pid||ui.detail?.id);if(!p)return;openSheet(`<h2>Edit ${esc(p.name)}</h2><input type="hidden" id="epId" value="${p.id}"><div class="form-grid"><div class="field"><label>Name</label><input id="epName" value="${esc(p.name)}"></div><div class="field"><label>City</label><input id="epCity" value="${esc(p.city||'')}"></div><div class="field"><label>Age</label><input id="epAge" inputmode="numeric" value="${esc(p.age||'')}"></div><div class="field"><label>Occupation</label><input id="epOccupation" value="${esc(p.occupation||'')}"></div><div class="field"><label>Phone</label><input id="epPhone" value="${esc(p.phone||'')}"></div><div class="field"><label>Email</label><input id="epEmail" value="${esc(p.email||'')}"></div><div class="field"><label>Profile</label><textarea id="epProfile">${esc(currentProfileText(p.id))}</textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" id="saveEditPerson" data-act="save-edit-person">Save</button></div>`);}
+async function saveEditPerson(){const p=person(document.getElementById('epId')?.value);if(!p)return;p.name=document.getElementById('epName').value.trim()||p.name;p.city=document.getElementById('epCity').value.trim();p.age=Number(document.getElementById('epAge').value)||undefined;p.occupation=document.getElementById('epOccupation').value.trim();p.phone=document.getElementById('epPhone').value.trim();p.email=document.getElementById('epEmail').value.trim();const newProfile=document.getElementById('epProfile').value.trim();if(newProfile!==currentProfileText(p.id)){const e=addEntry({type:'profile',personIds:[p.id],about:[{type:'person',id:p.id}],text:'',changes:[]});const v=addProfileVersion(p,newProfile,{entryId:e.id,origin:'edit'});e.text=`Profile updated to v${v.number}.`;e.profileVersionId=v.id;e.changes.push({kind:'profile-version',profileVersionId:v.id});}await save();closeSheet();render();showToast('Saved');}
 
 function handleInput(e){if(e.target.matches('[data-role="search"]')){ui.search=e.target.value;clearTimeout(handleInput.t);handleInput.t=setTimeout(render,90);}}
 function handleChange(e){if(e.target.id==='backupFile'&&e.target.files?.[0])importBackup(e.target.files[0]);}
@@ -71,12 +74,19 @@ document.addEventListener('click',handleClick);
 document.addEventListener('input',handleInput);
 document.addEventListener('change',handleChange);
 
+// Start-up: open storage, load the data (upgrading v58 data once), then show it.
 async function init(){
-  try{data=await dbGet(STATE_KEY);}
+  try{await dbOpen();}
   catch(err){console.error(err);storageBlocked=true;data=demoData();applySettings();render();showToast('Local storage unavailable; using temporary data');return;}
-  try{if(!data){data=demoData();await save();}normalizeData(data);data.settings={...defaultSettings(),...(data.settings||{})};applySettings();render();loadSafetyCopies();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  let res;
+  try{res=await loadOrUpgrade();}
+  catch(err){console.error(err);showUpgradeProblem();return;}
+  try{data=res.data;touchData();applySettings();render();loadSafetyCopies();if(res.migrated)showToast(`ZivugMatch is now ${APP_VERSION_LABEL}`);if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(err){console.error(err);showLoadProblem();}
 }
 function showLoadProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be shown</h3><p>Nothing was changed or deleted. Please export a backup so it can be checked.</p><button class="warm-primary" data-act="export-backup">Export backup</button></div></main>`;}
+// The upgrade to v1.0 failed: nothing was written, the original data is untouched. Offer it as a file.
+function showUpgradeProblem(){app.innerHTML=`<main class="page"><div class="warm-empty"><h3>Your data could not be updated to ${APP_VERSION_LABEL}</h3><p>Nothing was changed or deleted. You can save your data as a file, and try again.</p><button class="warm-primary" data-act="export-original">Save my data</button> <button class="warm-primary" data-act="reload-app">Try again</button></div></main>`;}
+async function exportOriginalState(){try{const old=await kvGet('state');const blob=new Blob([JSON.stringify(old,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`ZivugMatch_v58_Data_${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){showToast('Could not read the data');}}
 // Start once every script has loaded, so the first render already uses the final screen code.
 document.addEventListener('DOMContentLoaded',init);

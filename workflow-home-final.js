@@ -45,15 +45,15 @@ function statusSentenceForPerson(p){
   const mine=openForPerson(p.id,'me'),them=openForPerson(p.id,'them');
   if(mine.length)return `${mine[0].label} · My to-do`;
   if(them.length)return `${them[0].label} · To hear back`;
-  const current=shidduchimForPerson(p.id).find(s=>s.status==='active');
-  if(current){const r=getCurrentRound(current);return r?.stage||'Current shidduch';}
+  const current=shidduchimForPerson(p.id).find(s=>shStatus(s)==='active');
+  if(current){const r=currentRound(current);return r?.stage||'Current shidduch';}
   if(needsContactPerson(p))return 'Time to contact';
   const lc=lastContact(p.id);return lc?`Last contact ${fmtDay(lc).toLowerCase()}`:'No contact yet';
 }
 
 function zmPersonOpenStatus(p){
   const mine=openForPerson(p.id,'me'),them=openForPerson(p.id,'them');
-  const active=shidduchimForPerson(p.id).filter(s=>s.status==='active');
+  const active=shidduchimForPerson(p.id).filter(s=>shStatus(s)==='active');
   const lc=lastContact(p.id);
   let boxes='';
   if(mine.length)boxes+=`<button class="zm-person-open-box mine" data-contact="wait" data-person-id="${esc(p.id)}"><span><b>My to-do</b><small>${esc(zmShortOpenLabel(mine))}</small></span><em>Change</em></button>`;
