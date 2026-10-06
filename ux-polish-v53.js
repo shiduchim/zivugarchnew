@@ -3,9 +3,6 @@
 // v53 final UX polish: clearer single mode, distinct contact icons,
 // current workflow wording, and compact sticky Shadchanim header.
 
-// SMS icon chosen from the approved icon sheet: rectangular message bubble with two lines (option 2).
-ICONS.sms='<path d="M4 5h16v12H9l-5 4V5Z"/><path d="M8 9h8M8 13h6"/>';
-
 function warmContactButtons(p){
   return `<div class="warm-contact-row">
     <button class="warm-contact phone" data-contact="call" data-person-id="${p.id}"><span>${icon('phone')}</span><small>Call</small></button>

@@ -3,9 +3,6 @@
 // Warm Modern UI layer — follows the approved rendering direction.
 // It deliberately changes only presentation and screen composition; the agreed data architecture stays intact.
 
-ICONS.girl='<circle cx="12" cy="8" r="3"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/><path d="M8.7 5.8c1.1-2.2 5.5-2.2 6.6 0"/>';
-ICONS.plus=ICONS.edit;
-
 function warmWordmark(){return `<div class="warm-wordmark"><span>Zivug</span><b>Match</b><em>ב״ה</em></div>`;}
 
 function header(title,sub,{add=false,back=false,filter=false}={}){
@@ -102,4 +99,3 @@ function personDetail(pid){
 }
 
 function sourceNamesForPerson(pid){const srcs=data.sources.filter(s=>s.peopleIds?.includes(pid));if(!srcs.length)return'No source recorded';const first=srcs.slice(0,2).map(s=>s.name).join(' · ');return srcs.length>2?`${first} · ${srcs.length-2} more`:first;}
-
