@@ -40,7 +40,7 @@ function handleClick(e){
   else if(act==='idea-yes')runOnce('idea',()=>chooseIdea(b.dataset.ideaId,true));
   else if(act==='export-backup')exportBackup();
   else if(act==='import-backup')document.getElementById('backupFile')?.click();
-  else if(act==='toggle-demo'){const wasDemo=data.meta.demo;keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});}
+  else if(act==='toggle-demo')runOnce(act,()=>{const wasDemo=data.meta.demo;return keepSafetyCopy(wasDemo?'clearing the demo':'loading the demo').then(copyId=>{data=wasDemo?emptyData():demoData();return save().then(()=>{closeSheet();ui.detail=null;ui.screen='recent';render();showUndoToast(data.meta.demo?'Demo loaded':'Ready for your data',copyId);});});});
   else if(act==='undo-safety')runOnce(act,()=>restoreSafetyCopy(b.dataset.copyId));
   else if(act==='close-open-item')runOnce(act,()=>closeOpenItem(b.dataset.itemId));
   else if(act==='undo-close-item')runOnce(act,()=>undoCloseOpenItem(b.dataset.itemId,b.dataset.entryId));
@@ -51,7 +51,7 @@ function handleClick(e){
   else if(act==='show-dormant'){closeSheet();const arr=byType('Shadchan').filter(dormantPerson);openSheet(`<h2>Dormant 60+ days</h2><p class="lead">This is only a filter. It does not create reminders.</p>${arr.length?`<div class="list-card">${arr.map(p=>personRow(p)).join('')}</div>`:empty('Nobody is dormant','Everyone has been contacted in the last 60 days.')}<button class="primary-btn full" style="margin-top:12px" data-act="close-sheet">Done</button>`);}
   else if(act==='detail-menu')detailMenu();
   else if(act==='edit-person')editPersonSheet(ui.detail?.id);
-  else if(act==='log-profile')logProfileSend(b.dataset.personId);
+  else if(act==='log-profile')runOnce(act,()=>logProfileSend(b.dataset.personId));
   else if(act==='quick-add')quickAdd(b.dataset.add);
   else if(act==='save-edit-person')runOnce(act,saveEditPerson);
   else if(act==='end-shidduch')openEndShidduchSheet(b.dataset.shidduchId||ui.detail?.id);
