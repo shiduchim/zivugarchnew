@@ -1,8 +1,31 @@
 /* UX refinement components + expanded skin library. */
 
-.skin-help{margin:-2px 2px 9px;font-size:10px;color:var(--text-3);line-height:1.35}
-.skin-picker-many{grid-template-columns:repeat(2,minmax(0,1fr));max-height:440px;overflow:auto;padding:2px}
-.skin-picker-many .skin-choice{min-height:66px}
+.skin-help{margin:-2px 2px 7px;font-size:9.5px;color:var(--text-3);line-height:1.3}
+/* Skins are intentionally compact and never get their own scrollbar.
+   The Settings sheet is the only scroll surface, so dragging anywhere here keeps scrolling the page. */
+.skin-picker-many{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  max-height:none;
+  overflow:visible;
+  padding:1px;
+  margin:6px 0 10px;
+}
+.skin-picker-many .skin-choice{
+  min-height:50px;
+  padding:7px;
+  border-radius:13px;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:7px;
+}
+.skin-picker-many .skin-swatch{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  font-size:15px;
+}
+.skin-picker-many .skin-choice b{font-size:10px;line-height:1.1}
+.skin-picker-many .skin-choice small{font-size:7.5px;line-height:1.15;margin-top:2px}
 .next-list{display:grid;gap:8px}
 .next-card{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:18px;box-shadow:var(--shadow-soft);padding:11px 12px;display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;text-align:left}
 .next-avatar{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-weight:850;font-size:11px;background:var(--blue-2);color:var(--blue)}
@@ -25,4 +48,10 @@
 
 /* Frosted Glass */
 
-@media(max-width:520px){.skin-picker-many{grid-template-columns:1fr 1fr}.skin-picker-many .skin-choice{grid-template-columns:38px 1fr}.quick-add-grid{grid-template-columns:1fr 1fr}.next-card{grid-template-columns:44px 1fr auto}}
+@media(max-width:520px){
+  .skin-picker-many{grid-template-columns:1fr 1fr}
+  .skin-picker-many .skin-choice{grid-template-columns:32px minmax(0,1fr);padding:6px;min-height:48px}
+  .skin-picker-many .skin-swatch{width:32px;height:32px}
+  .quick-add-grid{grid-template-columns:1fr 1fr}
+  .next-card{grid-template-columns:44px 1fr auto}
+}
