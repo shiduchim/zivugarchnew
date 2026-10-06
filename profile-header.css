@@ -1,4 +1,4 @@
-/* v58: profile app bar. Compact immediately, then pinned with JS when it reaches the viewport top.
+/* Profile app bar. Compact immediately, then pinned with JS when it reaches the viewport top.
    We use a fixed fallback instead of relying on CSS sticky through older overflow/preview layers. */
 
 .app-shell:has(.zm-profile-identity),

@@ -1,0 +1,134 @@
+/* ZivugMatch v1.0 additions. Loaded last; every color comes from the skin's own tokens, so all 11 skins
+   restyle these pieces the same way they restyle the rest of the app. */
+
+/* "Same person?" */
+.identity-card{display:flex;align-items:center;gap:12px;margin:10px 0;padding:12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface)}
+.identity-card>div:last-child{display:flex;flex-direction:column;min-width:0}
+.identity-card strong{color:var(--text);font-size:15px}
+.identity-card span{color:var(--text-2);font-size:12px;overflow-wrap:anywhere}
+.identity-card small{color:var(--text-3);font-size:11px;margin-top:2px}
+.identity-actions{margin-top:14px}
+.identity-hint{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);color:var(--text-2);font-size:12.5px}
+.identity-hint b{color:var(--text)}
+.identity-hint button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:12px;padding:6px 12px;border-radius:999px}
+
+/* A list line with nobody added for it yet */
+.source-line-unlinked{cursor:default}
+.source-line-unlinked .warm-person-line{color:var(--text-3)}
+
+/* Send a profile: exactly what will go out */
+.send-to{padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface-2);color:var(--text);font-weight:700;font-size:14px}
+.send-files{padding:2px 12px}
+.send-preview-label{margin:12px 0 4px;color:var(--text-2);font-size:12px;font-weight:700}
+.send-preview{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;padding:10px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text);font-size:13px;line-height:1.45}
+.send-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.send-actions button{padding-left:6px;padding-right:6px;min-width:0}
+
+/* Profile versions */
+.version-card h3{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.version-card h3 small{color:var(--text-3);font-size:11px;font-weight:600}
+.version-sent{margin-top:8px;color:var(--text-2);font-size:12px}
+.versions-link{float:right;border:0;background:none;color:var(--blue);font-size:12px;font-weight:700;padding:0}
+
+/* An activity: what was sent, later links, delete */
+.entry-sent{margin-top:10px}
+.entry-correction{margin:8px 2px 0;color:var(--text-3);font-size:11.5px}
+.entry-actions{display:flex;justify-content:center;margin-top:14px}
+
+/* Offers */
+.offer-again{color:var(--text);font-weight:600}
+.option.quiet{background:transparent}
+.link-list{padding:2px 12px}
+.link-row{align-items:flex-start}
+.link-row span{line-height:1.4}
+.link-row b{color:var(--text-2);font-weight:700;margin-right:4px}
+
+/* Answers and dates */
+.zm-answer-edit{justify-self:start;text-align:left;border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline dotted var(--line);text-underline-offset:3px}
+.answer-options{justify-content:flex-start;margin:4px 0 12px}
+.answer-options .option{font-size:13px;padding:8px 16px}
+.answer-closes{margin-top:10px}
+.zm-add-date{display:flex;justify-content:flex-end;margin:0 0 10px}
+.zm-add-date-note{margin:0 2px 10px;color:var(--text-3);font-size:12px}
+.date-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin:10px 0}
+.date-history{margin-top:14px}
+.date-history-row{padding:6px 0;border-bottom:1px solid var(--line);color:var(--text);font-size:12.5px}
+.date-history-row b{color:var(--text-2);font-weight:700;margin-right:4px}
+
+/* Earlier rounds, folded under the current one */
+.earlier-rounds{margin-top:14px}
+.earlier-round{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;margin:6px 0;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text-2);font-size:12.5px;text-align:left}
+.earlier-round b{color:var(--text);font-size:15px}
+
+/* Add activity: which open items this settles */
+.activity-settles{padding:2px 12px}
+.activity-settles:empty{display:none}
+
+/* Sources: the list as it came, the one follow-up, adding people */
+.section-add{border:0;background:transparent;color:var(--blue);font-size:11px;font-weight:750;padding:4px}
+.source-follow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface)}
+.source-follow b{display:block;color:var(--text);font-size:12.5px}
+.source-follow span{color:var(--text-2);font-size:11px}
+.source-original{margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface)}
+.source-original summary{color:var(--text-2);font-size:12px;font-weight:700;cursor:pointer}
+.source-original .profile-text{margin-top:8px;white-space:pre-wrap;font-size:12.5px;color:var(--text)}
+button.source-line-unlinked{cursor:pointer;width:100%;text-align:left}
+
+/* References and family on a person's page */
+.links-card{margin-top:10px}
+.links-card>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.links-head{padding:10px 0 6px}
+.links-head span{color:var(--text-2);font-size:10.5px;font-weight:650}
+.links-head button{border:0;background:transparent;color:var(--blue);font-size:11px;font-weight:800;padding:4px}
+.link-person{padding:8px 0;border-top:1px solid var(--line)}
+.link-open{display:flex;flex-direction:column;align-items:flex-start;min-width:0;border:0;background:none;padding:0;text-align:left;color:inherit}
+.link-open b{color:var(--text);font-size:12.5px}
+.link-open span{color:var(--text-2);font-size:11px}
+.links-empty{margin:0 0 10px;color:var(--text-3);font-size:11.5px}
+
+/* Files */
+.file-add{display:inline-flex;align-items:center;padding:6px 12px;font-size:11px;cursor:pointer}
+.file-photo{display:block;max-width:100%;max-height:60vh;margin:0 auto 12px;border-radius:var(--radius-md)}
+.file-audio{width:100%;margin-bottom:12px}
+.split-actions a.ghost-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+
+/* Folders */
+.folder-list{padding:2px 12px;margin-bottom:10px}
+.folder-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 2px 10px;color:var(--text-2);font-size:12px}
+.folder-note b{color:var(--text)}
+.folder-note button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:11px;padding:5px 11px;border-radius:999px}
+
+/* Intake: To file on Recent, Paste, filing */
+.to-file-row{display:flex;align-items:center;gap:10px;width:100%;margin:2px 0 6px;padding:9px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text);text-align:left}
+.to-file-icon{display:inline-flex;color:var(--blue)}
+.to-file-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.to-file-copy{display:flex;flex-direction:column;flex:1;min-width:0}
+.to-file-copy b{font-size:13px}
+.to-file-copy small{color:var(--text-2);font-size:11px}
+.to-file-row strong{min-width:24px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--blue);font-size:12px;text-align:center}
+.paste-clip{margin:6px 0 10px}
+.intake-text .profile-text{max-height:160px;overflow:auto;white-space:pre-wrap}
+.intake-text small{display:block;margin-top:6px;color:var(--text-3);font-size:11px}
+.file-kinds{justify-content:flex-start}
+.file-kinds .option{font-size:11px;padding:7px 11px}
+.file-new input+label{margin-top:8px}
+.intake-actions{grid-template-columns:1fr 1fr 1.3fr}
+.split-actions.three{grid-template-columns:1fr 1fr 1fr}
+
+/* A list: the rest of its counts, and sending my profile to the ones not contacted */
+.source-counts{margin:8px 2px 0;color:var(--text-2);font-size:12px}
+.list-send-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:10px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--blue);font-size:12.5px;font-weight:750;text-align:left}
+.list-send-row b{font-size:16px}
+.list-send-people{padding:2px 12px}
+.list-send-people small{color:var(--text-3)}
+.list-send-step{margin-top:12px}
+/* Needs a number */
+.number-hint span{color:var(--text-2)}
+/* A paused shidduch */
+.zm-paused-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:9px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text-2);font-size:12.5px}
+.zm-paused-note button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:12px;padding:6px 12px;border-radius:999px}
+.answer-source{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--surface);color:var(--text-2);font-size:12px}
+.answer-source b{color:var(--text)}
+.answer-source button{border:0;background:var(--surface-2);color:var(--blue);font-weight:700;font-size:11.5px;padding:5px 11px;border-radius:999px}
+.quiet-line{display:block;width:100%;margin:0 0 8px;padding:8px 12px;border:1px dashed var(--line);border-radius:var(--radius-md);background:transparent;color:var(--text-2);font-size:12px;text-align:left}
+.view-ages select{min-width:70px}

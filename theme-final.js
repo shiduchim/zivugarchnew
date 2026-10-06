@@ -23,14 +23,13 @@ function skinCards(){return FINAL_SKINS.map(([v,l,d,m])=>skinChoice(v,l,d,m)).jo
 // Settings are applied in one place, as attributes on <html> that the CSS reads.
 // data-skin is the single appearance system. Legacy theme values may remain in saved
 // data for backwards compatibility, but they never style the app (no data-theme).
-// A retired skin saved by an older version falls back to Classic.
+// A retired skin saved by an older version shows as Classic. Applying settings never writes data.
 const SKIN_BAR_COLORS={
 classic:'#f6f0e7',game:'#f5f3ff',dark:'#15191f',glass:'#6c8fc7',boys:'#082f49',girls:'#65244f',kids:'#fff4b8',
 contrast:'#0B1735',neon:'#f4f7ff',ocean:'#06364a',sunset:'#6d294f'
 };
 function applySettings(){
-if(data?.settings && !FINAL_SKIN_IDS.has(data.settings.skin||'classic')) data.settings.skin='classic';
-const s=data?.settings||defaultSettings(),root=document.documentElement,skin=s.skin||'classic';
+const s=data?.settings||defaultSettings(),root=document.documentElement,skin=FINAL_SKIN_IDS.has(s.skin)?s.skin:'classic';
 root.removeAttribute('data-theme');
 root.dataset.density=s.density||'comfortable';
 root.dataset.iconSize=s.iconSize||'medium';

@@ -21,6 +21,7 @@ async function fresh({ mode = 'single', skin = 'classic', settings = {}, fixture
   if (mutate) mutate(fx);
   await L.idbWrite(page, fx);
   await L.openApp(page);
+  await L.openApp(page); // a v1.0 build upgrades on the first load; counting starts after it
   return { ctx, page, seeded: fx };
 }
 async function run(page, steps) { for (const [op, arg] of steps) { if (op === 'tap') await L.tap(page, arg); else if (op === 'close') await L.closeSheets(page); } }
@@ -32,6 +33,13 @@ function diff(a, b) {
   }
   return out;
 }
+// Both layouts: v58 (aboutType/aboutId, shidduch.status, currentRoundId) and v1.0 (about[], status from rounds).
+const aboutIdsOf = e => [...(Array.isArray(e.about) ? e.about.map(a => a.id) : []), e.aboutId].filter(Boolean);
+const roundsFor = (st, sid) => st.rounds.filter(r => r.shidduchId === sid).sort((a, b) => (a.number || 0) - (b.number || 0));
+const curRoundId = (st, s) => s.currentRoundId || roundsFor(st, s.id).slice(-1)[0]?.id;
+const shStatusOf = (st, s) => s.status || (roundsFor(st, s.id).slice(-1)[0]?.status === 'ended' ? 'ended' : 'active');
+async function kvValue(page, key) { return page.evaluate(key => new Promise(r => { const q = indexedDB.open('ZivugMatchDB'); q.onsuccess = () => { const db = q.result; const g = db.transaction('kv').objectStore('kv').get(key); g.onsuccess = () => { db.close(); r(g.result); }; g.onerror = () => { db.close(); r(undefined); }; }; q.onerror = () => r(undefined); }), key); }
+async function safetyCopyCount(page) { const v1 = await kvValue(page, 'copiesIndex'); if (Array.isArray(v1)) return v1.filter(c => !c.pinned).length; return ((await kvValue(page, 'safetyCopies')) || []).length; }
 const ids = st => Object.fromEntries(RECORDS.map(k => [k, (st[k] || []).map(x => x.id)]));
 const sameIds = (a, b) => JSON.stringify(ids(a)) === JSON.stringify(ids(b));
 const domList = (page, sel, attr) => page.$$eval(sel, (els, attr) => els.map(e => attr ? e.getAttribute(attr) : e.textContent.trim()), attr);
@@ -164,9 +172,9 @@ const checks = {
       await L.tap(page, `[data-idea="${newIdea.id}"]`); await L.tap(page, '#overlay [data-act="idea-yes"]');
       const s2 = await L.idbRead(page);
       const sh = s2.shidduchim.find(s => s.id === sid);
-      det[key] = { pairRecords: pairCount(s2, g, gl), sameRecordId: !!sh, status: sh?.status, rounds: roundsOf(s2, sid), leftoverEndedFields: sh ? Object.keys(sh).filter(k => /^end/.test(k)) : [] };
+      det[key] = { pairRecords: pairCount(s2, g, gl), sameRecordId: !!sh, status: sh && shStatusOf(s2, sh), rounds: roundsOf(s2, sid), leftoverEndedFields: sh ? Object.keys(sh).filter(k => /^end/.test(k)) : [] };
       ok = ok && pairCount(s2, g, gl) === 1 && !!sh && s0.shidduchim.every(s => s2.shidduchim.some(x => x.id === s.id));
-      if (key.startsWith('c')) ok = ok && sh.status === 'active' && s2.rounds.some(r => r.shidduchId === sid && r.number === 2);
+      if (key.startsWith('c')) ok = ok && shStatusOf(s2, sh) === 'active' && s2.rounds.some(r => r.shidduchId === sid && r.number === 2);
       await ctx.close();
     }
     const twoActive = ['a_existingActivePair', 'b_newOfferActivePair'].every(k => det[k].rounds.filter(r => r.endsWith(':active')).length === 2);
@@ -182,7 +190,7 @@ const checks = {
     await setting(page, 'mode', 'single'); await setting(page, 'skin', 'dark'); await setting(page, 'skin', 'classic'); await setting(page, 'mode', 'shadchan'); await L.closeSheets(page);
     await L.openApp(page); await L.openApp(page);
     const s1 = await L.idbRead(page);
-    const seedIdsMatch = sameIds(seeded, s0);
+    const seedIdsMatch = RECORDS.every(k => (seeded[k] || []).filter(Boolean).every(r => !r.id || (s0[k] || []).some(x => x.id === r.id)));
     const recordsUnchanged = RECORDS.every(k => JSON.stringify(s0[k]) === JSON.stringify(s1[k]));
     // Add a person through the UI, then reload twice: the record and every ID must come back identical.
     await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#qaGuy');
@@ -309,8 +317,12 @@ const checks = {
 
   // ---------- SAFETY requirements for step B. Expected to FAIL on v58 and PASS after the approved fix. ----------
   async S1_render_error_keeps_real_data() {
-    // A corrupt history row (null) makes the first render throw on any build.
-    const { ctx, page } = await fresh({ mode: 'shadchan', mutate: fx => { fx.entries.push(null); fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' }); } });
+    // The first render throws on real data (any build): the Recent screen is made to fail by the test.
+    const { ctx, page } = await L.newPage(browser, BASE, L.WIDTHS.phone);
+    const fx = FIX('demo'); Object.assign(fx.settings, { mode: 'shadchan' }); fx.people.push({ id: 'p_golden_real', name: 'Golden Real Person', types: ['Shadchan'], createdAt: '2026-10-01T09:00:00.000Z' });
+    await L.idbWrite(page, fx); await L.openApp(page);
+    await ctx.route(/recent(-filter-v55)?\.js/, async r => { const res = await r.fetch(); r.fulfill({ response: res, body: (await res.text()) + "\n;recentScreen=function(){throw new Error('simulated render failure')};" }); });
+    await L.openApp(page);
     const s0 = await L.idbRead(page);
     const text = await page.$eval('#app', a => a.textContent);
     const demoShown = /Local storage unavailable/.test(await page.$eval('#toast', e => e.textContent));
@@ -414,7 +426,7 @@ const checks = {
     await L.settle(page); await page.waitForTimeout(200);
     const st = await L.idbRead(page); const sh = st.shidduchim.filter(s => s.guyId === 'p_moshe' && s.girlId === 'p_tamar');
     const rounds = st.rounds.filter(r => sh.some(s => s.id === r.shidduchId));
-    const entries = st.entries.filter(e => sh.some(s => s.id === e.aboutId) && /Interested/.test(e.text || ''));
+    const entries = st.entries.filter(e => sh.some(s => aboutIdsOf(e).includes(s.id)) && /Interested/.test(e.text || ''));
     const ok = sh.length === 1 && rounds.length === 1 && entries.length === 1;
     record('R1', 'Tapping Interested several times quickly creates one shidduch, one round and one ledger entry', ok ? 'PASS' : 'FAIL', { records: sh.length, rounds: rounds.map(r => `#${r.number}:${r.status}`), interestedEntries: entries.length });
     await ctx.close();
@@ -437,7 +449,7 @@ const checks = {
       const sid = key === 'existingOffer' ? 'sh_me_leah' : 'sh_david_noa';
       const r0 = s0.rounds.filter(r => r.shidduchId === sid), r1 = st.rounds.filter(r => r.shidduchId === sid);
       const sh0 = s0.shidduchim.find(s => s.id === sid), sh1 = st.shidduchim.find(s => s.id === sid);
-      det[key] = { roundsBefore: r0.length, roundsAfter: r1.length, sameCurrentRound: sh0.currentRoundId === sh1.currentRoundId, activeRounds: r1.filter(r => r.status === 'active').length };
+      det[key] = { roundsBefore: r0.length, roundsAfter: r1.length, sameCurrentRound: curRoundId(s0, sh0) === curRoundId(st, sh1), activeRounds: r1.filter(r => r.status === 'active').length };
       ok = ok && r1.length === r0.length && det[key].sameCurrentRound && det[key].activeRounds === 1;
       await ctx.close();
     }
@@ -492,6 +504,8 @@ const checks = {
       return page.$eval('#app', a => { const r = [...a.querySelectorAll('.warm-info-card > div')].find(d => d.querySelector('span')?.textContent === 'My profile'); return r ? r.querySelector('strong').textContent + ' | ' + r.querySelector('button').textContent : null; }); };
     const miriam = await row('p_miriam'), batya0 = await row('p_batya');
     await L.tap(page, '[data-act="log-profile"]');
+    // v1.0 opens a send sheet first (choose what goes out); v58 recorded the send at once.
+    if (await page.$('#overlay [data-send="copy"]')) await L.tap(page, '#overlay [data-send="copy"]');
     const batya1 = await row('p_batya');
     const fake = (await page.content()).includes('Has v3 · v4 ready');
     const ok = miriam === 'Has v4 | Send v4' && batya0 === 'Not sent yet · v4 ready | Send v4' && batya1 === 'Has v4 | Send v4' && !fake;
@@ -529,7 +543,7 @@ const checks = {
     const label = await (async () => { await L.tap(page, '[data-act="settings"]'); return page.$eval('#overlay [data-act="toggle-demo"]', e => e.textContent); })();
     await L.tap(page, '#overlay [data-act="toggle-demo"]');
     const st = await L.idbRead(page);
-    const copies = await page.evaluate(() => new Promise(r => { const q = indexedDB.open('ZivugMatchDB', 1); q.onsuccess = () => { const g = q.result.transaction('kv').objectStore('kv').get('safetyCopies'); g.onsuccess = () => r((g.result || []).length); }; }));
+    const copies = await safetyCopyCount(page);
     const lost = !st.people.some(p => p.id === 'p_golden_real') && !copies;
     record('K1', `Settings "${label}" replaces all real data with no confirm and no undo`, lost ? 'KNOWN' : 'CHANGED', { realPersonStillThere: !lost, peopleAfter: st.people.length, demoFlag: st.meta.demo });
     await ctx.close();
@@ -552,9 +566,9 @@ const checks = {
     await page.setInputFiles('#backupFile', { name: 'backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(backup)) });
     await L.settle(page); await page.waitForTimeout(200);
     const st = await L.idbRead(page);
-    const keys = await page.evaluate(() => new Promise(r => { const q = indexedDB.open('ZivugMatchDB', 1); q.onsuccess = () => { const k = q.result.transaction('kv').objectStore('kv').getAllKeys(); k.onsuccess = () => r(k.result); }; }));
+    const copies = await safetyCopyCount(page);
     const lost = !st.people.some(p => p.id === 'p_golden_real');
-    record('K3', 'Restore replaces everything and keeps no recoverable copy of the previous data', lost && !keys.includes('safetyCopies') ? 'KNOWN' : 'CHANGED', { peopleAfter: st.people.length, storedKeys: keys });
+    record('K3', 'Restore replaces everything and keeps no recoverable copy of the previous data', lost && !copies ? 'KNOWN' : 'CHANGED', { peopleAfter: st.people.length, safetyCopies: copies });
     await ctx.close();
   },
   async K4_missing_createdAt_crashes_list() {

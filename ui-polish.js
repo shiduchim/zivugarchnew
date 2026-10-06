@@ -1,6 +1,6 @@
 'use strict';
 
-// v53 final UX polish: clearer single mode, distinct contact icons,
+// UX polish: clearer single mode, distinct contact icons,
 // current workflow wording, and compact sticky Shadchanim header.
 
 function warmContactButtons(p){
@@ -47,8 +47,9 @@ function openMyProfileInSingleMode(){
 function zmGirlAppliesToMe(p){
   const self=me();
   if(!self)return false;
-  const pairIdea=data.ideas.some(i=>i.status==='open'&&((i.guyId===self.id&&i.girlId===p.id)||(i.girlId===self.id&&i.guyId===p.id)));
-  const activeMatch=data.shidduchim.some(s=>s.status==='active'&&((s.guyId===self.id&&s.girlId===p.id)||(s.girlId===self.id&&s.guyId===p.id)));
+  const pair=x=>(isMe(x.guyId)&&samePerson(x.girlId,p.id))||(isMe(x.girlId)&&samePerson(x.guyId,p.id));
+  const pairIdea=data.ideas.some(i=>i.status==='open'&&pair(i));
+  const activeMatch=liveShidduchim().some(s=>shStatus(s)==='active'&&pair(s));
   return pairIdea||activeMatch;
 }
 
@@ -56,7 +57,7 @@ function zmGirlAppliesToMe(p){
 // Avoid duplicate city/type text: one concise line, then occupation only if present.
 function zmProfileIdentity(p){
   const type=p.types?.includes('Shadchan')?'Shadchan':p.types?.includes('Girl')?'Girl':p.types?.includes('Guy')?'Guy':'Person';
-  const meta=[type,p.age,p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
+  const meta=[type,personAge(p),p.city].filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='');
   return `<div class="zm-profile-sticky-sentinel" aria-hidden="true"></div>
     <div class="zm-profile-identity">
       <button class="warm-back zm-profile-back" data-act="back" aria-label="Back">${icon('back')}</button>
