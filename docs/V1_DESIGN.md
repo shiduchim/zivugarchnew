@@ -95,6 +95,27 @@ merged or guessed.
 
 Rendering, searching, filtering, switching mode or skin never write anything.
 
+## Flows
+
+Each flow lives in one file and writes one entry per real moment.
+
+| File | Owns |
+|---|---|
+| `ledger.js` | Writing entries and open items, linking an entry to more records (kept as a correction), soft delete with Undo (only for entries that changed no record), the entry page |
+| `profiles.js` | ProfileVersions, "which version does this person have", the send sheet (To, Version, Files, What for, Your words, a preview of exactly what goes out) |
+| `offers.js` | Offer rows and sheet, Not applicable (private reason, no shidduch), Interested (one shidduch per pair; a new round only after the last one ended), Link earlier history |
+| `rounds.js` | Answers (Yes / Thinking / No, who told me, which item it answers), Engaged, dates (add, move, cancelled, happened, feedback) and earlier rounds folded on the History tab |
+| `items.js` | What's next? (Done, Heard back, Check in now, Not needed, Undo), the "after talking to …" question, items settled from Add activity |
+
+- **Open items close only by choice.** The app names the open items (after a contact, an answer, a
+  date's feedback) and I tick the one that was settled. Only that item closes, linked to the entry
+  that settled it.
+- **Dates** start only when both sides said Yes; Thinking blocks them. Every change to a date is an
+  entry about its Date ID, so moving it or adding feedback never makes a new date. "It happened"
+  opens one feedback item per side, and feedback for a side closes exactly that item.
+- **Current state** (an answer, a date's state, a stage) is read from the newest entry; two entries
+  with the same time count in the order they were written.
+
 ## Identity
 
 - One matching check (`identity.js`) serves every way in: add person, file from intake, add to a
@@ -130,6 +151,30 @@ through that pointer, so nothing is copied or rewritten:
   - are not already about another offer or shidduch
   - involve no other single
 
+  - when I had my own offer or shidduch with one of them, involve nothing between me and that
+    person
+
   So an entry with Me + Leah is never offered for David – Leah.
 - **My own shidduch** appears on the other person's page as a private, folded line.
 - **Private notes and reasons** stay on their own records and are never part of a send.
+
+## What looks different from v58
+
+Checked by the golden harness (DOM of every state against the cleaned v58). Everything else is the
+same, element for element.
+
+| Where | Difference | Why |
+|---|---|---|
+| Settings | "Before v1.0" row (Restore); footer "ZivugMatch v1.0" | The pinned safety copy; the new version |
+| Person ⋯ | "Same person as…" (not on Me), "Undo merge" after a merge, "Send profile" when there is a profile | Identity; sending |
+| Person → Shidduchim | My own shidduch reads "My own shidduch with Leah", marked Private | Privacy rule |
+| Profile tab | "All versions" when there is more than one | Frozen versions |
+| Shadchan → Send vN | Opens the send sheet instead of logging at once | Only what I choose is sent |
+| What's next? | Each item has Done / Not needed, or Heard back / Check in now / Not needed; "When?" for a to-do | Open items |
+| Add activity | "Who reached out?" and the open items it settles | Open items |
+| Shidduch → Overview | Each answer can be tapped to change it | Answers are entries |
+| Shidduch → Dates | "Add date", or "Dates start after both sides say Yes" | Dates; Thinking blocks dating |
+| Shidduch → History | Includes date entries; earlier rounds folded below | One ledger; rounds |
+| Shidduch ⋯ | "Engaged" | Marriage stage |
+| Entry page | "What was sent", later links, "Delete this activity" for plain entries | Ledger |
+

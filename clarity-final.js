@@ -13,7 +13,7 @@ function addPersonSheet(typePreset){
 
 function addActivitySheet(pid=''){
   const peopleOptions=livePeople().filter(p=>!p.isMe).sort(byName);
-  openSheet(`<h2>Add activity</h2><p class="lead">Add something that happened outside the app. It will also appear in this person's History.</p><div class="form-grid"><div class="field"><label>Person</label><select id="aPerson"><option value="">Choose…</option>${peopleOptions.map(p=>`<option value="${p.id}" ${pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="aType"><option value="note">Note</option><option value="call">Call</option><option value="message">Message</option><option value="profile">Profile</option><option value="referral">Referral</option></select></div><div class="field"><label>What happened?</label><textarea id="aText" placeholder="Short note…"></textarea></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-activity">Save</button></div>`);
+  openSheet(`<h2>Add activity</h2><p class="lead">Add something that happened outside the app. It will also appear in this person's History.</p><div class="form-grid"><div class="field"><label>Person</label><select id="aPerson"><option value="">Choose…</option>${peopleOptions.map(p=>`<option value="${p.id}" ${pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Type</label><select id="aType"><option value="note">Note</option><option value="call">Call</option><option value="message">Message</option><option value="profile">Profile</option><option value="referral">Referral</option></select></div><div class="field"><label>Who reached out?</label><select id="aWho"><option value="out">I contacted them</option><option value="in">They contacted me</option></select></div><div class="field"><label>What happened?</label><textarea id="aText" placeholder="Short note…"></textarea></div><div class="sheet-section activity-settles" id="aItems">${activityItemsHtml(pid)}</div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-activity">Save</button></div>`);
 }
 
 function addSourceSheet(){
@@ -45,21 +45,4 @@ function filtersSheet(){
   if(ui.screen==='shadchanim'){
     openSheet(`<h2>Shadchanim view</h2><div class="sheet-section"><div class="setting-row"><div class="setting-copy"><b>No contact for 60 days or more</b><span>Show people you have not contacted recently</span></div><button class="option" data-act="show-dormant">Show</button></div></div><button class="primary-btn full" data-act="close-sheet">Done</button>`);
   }else settingsSheet();
-}
-
-// New waiting/history entries use the same language users see on screen.
-async function saveWaiting(){
-  const pid=document.getElementById('wPerson')?.value,direction=document.getElementById('wDirection')?.value,label=document.getElementById('wLabel')?.value.trim();
-  if(!pid||!label)return showToast('Say what needs to happen');
-  const turn=direction==='them'?'Their turn':'My turn';
-  const e=addEntry({type:'status',personIds:[pid],about:[{type:'person',id:pid}],text:`${turn}: ${label}`,result:turn,changes:[]});
-  const x=addOpenItem({direction,personId:pid,about:{type:'person',id:pid},kind:'manual',label,openedByEntryId:e.id});
-  e.changes.push({kind:'item-opened',itemId:x.id});
-  await save();closeSheet();render();showToast('Turn saved');
-}
-
-async function logProfileSend(pid){
-  const p=person(pid),v=latestProfileVersion(me().id),n=v?.number||myProfileVersion();
-  addEntry({type:'profile',channel:'WhatsApp',direction:'out',fromPersonId:me().id,toPersonId:p.id,personIds:[me().id,p.id],about:[{type:'person',id:me().id}],text:`Sent my profile v${n} to ${p.name}.`,profileVersionId:v?.id,profileVersionNumber:n,changes:[{kind:'profile-sent',profileVersionId:v?.id||null}]});
-  await save();render();showToast('Profile marked as sent');
 }

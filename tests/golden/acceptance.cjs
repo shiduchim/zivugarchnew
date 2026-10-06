@@ -222,6 +222,279 @@ const tests = {
     await ctx.close();
   },
 
+  // ---- One ledger, open items --------------------------------------------------------------------
+  async L01_ledger_written_once_shown_everywhere() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    // Leah's answer on Me – Leah, given on the shidduch page, heard through Miriam.
+    await run(page, [...shidduchPath('sh_me_leah'), tab('overview')]);
+    await L.tap(page, '[data-act="set-answer"][data-side="girl"]');
+    await L.tap(page, '#overlay [data-answer-value="yes"]');
+    await page.selectOption('#answerFrom', 'p_miriam');
+    await L.tap(page, '#overlay [data-act="save-answer"]');
+    const s1 = await L.idbRead(page);
+    const added = s1.entries.filter(e => !s0.entries.some(x => x.id === e.id));
+    const eid = added[0]?.id;
+    const shown = await inPage(page, eid => {
+      const out = {}; const count = () => document.querySelectorAll(`#app [data-entry="${eid}"]`).length;
+      const show = (k, screen, detail, t) => { ui.screen = screen; ui.detail = detail; ui.detailTab = t || ''; render(); out[k] = count(); };
+      show('recent', 'recent', null); show('leah', 'girls', { type: 'person', id: 'p_leah' }, 'conversation'); show('miriam', 'shadchanim', { type: 'person', id: 'p_miriam' }, 'conversation'); show('shidduch', 'shidduchim', { type: 'shidduch', id: 'sh_me_leah' }, 'history');
+      ui.detail = null; ui.screen = 'recent'; render(); return out;
+    }, eid);
+    const answer = await inPage(page, () => roundAnswer(currentRound(shidduch('sh_me_leah')), 'girl'));
+    const ok = added.length === 1 && Object.values(shown).every(n => n === 1) && answer === 'yes' && JSON.stringify(s1.rounds) === JSON.stringify(s0.rounds);
+    record('L01', 'One moment is written once (one entry, one id) and shows once in Recent, both people\'s History and the shidduch\'s History; the round record is not rewritten', ok, { added: added.length, shown, answer });
+    await ctx.close();
+  },
+
+  async L02_exact_item_closes() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await run(page, personPath('p_miriam', 'shadchan'));
+    // Not needed: exactly that item closes, with an entry saying so.
+    await L.tap(page, '.warm-contact.wait');
+    await L.tap(page, '#overlay [data-act="item-not-needed"][data-item-id="oi2"]');
+    const s1 = await L.idbRead(page);
+    const oi2 = byId(s1.openItems, 'oi2');
+    const notNeeded = oi2.status === 'closed' && oi2.closeKind === 'not-needed' && !!byId(s1.entries, oi2.closedByEntryId) && byId(s1.openItems, 'oi1').status === 'open';
+    // Check in now: the item stays open; the message goes to the history.
+    await L.tap(page, '.warm-contact.wait');
+    await L.tap(page, '#overlay [data-act="item-check-in"][data-item-id="oi1"]');
+    await L.settle(page);
+    const s2 = await L.idbRead(page);
+    const checkIn = byId(s2.openItems, 'oi1').status === 'open' && s2.entries.some(e => (e.changes || []).some(c => c.kind === 'item-checked-in' && c.itemId === 'oi1'));
+    // A new to-do, then a call: the app names Miriam's open items and only the ticked one closes, by the call.
+    await L.openApp(page); await run(page, personPath('p_miriam', 'shadchan'));
+    await L.tap(page, '.warm-contact.wait');
+    await page.selectOption('#wDirection', 'me'); await page.fill('#wLabel', 'Send two names');
+    await L.tap(page, '#overlay [data-act="save-waiting"]');
+    await L.tap(page, '[data-contact="call"]'); await L.settle(page);
+    const listed = await page.$$eval('#overlay input[name="afterItem"]', els => els.map(e => e.value));
+    await page.check('#overlay input[name="afterItem"][value="oi1"]');
+    await L.tap(page, '#overlay [data-act="after-contact-save"]');
+    const s3 = await L.idbRead(page);
+    const call = s3.entries.find(e => e.type === 'call' && !s2.entries.some(x => x.id === e.id));
+    const oi1 = byId(s3.openItems, 'oi1'), todo = s3.openItems.find(x => x.label === 'Send two names');
+    const afterCall = listed.includes('oi1') && listed.includes(todo?.id) && oi1.status === 'closed' && oi1.closedByEntryId === call?.id && todo?.status === 'open';
+    record('L02', 'Open items: Not needed and Heard back close exactly the chosen item; Check in now keeps it open; after a call the app names the open items and only the ticked one closes, linked to that call', notNeeded && checkIn && afterCall, { notNeeded, checkIn, listed, afterCall });
+    await ctx.close();
+  },
+
+  async L03_delete_is_only_for_plain_entries_and_reversible() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const ids = await inPage(page, async () => { const n = addEntry({ type: 'note', personIds: ['p_rivka'], about: [{ type: 'person', id: 'p_rivka' }], text: 'Plain note to delete.' }); await save(); return { note: n.id, changing: data.entries.find(e => (e.changes || []).some(c => !['profile-sent', 'item-checked-in'].includes(c.kind)))?.id }; });
+    await inPage(page, idv => { ui.detail = { type: 'entry', id: idv }; render(); }, ids.changing);
+    const changingHasDelete = !!(await page.$('#app [data-act="delete-entry"]'));
+    await inPage(page, idv => { ui.detail = { type: 'entry', id: idv }; render(); }, ids.note);
+    await L.tap(page, '#app [data-act="delete-entry"]');
+    const s1 = await L.idbRead(page);
+    const hidden = await inPage(page, idv => !entriesForPerson('p_rivka').some(e => e.id === idv), ids.note);
+    await page.evaluate(() => document.querySelector('#toast [data-act="restore-entry"]').click()); await L.settle(page); await page.waitForTimeout(200);
+    const s2 = await L.idbRead(page);
+    const ok = !changingHasDelete && !!byId(s1.entries, ids.note)?.deletedAt && hidden && !byId(s2.entries, ids.note).deletedAt && byId(s2.entries, ids.note).text === 'Plain note to delete.';
+    record('L03', 'A plain activity can be deleted (kept, hidden) and restored with Undo; an activity that changed a record cannot be deleted', ok, { changingHasDelete, softDeleted: !!byId(s1.entries, ids.note)?.deletedAt, hidden, restored: !byId(s2.entries, ids.note).deletedAt });
+    await ctx.close();
+  },
+
+  // ---- Offers ------------------------------------------------------------------------------------
+  async O01_not_applicable_makes_no_shidduch() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const s0 = await L.idbRead(page);
+    // Miriam offers Tamar for me.
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay [data-add="offer"]');
+    await page.selectOption('#iGuy', 'p_me'); await page.selectOption('#iGirl', 'p_tamar'); await page.selectOption('#iBy', 'p_miriam');
+    await L.tap(page, '#overlay [data-act="save-idea"]');
+    const s1 = await L.idbRead(page);
+    const offer = s1.ideas.find(i => !s0.ideas.some(x => x.id === i.id));
+    const answerItem = s1.openItems.find(x => x.about?.type === 'idea' && x.about.id === offer?.id);
+    await inPage(page, idv => ideaSheet(idv), offer.id);
+    await L.tap(page, '#overlay [data-act="idea-no"]');
+    await page.fill('#ideaReason', 'PRIVATE-REASON-123');
+    await L.tap(page, '#overlay [data-act="idea-no-save"]');
+    const s2 = await L.idbRead(page);
+    const o = byId(s2.ideas, offer.id), item = byId(s2.openItems, answerItem?.id);
+    const noShidduch = s2.shidduchim.length === s0.shidduchim.length && s2.rounds.length === s0.rounds.length;
+    const reasonPrivate = o.privateReason === 'PRIVATE-REASON-123' && !s2.entries.some(e => JSON.stringify(e).includes('PRIVATE-REASON-123'));
+    const stillOwed = item?.status === 'open' && item.direction === 'me' && /Tell Miriam/.test(item.label) && item.personId === 'p_miriam';
+    const ok = o.status === 'not-applicable' && noShidduch && reasonPrivate && stillOwed;
+    record('O01', 'Not applicable closes the offer, keeps the reason privately on the offer only, creates no shidduch or round, and leaves "Tell Miriam" open on the right person', ok, { status: o.status, noShidduch, reasonPrivate, item: item && { label: item.label, status: item.status, personId: item.personId } });
+    await ctx.close();
+  },
+
+  async O02_interested_once() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    await inPage(page, () => ideaSheet('idea_moshe_tamar'));
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-act="idea-yes"]'); b.click(); b.click(); b.click(); });
+    await L.settle(page); await page.waitForTimeout(300); await L.closeSheets(page);
+    const s1 = await L.idbRead(page);
+    const newSh = s1.shidduchim.filter(s => !s0.shidduchim.some(x => x.id === s.id)), newR = s1.rounds.filter(r => !s0.rounds.some(x => x.id === r.id));
+    const newE = s1.entries.filter(e => !s0.entries.some(x => x.id === e.id));
+    const otherSide = s1.openItems.filter(x => x.kind === 'other-side' && x.about?.id === newSh[0]?.id);
+    // The same pair offered again while its round is in progress: the round continues, nothing new is made.
+    await inPage(page, async () => { data.ideas.push({ id: 'idea_again', guyId: 'p_moshe', girlId: 'p_tamar', suggestedByPersonId: 'p_dina', createdAt: iso(), status: 'open' }); await save(); });
+    await inPage(page, () => ideaSheet('idea_again')); await L.tap(page, '#overlay [data-act="idea-yes"]'); await L.closeSheets(page);
+    const s2 = await L.idbRead(page);
+    const r = s2.rounds.find(x => x.id === newR[0]?.id);
+    const ok = newSh.length === 1 && newR.length === 1 && newR[0].number === 1 && newE.length === 1 && byId(s1.ideas, 'idea_moshe_tamar').status === 'interested' && otherSide.length === 1 && otherSide[0].personId === 'p_rivka'
+      && s2.shidduchim.length === s1.shidduchim.length && s2.rounds.length === s1.rounds.length && r.status === 'active' && r.shadchanIds.includes('p_dina') && byId(s2.ideas, 'idea_again').shidduchId === newSh[0].id;
+    record('O02', 'Interested (even tapped 3 times) makes one shidduch, Round 1 and one entry, and asks Rivka for the other side; the same pair offered again continues that round', ok, { shidduchim: newSh.length, rounds: newR.length, entries: newE.length, otherSide: otherSide.map(x => x.personId), secondOffer: { shidduchim: s2.shidduchim.length - s1.shidduchim.length, rounds: s2.rounds.length - s1.rounds.length, shadchanIds: r?.shadchanIds } });
+    await ctx.close();
+  },
+
+  async O03_round_two_keeps_round_one() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    await L.tap(page, '[data-act="add-current"]'); await L.tap(page, '#overlay [data-add="offer"]');
+    await page.selectOption('#iGuy', 'p_ari'); await page.selectOption('#iGirl', 'p_rina'); await page.selectOption('#iBy', 'p_dina');
+    await L.tap(page, '#overlay [data-act="save-idea"]');
+    const s1 = await L.idbRead(page);
+    const offer = s1.ideas.find(i => !s0.ideas.some(x => x.id === i.id));
+    await inPage(page, idv => ideaSheet(idv), offer.id);
+    const again = await page.$eval('#overlay', o => o.querySelector('.offer-again')?.textContent || '');
+    await L.tap(page, '#overlay [data-act="idea-yes"]'); await L.closeSheets(page);
+    const s2 = await L.idbRead(page);
+    const r2 = s2.rounds.find(r => !s0.rounds.some(x => x.id === r.id));
+    const r1Same = JSON.stringify(byId(s2.rounds, 'round_ari_rina_1')) === JSON.stringify(byId(s0.rounds, 'round_ari_rina_1'));
+    await run(page, [...shidduchPath('sh_ari_rina'), tab('history')]);
+    const folded = await page.$$eval('#app .earlier-round', els => els.map(e => e.textContent));
+    const ok = /Round 1/.test(again) && s2.shidduchim.length === s0.shidduchim.length && r2?.shidduchId === 'sh_ari_rina' && r2.number === 2 && r2.status === 'active' && r1Same && folded.length === 1 && /Round 1/.test(folded[0]);
+    record('O03', 'An ended pair offered again shows "Suggested again"; Interested opens Round 2 on the same shidduch, Round 1 stays exactly as it was and is folded below', ok, { again, round2: r2 && { shidduchId: r2.shidduchId, number: r2.number, status: r2.status }, r1Same, folded });
+    await ctx.close();
+  },
+
+  async O04_link_earlier_is_privacy_safe() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const ids = await inPage(page, async () => {
+      const at = '2026-09-01T10:00:00.000Z';
+      const mine = addEntry({ at, type: 'message', channel: 'WhatsApp', direction: 'out', fromPersonId: 'p_me', toPersonId: 'p_leah', about: [{ type: 'person', id: 'p_leah' }], text: 'Me and Leah, my own.' });
+      const viaMiriam = addEntry({ at, type: 'message', direction: 'in', fromPersonId: 'p_miriam', toPersonId: 'p_me', about: [{ type: 'person', id: 'p_leah' }], text: 'Miriam about Leah, for me.' });
+      const david = addEntry({ at, type: 'call', direction: 'in', fromPersonId: 'p_rivka', toPersonId: 'p_me', about: [{ type: 'person', id: 'p_david' }], text: 'Rivka about David.' });
+      const otherSingle = addEntry({ at, type: 'note', personIds: ['p_david', 'p_noa'], about: [{ type: 'person', id: 'p_david' }], text: 'David and Noa.' });
+      const priv = addEntry({ at, type: 'note', personIds: ['p_david'], about: [{ type: 'person', id: 'p_david' }], text: 'Private about David.', private: true });
+      data.ideas.push({ id: 'idea_david_leah', guyId: 'p_david', girlId: 'p_leah', suggestedByPersonId: 'p_rivka', createdAt: iso(), status: 'open' });
+      await save(); return { mine: mine.id, viaMiriam: viaMiriam.id, david: david.id, otherSingle: otherSingle.id, priv: priv.id };
+    });
+    await inPage(page, () => ideaSheet('idea_david_leah')); await L.tap(page, '#overlay [data-act="idea-yes"]'); await L.settle(page);
+    const offered = await page.$$eval('#overlay input[name="linkEntry"]', els => els.map(e => e.value));
+    const before = (await L.idbRead(page)).entries.find(e => e.id === ids.david);
+    await page.check(`#overlay input[name="linkEntry"][value="${ids.david}"]`);
+    await L.tap(page, '#overlay [data-act="link-earlier-save"]');
+    const st = await L.idbRead(page);
+    const sh = st.shidduchim.find(s => s.guyId === 'p_david' && s.girlId === 'p_leah'), linked = byId(st.entries, ids.david);
+    const safe = offered.includes(ids.david) && ![ids.mine, ids.viaMiriam, ids.otherSingle, ids.priv].some(x => offered.includes(x));
+    const linkedOk = !!sh && linked.about.some(a => a.type === 'shidduch' && a.id === sh.id) && linked.text === before.text && linked.at === before.at && linked.corrections?.length === 1;
+    const pageOwn = await inPage(page, sid => entriesForShidduch(sid).map(e => e.id), sh?.id);
+    record('O04', 'After Interested on David – Leah, earlier entries are offered only when safe: nothing between Me and Leah (my own shidduch), nothing private, nothing with another single; linking keeps the words and time', safe && linkedOk && !pageOwn.includes(ids.mine), { offered: Object.fromEntries(Object.entries(ids).map(([k, v]) => [k, offered.includes(v)])), linkedOk });
+    await ctx.close();
+  },
+
+  // ---- Dates ----------------------------------------------------------------------------------------
+  async D01_one_date_id_through_every_change() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const s0 = await L.idbRead(page);
+    await run(page, [...shidduchPath('sh_david_noa'), tab('dates')]);
+    await L.tap(page, '[data-act="add-date"]');
+    await page.fill('#dateWhen', '2026-10-12T19:00');
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-act="save-new-date"]'); b.click(); b.click(); });
+    await L.settle(page); await page.waitForTimeout(200);
+    const s1 = await L.idbRead(page);
+    const added = s1.dates.filter(d => !s0.dates.some(x => x.id === d.id)), did = added[0]?.id;
+    await L.tap(page, `[data-date="${did}"]`); await page.fill('#dateWhen', '2026-10-14T20:30'); await L.tap(page, '#overlay [data-act="date-move"]');
+    await L.tap(page, `[data-date="${did}"]`); await L.tap(page, '#overlay [data-act="date-happened"]');
+    const s2 = await L.idbRead(page);
+    const fbItems = s2.openItems.filter(x => x.kind === 'date-feedback' && x.about?.id === did);
+    // Feedback for this date and this side closes exactly that item.
+    await page.selectOption('#dateFb_guy', 'positive'); await L.tap(page, '#overlay [data-act="date-feedback"]');
+    const s3 = await L.idbRead(page);
+    const st = await inPage(page, idv => { const s = dateState(dateById(idv)); return { when: s.when, status: s.status, guy: s.guy, girl: s.girl }; }, did);
+    const aboutDate = s3.entries.filter(e => (e.about || []).some(a => a.type === 'date' && a.id === did));
+    const guyItem = fbItems.find(x => x.side === 'guy'), girlItem = fbItems.find(x => x.side === 'girl');
+    const otherDatesSame = s0.dates.every(d => JSON.stringify(byId(s3.dates, d.id)) === JSON.stringify(d));
+    const ok = added.length === 1 && s3.dates.length === s0.dates.length + 1 && new Date(st.when).getTime() === new Date('2026-10-14T20:30:00+03:00').getTime() && st.status === 'happened' && st.guy === 'positive' && aboutDate.length === 4
+      && fbItems.length === 2 && byId(s3.openItems, guyItem.id).status === 'closed' && byId(s3.openItems, girlItem.id).status === 'open' && otherDatesSame && JSON.stringify(byId(s3.dates, did)) === JSON.stringify(byId(s1.dates, did));
+    record('D01', 'A date keeps one Date ID when added (double tap), moved, marked happened and given feedback; feedback closes exactly that date\'s item for that side; other dates are untouched', ok, { added: added.length, state: st, entriesAboutDate: aboutDate.length, feedbackItems: fbItems.map(x => x.side + ':' + byId(s3.openItems, x.id).status), otherDatesSame });
+    await ctx.close();
+  },
+
+  async D02_thinking_blocks_dates() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    await run(page, [...shidduchPath('sh_me_leah'), tab('dates')]);
+    const blocked = !(await page.$('#app [data-act="add-date"]')) && !!(await page.$('#app .zm-add-date-note'));
+    await run(page, [tab('overview')]);
+    await L.tap(page, '[data-act="set-answer"][data-side="girl"]'); await L.tap(page, '#overlay [data-answer-value="yes"]'); await L.tap(page, '#overlay [data-act="save-answer"]');
+    await run(page, [tab('dates')]);
+    const open = !!(await page.$('#app [data-act="add-date"]'));
+    record('D02', 'While a side is Thinking no date can be added; once both say Yes, Add date appears', blocked && open, { blocked, open });
+    await ctx.close();
+  },
+
+  // ---- Profiles and sending ------------------------------------------------------------------------
+  async P01_profile_versions_are_frozen() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    const s0 = await L.idbRead(page);
+    const editProfile = async text => { await inPage(page, () => { ui.detail = { type: 'person', id: 'p_me' }; ui.detailTab = 'profile'; render(); }); await L.tap(page, '[data-act="detail-menu"]'); await L.tap(page, '#overlay [data-act="edit-person"]'); await page.fill('#epProfile', text); await L.tap(page, '#overlay [data-act="save-edit-person"]'); };
+    await editProfile('Profile text A.');
+    const s1 = await L.idbRead(page);
+    const vA = s1.profileVersions.find(v => !s0.profileVersions.some(x => x.id === v.id));
+    // Send version A to Batya, then edit again: the send still points to A, and A never changes.
+    await inPage(page, () => sendProfileSheet(me().id, 'p_batya'));
+    await page.fill('#sendWords', 'Hello Batya.'); await page.dispatchEvent('#sendWords', 'input');
+    const preview = await page.$eval('#sendPreview', e => e.textContent);
+    await page.evaluate(() => { const b = document.querySelector('#overlay [data-send="copy"]'); b.click(); b.click(); });
+    await L.settle(page); await page.waitForTimeout(200);
+    await editProfile('Profile text B.');
+    const s2 = await L.idbRead(page);
+    const sends = s2.entries.filter(e => e.type === 'profile' && e.direction === 'out' && !s0.entries.some(x => x.id === e.id));
+    const vB = s2.profileVersions.find(v => v.id !== vA?.id && !s0.profileVersions.some(x => x.id === v.id));
+    const send = sends[0];
+    const oldSame = s0.profileVersions.every(v => JSON.stringify(byId(s2.profileVersions, v.id)) === JSON.stringify(v)) && JSON.stringify(byId(s2.profileVersions, vA.id)) === JSON.stringify(vA);
+    await inPage(page, idv => { ui.detail = { type: 'entry', id: idv }; render(); }, send?.id);
+    const shownSent = await page.$eval('#app', a => a.querySelector('.entry-sent .profile-text')?.textContent || '');
+    const status = await inPage(page, () => myProfileStatus('p_batya'));
+    const ok = vA?.text === 'Profile text A.' && vB?.text === 'Profile text B.' && vB.number === vA.number + 1 && oldSame && sends.length === 1 && send.profileVersionId === vA.id && send.sentText === 'Hello Batya.\n\nProfile text A.' && preview === send.sentText && shownSent === send.sentText && status === `Has v${vA.number} · v${vB.number} ready`;
+    record('P01', 'Each profile edit makes a new frozen version; a send (double tap = one) records the exact version and words, and still shows what was sent after later edits', ok, { versions: [vA?.number, vB?.number], oldSame, sends: sends.length, sentVersion: send?.profileVersionId === vA?.id, sentText: send?.sentText, status });
+    await ctx.close();
+  },
+
+  async P02_only_chosen_parts_are_sent() {
+    const { ctx, page } = await fresh({ mode: 'single' });
+    await inPage(page, async () => {
+      data.files.push({ id: 'file_resume', personId: 'p_me', name: 'resume.pdf', mime: 'application/pdf', createdAt: iso() }, { id: 'file_photo', personId: 'p_me', name: 'photo.jpg', mime: 'image/jpeg', createdAt: iso() });
+      addEntry({ type: 'note', personIds: ['p_me', 'p_leah'], about: [{ type: 'person', id: 'p_leah' }], text: 'SECRET-NOTE-1', private: true });
+      data.ideas.find(i => i.id === 'idea_me_leah').privateReason = 'SECRET-REASON-2';
+      await save();
+    });
+    await inPage(page, () => sendProfileSheet(me().id, 'p_miriam'));
+    await page.check('#overlay input[name="sendFile"][value="file_resume"]');
+    await page.fill('#sendWords', 'For the Cohen idea.'); await page.dispatchEvent('#sendWords', 'input');
+    const preview = await page.$eval('#sendPreview', e => e.textContent);
+    await L.tap(page, '#overlay [data-send="copy"]'); await L.settle(page);
+    const st = await L.idbRead(page);
+    const send = st.entries.filter(e => e.type === 'profile').pop();
+    const version = byId(st.profileVersions, send.profileVersionId);
+    const leaked = ['SECRET-NOTE-1', 'SECRET-REASON-2'].some(s => preview.includes(s) || send.sentText.includes(s));
+    const ok = JSON.stringify(send.fileIds) === JSON.stringify(['file_resume']) && send.sentText === `For the Cohen idea.\n\n${version.text}` && preview === `${send.sentText}\n\nFiles: resume.pdf` && !leaked;
+    record('P02', 'A send carries only the chosen version, the ticked files and my words: no notes, private reasons or other files', ok, { fileIds: send.fileIds, leaked, preview: preview.slice(0, 120) });
+    await ctx.close();
+  },
+
+  // ---- Showing never writes ------------------------------------------------------------------------
+  async N01_new_sheets_and_search_write_nothing() {
+    const { ctx, page } = await fresh({ mode: 'shadchan' });
+    const w0 = await writes(page); const s0 = await L.idbRead(page);
+    const steps = [
+      () => sendProfileSheet(me().id, 'p_miriam'), () => profileVersionsSheet('p_me'), () => answerSheet('sh_me_leah', 'girl'), () => addDateSheet('sh_david_noa'), () => dateSheet('date_david_noa_2'),
+      () => notApplicableSheet('idea_moshe_tamar'), () => ideaSheet('idea_me_leah'), () => waitingSheet('p_miriam'), () => afterContactSheet('p_miriam', null), () => { ui.detail = { type: 'shidduch', id: 'sh_ari_rina' }; ui.detailTab = 'history'; render(); toggleRound('round_ari_rina_1'); },
+    ];
+    for (let i = 0; i < steps.length; i++) { await page.evaluate(`(${steps[i].toString()})()`); await L.settle(page); await L.closeSheets(page); }
+    for (const screen of ['girls', 'guys', 'shadchanim']) { await inPage(page, s => { ui.detail = null; ui.screen = s; render(); }, screen); const sel = '#app [data-role="search"]'; if (await page.$(sel)) for (const q of ['לאה', 'Rosen', '']) { await page.fill(sel, q); await page.waitForTimeout(150); } }
+    await L.settle(page);
+    const w1 = await writes(page); const s1 = await L.idbRead(page);
+    const same = COLL.every(c => JSON.stringify(s1[c]) === JSON.stringify(s0[c]));
+    record('N01', 'Opening every new sheet (send, versions, answer, dates, offers, items, earlier rounds) and searching write nothing', w1 === w0 && same, { writes: w1 - w0, same });
+    await ctx.close();
+  },
+
   // ---- Backups -----------------------------------------------------------------------------------
   async B01_backup_round_trip() {
     const { ctx, page } = await fresh({ fixture: 'v58-rich' });

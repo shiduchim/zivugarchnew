@@ -69,7 +69,9 @@ function zmPairHeader(s,r,g,gl){return `<div class="detail-head zm-pair-head">
 
 function zmOverviewBeforeDating(s){
   const r=currentRound(s),g=person(s.guyId),gl=person(s.girlId);
-  return `<div class="zm-clean-card"><div class="zm-clean-heading">Answers</div><div class="zm-clean-row">${zmPersonLabel(g,g?.isMe?'My answer':`${g?.name||'Guy'}'s answer`)}<strong>${esc(zmCleanStatusWord(roundAnswer(r,'guy')))}</strong></div><div class="zm-clean-row">${zmPersonLabel(gl,`${gl?.name||'Girl'}'s answer`)}<strong>${esc(zmCleanStatusWord(roundAnswer(r,'girl')))}</strong></div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
+  // Tapping an answer opens the answer sheet (only while the round is in progress).
+  const answer=side=>{const word=`<strong>${esc(zmCleanStatusWord(roundAnswer(r,side)))}</strong>`;return r&&r.status!=='ended'?`<button class="zm-answer-edit" data-act="set-answer" data-side="${side}" aria-label="Change answer">${word}</button>`:word;};
+  return `<div class="zm-clean-card"><div class="zm-clean-heading">Answers</div><div class="zm-clean-row">${zmPersonLabel(g,g?.isMe?'My answer':`${g?.name||'Guy'}'s answer`)}${answer('guy')}</div><div class="zm-clean-row">${zmPersonLabel(gl,`${gl?.name||'Girl'}'s answer`)}${answer('girl')}</div><div class="zm-clean-row next"><span>Next step</span><strong>${esc(zmCleanNextStep(s))}</strong></div></div>`;
 }
 
 function zmOverviewDating(s){
@@ -95,7 +97,10 @@ function zmCleanOverview(s){
 
 function zmCleanDates(s){
   const r=currentRound(s),g=person(s.guyId),gl=person(s.girlId),ds=zmRoundDates(r);
-  return ds.length?`<div class="warm-stack zm-date-stack">${ds.slice().reverse().map(d=>{const st=dateState(d);return `<button class="warm-person-row zm-date-row" data-date="${d.id}"><div class="warm-activity-icon lav">${icon('calendar')}</div><div class="warm-person-main"><div class="warm-person-top"><strong>Date ${esc(d.number)}</strong><time>${esc(fmtDate(st.when))}</time></div><div class="warm-person-line">${esc(st.status||'')}</div><div class="warm-person-status">${esc(g?.isMe?'My':g?.name||'Guy')}: ${esc(zmCleanStatusWord(st.guy))} · ${esc(gl?.name||'Girl')}: ${esc(zmCleanStatusWord(st.girl))}</div></div><div class="warm-chevron">›</div></button>`;}).join('')}</div>`:empty('No dates yet','When dating starts, each date and its feedback will appear here.');
+  // Dates are added only while the round is in progress and both sides said Yes (Thinking blocks dating).
+  const bothYes=['guy','girl'].every(side=>String(roundAnswer(r,side)).toLowerCase()==='yes');
+  const add=r&&r.status!=='ended'&&!/married|marriage/i.test(roundStageLabel(r))?(bothYes?`<div class="zm-add-date"><button class="ghost-btn" data-act="add-date">Add date</button></div>`:`<p class="zm-add-date-note">Dates start after both sides say Yes.</p>`):'';
+  return add+(ds.length?`<div class="warm-stack zm-date-stack">${ds.slice().reverse().map(d=>{const st=dateState(d);return `<button class="warm-person-row zm-date-row" data-date="${d.id}"><div class="warm-activity-icon lav">${icon('calendar')}</div><div class="warm-person-main"><div class="warm-person-top"><strong>Date ${esc(d.number)}</strong><time>${esc(fmtDate(st.when))}</time></div><div class="warm-person-line">${esc(st.status||'')}</div><div class="warm-person-status">${esc(g?.isMe?'My':g?.name||'Guy')}: ${esc(zmCleanStatusWord(st.guy))} · ${esc(gl?.name||'Girl')}: ${esc(zmCleanStatusWord(st.girl))}</div></div><div class="warm-chevron">›</div></button>`;}).join('')}</div>`:empty('No dates yet','When dating starts, each date and its feedback will appear here.'));
 }
 
 function zmRoleRow(p,role){
@@ -116,7 +121,7 @@ function shidduchDetail(sid){
 
   let content='';
   if(ui.detailTab==='dates')content=zmCleanDates(s);
-  else if(ui.detailTab==='history')content=timelineHtml(entriesForShidduch(s.id));
+  else if(ui.detailTab==='history')content=shidduchHistory(s);
   else if(ui.detailTab==='people')content=zmCleanPeople(s);
   else content=zmCleanOverview(s);
 

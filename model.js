@@ -33,7 +33,9 @@ function entryAbout(e,type){return (e.about||[]).filter(a=>a.type===type).map(a=
 function isAbout(e,type,idv){return (e.about||[]).some(a=>a.type===type&&a.id===idv);}
 function entryPeople(e){return [...new Set([...(e.personIds||[]),e.fromPersonId,e.toPersonId].filter(Boolean).map(canonId))];}
 function entriesForPerson(pid){const c=canonId(pid);return liveEntries().filter(e=>entryPeople(e).includes(c)).sort(newestFirst);}
-function entriesAbout(type,idv){return liveEntries().filter(e=>isAbout(e,type,idv)).sort(newestFirst);}
+// For working out a current state: newest first, and of two entries with the same time the later-written
+// one counts as newer (a list shown on screen keeps its usual order).
+function changesAbout(type,idv){return liveEntries().filter(e=>isAbout(e,type,idv)).reverse().sort(newestFirst);}
 // A shidduch's history: entries about it, its rounds, its dates, and the offers it started from.
 // With a round: that round's own entries, plus older entries about the whole shidduch dated within it.
 function entriesForShidduch(sid,{roundId=null}={}){
@@ -86,14 +88,14 @@ function shidduchSuggestedBy(s){const r=currentRound(s);return r?.suggestedByPer
 function shidduchIsMine(s){return isMe(s?.guyId)||isMe(s?.girlId);}
 
 // A side's answer in a round: the newest answer entry, otherwise the v58 value the round started with.
-function answerEntry(r,side){return entriesAbout('round',r?.id).find(e=>e.changes?.some(c=>c.kind==='answer'&&c.side===side));}
+function answerEntry(r,side){return changesAbout('round',r?.id).find(e=>e.changes?.some(c=>c.kind==='answer'&&c.side===side));}
 function roundAnswer(r,side){if(!r)return '';const e=answerEntry(r,side);if(e)return e.changes.find(c=>c.kind==='answer'&&c.side===side).value;return r.base?.[side]||'';}
 
 // A date's state: its v58 starting values, then every change recorded about this Date ID, oldest first.
 function dateState(d){
   const st={when:d?.base?.when??null,status:d?.base?.status||'',guy:d?.base?.guy||'',girl:d?.base?.girl||'',history:[]};
   if(!d)return st;
-  const es=entriesAbout('date',d.id).slice().reverse();
+  const es=changesAbout('date',d.id).reverse();
   for(const e of es){
     for(const c of e.changes||[]){
       if(c.kind==='date-set'||c.kind==='date-moved'){st.when=c.to??c.when??st.when;if(!st.status||st.status==='cancelled')st.status='planned';}
@@ -111,6 +113,7 @@ function roundDates(r,{withCancelled=false}={}){return data.dates.filter(d=>d.ro
 function profileVersionsOf(pid){const c=canonId(pid);return data.profileVersions.filter(v=>canonId(v.personId)===c).sort((a,b)=>(Number(a.number)||0)-(Number(b.number)||0));}
 function latestProfileVersion(pid){const vs=profileVersionsOf(pid);return vs[vs.length-1]||null;}
 function latestProfileNumber(pid){return Math.max(Number(latestProfileVersion(pid)?.number)||0,Number(person(pid)?.legacyProfileVersion)||0);}
+function filesOf(pid){const c=canonId(pid);return data.files.filter(f=>!f.deletedAt&&f.personId&&canonId(f.personId)===c);}
 function profileVersion(vid){return data.profileVersions.find(v=>v.id===vid);}
 function currentProfileText(pid){return latestProfileVersion(pid)?.text||'';}
 

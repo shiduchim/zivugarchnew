@@ -504,6 +504,8 @@ const checks = {
       return page.$eval('#app', a => { const r = [...a.querySelectorAll('.warm-info-card > div')].find(d => d.querySelector('span')?.textContent === 'My profile'); return r ? r.querySelector('strong').textContent + ' | ' + r.querySelector('button').textContent : null; }); };
     const miriam = await row('p_miriam'), batya0 = await row('p_batya');
     await L.tap(page, '[data-act="log-profile"]');
+    // v1.0 opens a send sheet first (choose what goes out); v58 recorded the send at once.
+    if (await page.$('#overlay [data-send="copy"]')) await L.tap(page, '#overlay [data-send="copy"]');
     const batya1 = await row('p_batya');
     const fake = (await page.content()).includes('Has v3 · v4 ready');
     const ok = miriam === 'Has v4 | Send v4' && batya0 === 'Not sent yet · v4 ready | Send v4' && batya1 === 'Has v4 | Send v4' && !fake;

@@ -28,7 +28,7 @@ function zmStageForShidduch(s){
     if(savedIndex!=null)return {index:savedIndex,label:ZM_FLOW_STAGE_LABELS[savedIndex]||r?.endedStage||'Profile sent'};
   }
 
-  const raw=String(r?.stage||'').trim().toLowerCase();
+  const raw=String(roundStageLabel(r)).trim().toLowerCase();
   const guyStatus=String(roundAnswer(r,'guy')).trim().toLowerCase();
   const girlStatus=String(roundAnswer(r,'girl')).trim().toLowerCase();
 

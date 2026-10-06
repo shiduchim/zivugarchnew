@@ -46,7 +46,7 @@ function statusSentenceForPerson(p){
   if(mine.length)return `${mine[0].label} · My to-do`;
   if(them.length)return `${them[0].label} · To hear back`;
   const current=shidduchimForPerson(p.id).find(s=>shStatus(s)==='active');
-  if(current){const r=currentRound(current);return r?.stage||'Current shidduch';}
+  if(current){const r=currentRound(current);return roundStageLabel(r)||'Current shidduch';}
   if(needsContactPerson(p))return 'Time to contact';
   const lc=lastContact(p.id);return lc?`Last contact ${fmtDay(lc).toLowerCase()}`:'No contact yet';
 }
@@ -61,11 +61,4 @@ function zmPersonOpenStatus(p){
   const meta=[`Last contact: ${lc?fmtDay(lc):'Not yet'}`];
   if(active.length)meta.push(`${active.length} current shidduch${active.length===1?'':'im'}`);
   return `<div class="zm-person-status-area">${boxes}<div class="zm-person-meta">${meta.map((x,i)=>`${i?'<i>·</i>':''}<span>${esc(x)}</span>`).join('')}</div></div>`;
-}
-
-// Set the next step in ordinary language while preserving the same stored direction values.
-function waitingSheet(pid){
-  const items=openForPerson(pid);
-  const openList=items.length?`<div class="sheet-section zm-open-list">${items.map(x=>`<div class="setting-row"><div class="setting-copy"><b>${esc(x.label||'Next step')}</b><span>${x.direction==='me'?'My to-do':'To hear back'}</span></div><button class="option" data-act="close-open-item" data-item-id="${esc(x.id)}">${x.direction==='me'?'Done':'Heard back'}</button></div>`).join('')}</div>`:'';
-  openSheet(`<h2>What's next?</h2><p class="lead">Keep one open thing in the right place.</p>${openList}<input type="hidden" id="wPerson" value="${esc(pid)}"><div class="form-grid"><div class="field"><label>Who needs to act?</label><select id="wDirection"><option value="me">I need to…</option><option value="them">I'll hear back about…</option></select></div><div class="field"><label>What is it about?</label><input id="wLabel" placeholder="For example: answer about the Cohen idea" /></div></div><div class="split-actions"><button class="ghost-btn" data-act="close-sheet">Cancel</button><button class="primary-btn" data-act="save-waiting">Save</button></div>`);
 }
